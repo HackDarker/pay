@@ -1,0 +1,302 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<#include "lib/lib.html" />
+<title>代付订单列表</title>
+</head>
+<body style="background-color: #F0F0F0">
+	<input type="hidden" id="totalPages" value="${list.totalPage!'0'}">
+	<div id="hiddenCompany">
+		<#if companyList?? && companyList?size gt 0> 
+			<#list companyList as dl>
+				<span id="tempSpan"><input type="hidden" id="hiddenDics" companyId="${dl.id!}" companyName="${dl.companyName!}" channelId="${dl.channelId!}"/></span>
+			</#list> 
+		</#if>
+	</div>
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+		代付订单管理 <span class="c-gray en">&gt;</span> 代付订单列表 <a
+			class="btn btn-success radius r mr-20" id="refresh"
+			style="line-height: 1.6em; margin-top: 3px"
+			href="javascript:location.replace(location.href);" title="刷新"> <i
+			class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<div class="pd-20 text-c">
+
+		<div class="panel panel-default">
+			<div class="panel-header" style="height: 30px;">
+				<div style="float: left;font-size: 15px;">条件筛选</div>
+				<div style="float: right;">
+					<button type="submit" class="layui-btn layui-btn-small" onclick="data_form_submit()"><i class="layui-icon" style="line-height: 12px;">&#xe615;</i> 搜索</button>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="text-c">
+					<form action="" method="post" id="data_form">
+						<table class="table table-hover table-bg table-sort">
+							<tbody>
+								<tr>
+									<td>
+										<strong>订单编号：</strong>
+										<input type="text" name="orderNum" id="orderNum" placeholder="平台单号/商户单号/上游单号,精确搜索" style="width: 320px" class="input-text" value="${map.orderNum!}">
+									</td>
+									<td>
+										<strong>来源渠道：</strong> 
+										<select class="select" id="channelId" name="channelId" onchange="changeCompany(this)" style="width: 200px;height: 30px;">
+											<option value="">全部</option>
+											<#if channelList?? && channelList?size gt 0> 
+												<#list channelList as dl>
+													<option value="${dl.id!}"<#if dl.id == map.channelId> selected="selected" </#if>>${dl.channelName!}</option> 
+												</#list>
+											</#if>
+										</select>
+									</td>
+									<td class="chooseCompany">
+										<strong>来源商户：</strong>
+										<select class="select" id="companyId" name="companyId" style="width: 200px;height: 30px;">
+											<option value="">全部</option>
+											<#if companyList?? && companyList?size gt 0>
+												<#list companyList as dl>
+													<option value="${dl.id!}"<#if dl.id == map.companyId> selected="selected" </#if>>${dl.companyName!}</option>
+												</#list>
+											</#if>
+										</select>
+									</td>
+									<td>
+										<strong>订单状态：</strong>
+										<select class="select" id="dfStatus" name="dfStatus" style="width: 150px;height: 30px;">
+											<option value="">全部</option>
+											<option value="1"<#if map.dfStatus==1> selected="selected" </#if>>代付成功</option>
+											<option value="2"<#if map.dfStatus==2> selected="selected" </#if>>代付中</option>
+											<option value="3"<#if map.dfStatus==3> selected="selected" </#if>>代付失败</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<strong>代付时间：</strong> 
+										<input placeholder="开始时间" name="createTimeBegin" type="text" value="${map.createTimeBegin!}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 00:00:00',maxDate:'#F{$dp.$D(\'logmax\')}'})" id="logmin" class="input-text Wdate" style="width:150px;">
+										<strong>至</strong> 
+										<input type="text" placeholder="结束时间" name="createTimeEnd" value="${map.createTimeEnd!}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 23:59:59',minDate:'#F{$dp.$D(\'logmin\')}'})" id="logmax" class="input-text Wdate" style="width:150px;">
+									</td>
+									<td>
+										<strong>代付通道：</strong> 
+										<select class="select" id="dfRateId" name="dfRateId" style="width: 200px;height: 30px;">
+											<option value="">全部</option>
+											<#if rateList?? && rateList?size gt 0> 
+												<#list rateList as dl>
+													<option value="${dl.id!}"<#if dl.id == map.dfRateId> selected="selected" </#if>>${dl.dfRateName!}</option> 
+												</#list> 
+											</#if>
+										</select>
+									</td>
+									<td>
+										
+									</td>
+									<td style="text-align: right;">
+										<!-- <input type="button" class="btn radius" onclick="exportExcel()" value="导出Excel"></input> -->
+										&nbsp;
+									</td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-default mt-20">
+			<div class="panel-header" style="height: 25px;">
+				<div style="float: left;font-size: 15px;">代付订单列表</div>
+			</div>
+			<div class="panel-body">
+				<table
+					class="table table-border table-bordered table-hover table-bg table-sort">
+					<thead>
+						<tr class="text-c">
+							<th width="80">交易时间</th>
+							<th width="60">平台单号 / 商户单号 / 上游单号</th>
+							<th width="100">来源渠道商</th>
+							<th width="100">来源商户</th>
+							<th width="100">代付通道</th>
+							<th width="100">代付金额</th>
+							<th width="80">商户手续费</th>
+							<th width="60">代付状态</th>
+							<th width="50">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<#if list.dataList?? && list.dataList?size gt 0> 
+							<#list list.dataList as dl >
+								<tr class="text-c">
+									<td>${dl.payTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+									<td>${dl.dfOrderNum!}<br />${dl.dfMerchantOrderNum!}<br />${dl.bankTransaction!'无'}</td>
+									<td>${dl.channelName!}</td>
+									<td>${dl.companyName!}</td>
+									<td>${dl.dfRateName!}</td>
+									<td>${dl.dfPayMoney!}</td>
+									<td>${dl.dfPayWayMoney!}</td>
+									<td>
+										<#if dl.dfStatus ==1> 
+											<span class="label label-success radius">代付成功</span> 
+										<#elseif dl.dfStatus ==2> 
+											<span class="label radius">代付中</span>
+										<#elseif dl.dfStatus ==3> 
+											<span class="label label-danger radius">代付失败</span>
+										<#else> 
+											<span class="label red radius">其他</span> 
+										</#if>
+									</td>
+									<td>
+										<a title="订单详情" href="javascript:;"
+										onclick="fund_info('代付订单详情','${basePath}/dfWayRate/getOrderDetail.do?id='+${dl.id!},1200,600);"
+										class="ml-5" style="text-decoration:none">订单详情</a></td>
+								</tr>
+							</#list> 
+						</#if>
+					</tbody>
+				</table>
+				</br> 
+				<#if list.dataList?? && list.dataList?size gt 0>
+					<div id="page_list"></div>
+				</#if>
+			</div>
+		</div>
+
+
+		
+		
+	</div>
+	<script type="text/javascript">
+		
+		function data_form_submit(){
+			$("#data_form").attr("action","${basePath}/dfWayRate/dfOrderList.do").submit();
+		}
+
+		layui.use(['laypage', 'layer'], function(){
+	  		var laypage = layui.laypage,layer = layui.layer;
+			laypage.render({
+			    elem: 'page_list',	//容器。值支持id名、原生dom对象，jquery对象
+			    count: ${list.totalData!'0'},	//数据总数。一般通过服务端得到
+			    //groups: 5,	//连续出现的页码个数
+			    limit: ${list.pageData!'10'},
+			    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+				curr: ${list.curPage!'1'}, //获取起始页
+			    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+			    jump: function(obj, first){
+			      if (!first) {
+			      	window.location.href = "${basePath}/dfWayRate/dfOrderList.do?curPage="
+								+ obj.curr
+								+ "&pageData="
+								+ obj.limit
+								+ "&orderNum="
+								+ $("#orderNum").val()
+								+ "&channelId="
+								+ $("#channelId").val()
+								+ "&createTimeBegin="
+								+ $("#logmin").val()
+								+ "&createTimeEnd="
+								+ $("#logmax").val()
+								+ "&companyId="
+								+ $("#companyId").val()
+								+ "&dfStatus="
+								+ $("#dfStatus").val()
+								+ "&dfRateId="
+								+ $("#dfRateId").val();
+					}
+			    }
+			  });
+		});
+
+		var isChange = 0;
+		$(document).ready(function(){
+			$('select').searchableSelect();
+			isChange++;
+		});
+		// $(function() {
+		// 	laypage({
+		// 		cont : $('.page_list'), //容器。值支持id名、原生dom对象，jquery对象,
+		// 		pages : ${list.endPage!'0' }, //总页数
+		// 		groups : 10, //连续显示分页数
+		// 		first : '首页', //若不显示，设置false即可
+		// 		last : '尾页', //若不显示，设置false即可
+		// 		curr : ${list.curPage!'0'},
+		// 		hash : true, //开启hash
+		// 		skin : '#00AA91',
+		// 		jump : function(obj, first) { //触发分页后的回调
+		// 			if (!first) {
+		// 				window.location.href = "${basePath}/dfWayRate/dfOrderList.do?curPage="
+		// 						+ obj.curr
+		// 						+ "&pageData="
+		// 						+ 10
+		// 						+ "&orderNum="
+		// 						+ $("#orderNum").val()
+		// 						+ "&channelId="
+		// 						+ $("#channelId").val()
+		// 						+ "&createTimeBegin="
+		// 						+ $("#logmin").val()
+		// 						+ "&createTimeEnd="
+		// 						+ $("#logmax").val()
+		// 						+ "&companyId="
+		// 						+ $("#companyId").val()
+		// 						+ "&dfStatus="
+		// 						+ $("#dfStatus").val()
+		// 						+ "&dfRateId="
+		// 						+ $("#dfRateId").val();
+		// 			}
+		// 		}
+		// 	});
+		// });
+		
+		function changeCompany(obj){
+		
+			if(isChange == 0){
+				return;
+			}else{
+			
+				var cid = $(obj).val();
+				$("#companyId").empty();
+				var appendOptions = "<option value=\"\">全部</option>";
+				if(cid == "") {
+					for(var i = 0, len = $("#hiddenCompany").children().length;i<len;i++){
+						var companyId = $("#hiddenCompany").children().eq(i).find("#hiddenDics").attr("companyId");
+						var companyName = $("#hiddenCompany").children().eq(i).find("#hiddenDics").attr("companyName");
+						appendOptions+='<option value="'+companyId+'">'+companyName+'</option>';
+					}
+				} else {
+					for(var i = 0, len = $("#hiddenCompany").children().length;i<len;i++){
+						var companyId = $("#hiddenCompany").children().eq(i).find("#hiddenDics").attr("companyId");
+						var companyName = $("#hiddenCompany").children().eq(i).find("#hiddenDics").attr("companyName");
+						var channelId = $("#hiddenCompany").children().eq(i).find("#hiddenDics").attr("channelId");
+						if(channelId == cid) {
+							appendOptions+='<option value="'+companyId+'">'+companyName+'</option>';
+						}
+					}
+				}
+				$("#companyId").html(appendOptions);
+				$(".chooseCompany .searchable-select").remove();
+				$("#companyId").searchableSelect();
+			}			
+		}
+
+		//详情
+		function fund_info(title, url, w, h) {
+			layer_show(title, url, w, h);
+		}
+		$(document).keypress(function(e) {			
+		   	// 回车键事件  
+		      if(e.which == 13) {  
+		  		jQuery(".confirmButton").click();
+		  		data_form_submit()
+		      }  
+		});
+	</script>
+</body>
+</html>

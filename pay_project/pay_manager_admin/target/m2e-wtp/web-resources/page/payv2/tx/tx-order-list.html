@@ -1,0 +1,439 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<#include "lib/lib.html" />
+<title>订单列表</title>
+</head>
+<body style="background-color: #F0F0F0">
+	<input type="hidden" id="totalPages" value="${list.totalPage!'0'}">
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+		提现管理 <span class="c-gray en">&gt;</span> 提现记录 <a
+			class="btn btn-success radius r mr-20" id="refresh"
+			style="line-height: 1.6em; margin-top: 3px"
+			href="javascript:location.replace(location.href);" title="刷新"> <i
+			class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<input type="hidden" id="rates" qq="${ktxjeMap.qq!}" qqrate="${ktxjeMap.qqRate!}" wx="${ktxjeMap.wx!}" wxrate="${ktxjeMap.wxRate!}" ali="${ktxjeMap.ali!}" alirate="${ktxjeMap.aliRate!}" all="${ktxje!}">
+	<div class="pd-20 text-c">
+		<div class="text-c">
+
+			<div class="panel panel-default">
+				<div class="panel-header" style="height: 25px;">
+					<div style="float: left;font-size: 15px;">筛选汇总</div>
+				</div>
+				<div class="panel-body" style="padding: 5px;">
+					<table class="table table-hover table-bg table-sort">
+						<tbody>
+							<tr>
+								<td align="center" style="text-align:center;">
+									<h4>
+										可提现金额  <a href="javascript:;" id="tipsOne" style="text-decoration:none;"><i class="Hui-iconfont">&#xe633;</i></a><br />
+										<span style="color: red;">${ktxje!'0'}</span>
+									</h4>
+									<br/>
+									<input value="查看详情" class="layui-btn layui-btn-small" type="button" style="margin-top: -25px;" id="showDetail">
+								</td>
+								<td align="center" style="text-align:center;"><h4>
+										提现中金额<br />￥<span style="color: red;">${txzje!'0'}</span>
+									</h4>
+									<br/>&nbsp;</td>
+								<td align="center" style="text-align:center;"><h4>
+										今日提现成功<br />￥<span style="color: red;">${today.todaySucc!'0'}</span>
+									</h4>
+									<br/>&nbsp;</td>
+								<td align="center" style="text-align:center;"><h4>
+										今日提现手续费<br />￥<span style="color: red;">${today.todayRate!'0'}</span>
+									</h4>
+									<br/>&nbsp;</td>
+								<td align="center" style="text-align:center;"><h4>
+										今日到账金额  <a href="javascript:;" id="tipsTwo" style="text-decoration:none;"><i class="Hui-iconfont">&#xe633;</i></a><br />￥<span style="color: red;">${today.todayDz!'0'}</span>
+									</h4>
+									<br/>&nbsp;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="panel panel-default mt-20">
+				<div class="panel-header" style="height:30px;">
+					<div style="float:left;font-size:15px;">条件筛选</div>
+					<div style="float:right;">
+						<button type="submit" class="layui-btn layui-btn-small" onclick="data_form_submit()">
+							<i class="layui-icon" style="line-height: 12px;">&#xe615;</i> 搜索
+						</button>
+					</div>
+				</div>
+				
+				<div class="panel-body">
+					
+					<form action="" id="data_form">
+						<table class="table table-hover table-bg table-sort">
+							<tbody>
+								<!-- <tr>
+									<td align="center" style="text-align:center;">
+										<h4>
+											可提现金额<br />
+											<span style="color: red;">${ktxje!'0'}</span>
+										</h4>
+										<br/>
+										<button></button>
+									</td>
+									<td align="center" style="text-align:center;"><h4>
+											提现中金额<br />￥<span style="color: red;">${txzje!'0'}</span>
+										</h4></td>
+									<td align="center" style="text-align:center;"><h4>
+											今日提现成功<br />￥<span style="color: red;">${today.todaySucc!'0'}</span>
+										</h4></td>
+									<td align="center" style="text-align:center;"><h4>
+											今日提现手续费<br />￥<span style="color: red;">${today.todayRate!'0'}</span>
+										</h4></td>
+									<td align="center" style="text-align:center;"><h4>
+											今日到账金额<br />￥<span style="color: red;">${today.todayDz!'0'}</span>
+										</h4></td>
+								</tr> -->
+								<tr>
+									<td><strong>订单编号：</strong><input type="text" name="orderNum"
+										id="orderNum" placeholder="请输入平台提现订单号模糊搜索" style="width: 250px"
+										class="input-text" value="${map.orderNum!}">
+									</td>
+									<td><strong>开户名称：</strong><input type="text" name="accountName"
+										id="accountName" placeholder="请输入收款人姓名模糊搜索" style="width: 250px"
+										class="input-text" value="${map.accountName!}">
+									</td>
+									
+									<td><strong>交易时间：</strong> <input placeholder="开始时间"
+										name="txTimeBegin" type="text"
+										value="${map.txTimeBegin!}"
+										onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 00:00:00',maxDate:'#F{$dp.$D(\'logmax\')}'})"
+										id="logmin" class="input-text Wdate" style="width:150px;">
+										<strong>至</strong> <input type="text" placeholder="结束时间"
+										name="txTimeEnd" value="${map.txTimeEnd!}"
+										onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 23:59:59',minDate:'#F{$dp.$D(\'logmin\')}'})"
+										id="logmax" class="input-text Wdate" style="width:150px;">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<strong>所属商户：</strong> 
+										<select class="select" id="companyId" name="companyId" datatype="*" nullmsg="请选择！" style="width: 150px">
+											<option value="">全部</option> 
+											<#if companyList?? && companyList?size gt 0> 
+												<#list companyList as dl>
+													<option value="${dl.companyId!}"<#if dl.companyId == map.companyId> selected="selected" </#if>>${dl.companyName!}</option> 
+												</#list> 
+											</#if>
+										</select>
+										  <a href="javascript:;" id="tipsThree" style="text-decoration:none;font-size: 16px;"><i class="Hui-iconfont">&#xe633;</i></a>
+									</td>
+									<td><strong>提现状态：</strong> <select class="select"
+										id="status" name="status" datatype="*" nullmsg="请选择！"
+										style="width: 150px">
+											<option value="">全部</option>
+											<option value="1"<#if map.status==1>
+												selected="selected" </#if>>提现成功</option>
+											<option value="2"<#if map.status==2>
+												selected="selected" </#if>>提现中</option>
+											<option value="3"<#if map.status==3>
+												selected="selected" </#if>>提现失败</option>
+									</select></td>
+									<td>
+										
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+
+
+
+					
+				</div>
+			</div>
+			<div class="panel panel-default mt-20">
+				<div class="panel-header" style="height:30px;">
+					<div style="float:left;font-size:15px;">提现订单列表</div>					
+				</div>
+				<div class="panel-body">
+					<table
+						class="table table-border table-bordered table-hover table-bg table-sort">
+						<thead>
+							<tr class="text-c">
+								<th width="80">提现时间</th>
+								<th width="60">提现单号</th>
+								<th width="100">商户名称</th>
+								<th width="100">支付通道</th>
+								<th width="100">开户行全称</th>
+								<th width="100">银行帐号</th>
+								<th width="60">开户名称</th>
+								<th width="50">提现状态</th>
+								<th width="50">提现金额</th>
+								<th width="50">提现手续费</th>
+								<th width="50">到账金额</th>
+							</tr>
+						</thead>
+						<tbody>
+							<#if list.dataList?? && list.dataList?size gt 0> 
+								<#list list.dataList as dl >
+									<tr class="text-c">
+										<td>${dl.txTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+										<td>${dl.orderNum!}</td>
+										<td>${dl.companyName!}</td>
+										<td>${dl.payWayWame!}</td>
+										<td>${dl.accountBank!}</td>
+										<td>${dl.accountCard!}</td>
+										<td>${dl.accountName!}</td>
+										<td>
+											<#if dl.status ==1> <span class="label label-success radius">提现成功</span> 
+											<#elseif dl.status ==2> <span class="label red radius">提现中</span>
+											<#elseif dl.status ==3> <span class="label danger radius">提现失败</span>
+											</#if>
+										</td>
+										<td>${dl.amount!}</td>
+										<td>${dl.serviceAmount!}</td>
+										<td>${dl.arrivalAmount!}</td>
+									</tr>
+								</#list> 
+							</#if>
+						</tbody>
+					</table>
+					</br> 
+					<#if list.dataList?? && list.dataList?size gt 0>
+						<div id="page_list"></div>
+					</#if>
+				</div>
+			</div>		
+			
+		</div>
+		
+	</div>
+	<script type="text/javascript">
+		/* $(function(){
+			$('select').searchableSelect();
+		}); */
+
+		function data_form_submit(){
+			$("#data_form").attr("action","${basePath}/enchashment/txOrderList.do").submit();
+		}
+		
+		
+
+		layui.use(['laypage', 'layer'], function(){
+	  		var laypage = layui.laypage,layer = layui.layer;
+			laypage.render({
+			    elem: 'page_list',	//容器。值支持id名、原生dom对象，jquery对象
+			    count: ${list.totalData!'0'},	//数据总数。一般通过服务端得到
+			    //groups: 5,	//连续出现的页码个数
+			    limit: ${list.pageData!'10'},
+			    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+				curr: ${list.curPage!'1'}, //获取起始页
+			    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+			    jump: function(obj, first){
+			      if (!first) {
+
+			      	window.location.href = "${basePath}/enchashment/txOrderList.do?curPage="
+								+ obj.curr
+								+ "&pageData="
+								+ obj.limit
+								+ "&companyId="
+								+ $("#companyId").val()
+								+ "&orderNum="
+								+ $("#orderNum").val()
+								+ "&txTimeBegin="
+								+ $("#logmin").val()
+								+ "&txTimeEnd="
+								+ $("#logmax").val()
+								+ "&accountName="
+								+ $("#accountName").val()
+								+ "&status="
+								+ $("#status").val();
+					}
+			    }
+			  });
+		});
+		var isChange=0;
+		$(document).ready(function(){
+			$('select').searchableSelect();
+			isChange++;
+		});
+		// $(function() {
+		// 	laypage({
+		// 		cont : $('.page_list'), //容器。值支持id名、原生dom对象，jquery对象,
+		// 		pages : ${list.endPage!'0' }, //总页数
+		// 		//skip: true, //是否开启跳页
+		// 		// 	    	skin: 'molv',
+		// 		groups : 10, //连续显示分页数
+		// 		first : '首页', //若不显示，设置false即可
+		// 		last : '尾页', //若不显示，设置false即可
+		// 		curr : ${list.curPage!'0'},
+		// 		hash : true, //开启hash
+		// 		skin : '#00AA91',
+		// 		jump : function(obj, first) { //触发分页后的回调
+		// 			if (!first) {
+		// 				window.location.href = "${basePath}/enchashment/txOrderList.do?curPage="
+		// 						+ obj.curr
+		// 						+ "&pageData="
+		// 						+ 10
+		// 						+ "&companyId="
+		// 						+ $("#companyId").val()
+		// 						+ "&orderNum="
+		// 						+ $("#orderNum").val()
+		// 						+ "&txTimeBegin="
+		// 						+ $("#logmin").val()
+		// 						+ "&txTimeEnd="
+		// 						+ $("#logmax").val()
+		// 						+ "&accountName="
+		// 						+ $("#accountName").val()
+		// 						+ "&status="
+		// 						+ $("#status").val();
+		// 			}
+		// 		}
+		// 	});
+		// });
+		
+		$("#tipsOne").click(function(){
+			layer.tips('计算公式：可提现金额=商户支付成功订单金额-商户手续费-商户退款订单金额', '#tipsOne');
+		});
+		
+		$("#tipsTwo").click(function(){
+			layer.tips('计算公式：<br/>到账金额=可提现金额-提现手续费', '#tipsTwo', {
+				tips: [1, 'black']
+			});
+		});
+		$("#tipsThree").click(function(){
+			layer.tips('只会显示有D0通道的商户', '#tipsThree');
+		});
+		
+		$("#showDetail").click(function(){
+			var qq = $("#rates").attr("qq");
+			var qqRate = $("#rates").attr("qqrate");
+			var wx = $("#rates").attr("wx");
+			var wxRate = $("#rates").attr("wxrate");
+			var ali = $("#rates").attr("ali");
+			var aliRate = $("#rates").attr("alirate");
+			var all = $("#rates").attr("all");
+			layer.open({
+			  type: 1,
+			  skin: 'layui-layer-rim', //加上边框
+			  area: ['300px', '230px'], //宽高
+			  content: '<div >'
+			  				+'<table class="table table-border table-bordered table-hover table-bg table-sort">'
+			  					+'<thead>'
+			  					+'<tr  class="text-c">'
+			  						+'<td><strong>支付通道</strong></td>'
+			  						+'<td><strong>通道余额</strong></td>'
+			  					+'</tr>'
+			  					+'</thead>'
+			  					+'<tbody>'
+			  					+'<tr class="text-c">'
+			  						+'<td>'+qq+'</td>'
+			  						+'<td>'+qqRate+'</td>'
+			  					+'</tr>'
+			  					+'<tr class="text-c">'
+			  						+'<td>'+wx+'</td>'
+			  						+'<td>'+wxRate+'</td>'
+			  					+'</tr>'
+			  					+'<tr class="text-c">'
+			  						+'<td>'+ali+'</td>'
+			  						+'<td>'+aliRate+'</td>'
+			  					+'</tr>'
+			  					+'<tr class="text-c">'
+			  						+'<td><strong>合计</strong></td>'
+			  						+'<td><strong>'+all+'</strong></td>'
+			  					+'</tr>'
+			  					+'</tbody>'
+			  				+'</table>'
+			  			+'</div>'
+			});
+		});
+
+		//详情
+		function fund_info(title, url, w, h) {
+			layer_show(title, url, w, h);
+		}
+
+		//编辑
+		function fund_edit(title, url, w, h) {
+			layer_show(title, url, w, h);
+		}
+
+		//发起回调
+		function callbackOrder(obj, id, str) {
+			layer.confirm("确定" + str + "？", function(index) {
+				var data = {};
+				data.id = id;
+				//后台请求保存数据
+				$.axse("${basePath}/Payv2PayOrder/callbackOrder.do", data,
+						function(d) {
+							if (d.resultCode == 200) {
+								layer.msg('已' + str + '!', {
+									icon : 1,
+									time : 1000
+								});
+							} else {
+								Huimodal_alert(str + "失败,请重试!", 1500);
+							}
+						}, function(d) {
+							Huimodal_alert(str + "失败,请重试!", 1500);
+						});
+			});
+		}
+
+		//导出Excel
+		function exportExcel() {
+			if ($("#totalPages").val() > 0) {
+				/* 				var number=$("#totalPages").val();
+				 if(number*10>20000){
+				 alert("数据量过大，请按时间段导出或者按某类型导出");
+				 return false;
+				 }else{ */
+				window.location.href = "${basePath}/Payv2PayOrder/exportExcelOrder.do?companyId="
+						+ $("#companyId").val()
+						+ "&appId="
+						+ $("#appId").val()
+						+ "&createTimeBegin="
+						+ $("#logmin").val()
+						+ "&createTimeEnd="
+						+ $("#logmax").val()
+						+ "&payWayId="
+						+ $("#payWayId").val()
+						+ "&rateId="
+						+ $("#rateId").val()
+						+ "&payMoneyMin="
+						+ $("#payMoneyMin").val()
+						+ "&payMoneyMax="
+						+ $("#payMoneyMax").val()
+						+ "&payStatus="
+						+ $("#payStatus").val();
+
+				//}
+			} else {
+				layer.msg('没有数据可导出', function(){});
+				return false;
+			}
+		}
+
+		
+		//验证输入的数字合法性
+		function ValidateFloat(e, pnumber) {
+			if (!/^\d+[.]?\d*$/.test(pnumber)) {
+				$(e).val(/^\d+[.]?\d*/.exec($(e).val()));
+			}
+			return false;
+		}
+		$(document).keypress(function(e) {			
+		  // 回车键事件  
+	      if(e.which == 13) {  
+	  		jQuery(".confirmButton").click();
+	  		data_form_submit()
+	      }  
+		});
+	</script>
+</body>
+</html>

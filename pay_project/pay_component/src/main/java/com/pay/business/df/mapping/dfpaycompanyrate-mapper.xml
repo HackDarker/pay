@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.pay.business.df.mapper.DfPayCompanyRateMapper">
+
+	<resultMap id="dfpaycompanyrate_result_map" type="com.pay.business.df.entity.DfPayCompanyRate" >
+		<id column="id" property="id" />
+		<result column="company_id" property="companyId"/>
+		<result column="df_rate_id" property="dfRateId"/>
+		<result column="pay_way_rate" property="payWayRate"/>
+		<result column="total_amount" property="totalAmount"/>
+		<result column="status" property="status"/>
+		<result column="create_user_by" property="createUserBy"/>
+		<result column="update_user_by" property="updateUserBy"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		
+		<result column="df_pay_way_name" property="dfPayWayName"/>
+	</resultMap>
+	
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from df_pay_company_rate  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="dfRateId!=null and dfRateId!=''">
+				and df_rate_id = #{dfRateId}
+			</if>
+			<if test="payWayRate!=null and payWayRate!=''">
+				and pay_way_rate like CONCAT('%',#{payWayRate},'%')
+			</if>
+			<if test="totalAmount!=null and totalAmount!=''">
+				and total_amount like CONCAT('%',#{totalAmount},'%')
+			</if>
+			<if test="status!=null and status!=''">
+				and status = #{status}
+			</if>
+			<if test="createUserBy!=null and createUserBy!=''">
+				and create_user_by = #{createUserBy}
+			</if>
+			<if test="updateUserBy!=null and updateUserBy!=''">
+				and update_user_by = #{updateUserBy}
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeBegin!=null and updateTimeBegin!=''">
+				and update_time <![CDATA[ >= ]]> str_to_date(#{updateTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeEnd!=null and updateTimeEnd!=''">
+				and update_time <![CDATA[ <= ]]> str_to_date(#{updateTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id"   -->
+	<insert id="insertByEntity" parameterType="com.pay.business.df.entity.DfPayCompanyRate" useGeneratedKeys="true" keyProperty="id">
+		insert into df_pay_company_rate
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="companyId!=null ">
+				company_id,
+			</if>
+      		<if test="dfRateId!=null ">
+				df_rate_id,
+			</if>
+      		<if test="payWayRate!=null ">
+				pay_way_rate,
+			</if>
+      		<if test="totalAmount!=null ">
+				total_amount,
+			</if>
+      		<if test="status!=null ">
+				status,
+			</if>
+      		<if test="createUserBy!=null ">
+				create_user_by,
+			</if>
+      		<if test="updateUserBy!=null ">
+				update_user_by,
+			</if>
+      		<if test="createTime!=null ">
+				create_time,
+			</if>
+      		<if test="updateTime!=null ">
+				update_time,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id},
+			</if>
+      		<if test="companyId!=null ">
+      			#{companyId},
+			</if>
+      		<if test="dfRateId!=null ">
+      			#{dfRateId},
+			</if>
+      		<if test="payWayRate!=null ">
+      			#{payWayRate},
+			</if>
+      		<if test="totalAmount!=null ">
+      			#{totalAmount},
+			</if>
+      		<if test="status!=null ">
+      			#{status},
+			</if>
+      		<if test="createUserBy!=null ">
+      			#{createUserBy},
+			</if>
+      		<if test="updateUserBy!=null ">
+      			#{updateUserBy},
+			</if>
+      		<if test="createTime!=null ">
+      			#{createTime},
+			</if>
+      		<if test="updateTime!=null ">
+      			#{updateTime},
+			</if>
+    	</trim>
+	</insert>
+	
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.df.entity.DfPayCompanyRate">
+		delete from df_pay_company_rate
+		<where>
+      		<if test="id!=null ">
+				and id=#{id}
+			</if>
+      		<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+      		<if test="dfRateId!=null ">
+				and df_rate_id=#{dfRateId}
+			</if>
+      		<if test="payWayRate!=null ">
+				and pay_way_rate=#{payWayRate}
+			</if>
+      		<if test="totalAmount!=null ">
+				and total_amount=#{totalAmount}
+			</if>
+      		<if test="status!=null ">
+				and status=#{status}
+			</if>
+      		<if test="createUserBy!=null ">
+				and create_user_by=#{createUserBy}
+			</if>
+      		<if test="updateUserBy!=null ">
+				and update_user_by=#{updateUserBy}
+			</if>
+      		<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+      		<if test="updateTime!=null ">
+				and update_time=#{updateTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.df.entity.DfPayCompanyRate">
+		update df_pay_company_rate
+		<set>
+			<if test="companyId!=null ">
+				company_id=#{companyId},
+			</if>
+			<if test="dfRateId!=null ">
+				df_rate_id=#{dfRateId},
+			</if>
+			<if test="payWayRate!=null ">
+				pay_way_rate=#{payWayRate},
+			</if>
+			<if test="totalAmount!=null ">
+				total_amount=#{totalAmount},
+			</if>
+			<if test="status!=null ">
+				status=#{status},
+			</if>
+			<if test="createUserBy!=null ">
+				create_user_by=#{createUserBy},
+			</if>
+			<if test="updateUserBy!=null ">
+				update_user_by=#{updateUserBy},
+			</if>
+			<if test="createTime!=null ">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime!=null ">
+				update_time=#{updateTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.df.entity.DfPayCompanyRate" resultMap="dfpaycompanyrate_result_map">
+		select id,company_id,df_rate_id,pay_way_rate,total_amount,status,create_user_by,update_user_by,create_time,update_time from df_pay_company_rate
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="dfRateId!=null ">
+				and df_rate_id=#{dfRateId}
+			</if>
+			<if test="payWayRate!=null ">
+				and pay_way_rate=#{payWayRate}
+			</if>
+			<if test="totalAmount!=null ">
+				and total_amount=#{totalAmount}
+			</if>
+			<if test="status!=null ">
+				and status=#{status}
+			</if>
+			<if test="createUserBy!=null ">
+				and create_user_by=#{createUserBy}
+			</if>
+			<if test="updateUserBy!=null ">
+				and update_user_by=#{updateUserBy}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+			<if test="updateTime!=null ">
+				and update_time=#{updateTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据对象查询列表-->
+	<select id="selectByObject" resultMap="dfpaycompanyrate_result_map" >
+		select id,company_id,df_rate_id,pay_way_rate,total_amount,status,create_user_by,update_user_by,create_time,update_time from df_pay_company_rate
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="dfRateId!=null ">
+				and df_rate_id=#{dfRateId}
+			</if>
+			<if test="payWayRate!=null ">
+				and pay_way_rate=#{payWayRate}
+			</if>
+			<if test="totalAmount!=null ">
+				and total_amount=#{totalAmount}
+			</if>
+			<if test="status!=null ">
+				and status=#{status}
+			</if>
+			<if test="createUserBy!=null ">
+				and create_user_by=#{createUserBy}
+			</if>
+			<if test="updateUserBy!=null ">
+				and update_user_by=#{updateUserBy}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+			<if test="updateTime!=null ">
+				and update_time=#{updateTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="dfpaycompanyrate_result_map" >
+		
+		SELECT id,company_id,df_rate_id,pay_way_rate,total_amount,status,create_user_by,update_user_by,create_time,update_time FROM df_pay_company_rate 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="dfRateId!=null and dfRateId!=''">
+				and df_rate_id = #{dfRateId}
+			</if>
+			<if test="payWayRate!=null and payWayRate!=''">
+				and pay_way_rate like  CONCAT('%',#{payWayRate},'%')
+			</if>
+			<if test="totalAmount!=null and totalAmount!=''">
+				and total_amount like  CONCAT('%',#{totalAmount},'%')
+			</if>
+			<if test="status!=null and status!=''">
+				and status = #{status}
+			</if>
+			<if test="createUserBy!=null and createUserBy!=''">
+				and create_user_by = #{createUserBy}
+			</if>
+			<if test="updateUserBy!=null and updateUserBy!=''">
+				and update_user_by = #{updateUserBy}
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeBegin!=null and updateTimeBegin!=''">
+				and update_time <![CDATA[ >= ]]> str_to_date(#{updateTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeEnd!=null and updateTimeEnd!=''">
+				and update_time <![CDATA[ <= ]]> str_to_date(#{updateTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	
+	<!-- 充值 -->
+	<update id="plusCompanyTotalAmount" parameterType="com.pay.business.df.entity.DfPayWayRate">
+		update df_pay_company_rate set total_amount=total_amount+#{money} where company_id=#{companyId}
+	</update>
+	
+	<!-- 查询代付通道信息  -->
+	<select id="getRates" resultMap="dfpaycompanyrate_result_map" >
+		select com.pay_way_rate,rate.df_pay_way_name
+		from df_pay_company_rate com
+		LEFT JOIN df_pay_way_rate rate on rate.id = com.df_rate_id 
+		<where>
+			<if test="id!=null ">
+				and com.id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and com.company_id=#{companyId}
+			</if>
+			<if test="dfRateId!=null ">
+				and com.df_rate_id=#{dfRateId}
+			</if>
+			<if test="payWayRate!=null ">
+				and com.pay_way_rate=#{payWayRate}
+			</if>
+			<if test="totalAmount!=null ">
+				and com.total_amount=#{totalAmount}
+			</if>
+			<if test="status!=null ">
+				and com.status=#{status}
+			</if>
+			<if test="createUserBy!=null ">
+				and com.create_user_by=#{createUserBy}
+			</if>
+			<if test="updateUserBy!=null ">
+				and com.update_user_by=#{updateUserBy}
+			</if>
+			<if test="createTime!=null ">
+				and com.create_time=#{createTime}
+			</if>
+			<if test="updateTime!=null ">
+				and com.update_time=#{updateTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据渠道查询商户下最大代付费  -->
+	<select id="getRateBychannelId" resultType="java.lang.Double">
+		select IFNULL(min(com.pay_way_rate),0)
+		from df_pay_company_rate com
+		LEFT JOIN payv2_buss_company pbc on pbc.id = com.company_id 
+		where pbc.channel_id=#{id} and com.pay_way_rate!=0
+	</select>
+</mapper>

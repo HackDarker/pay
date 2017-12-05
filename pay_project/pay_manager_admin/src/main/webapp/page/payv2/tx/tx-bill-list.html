@@ -1,0 +1,426 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<#include "lib/lib.html" />
+<title>订单列表</title>
+</head>
+<body style="background-color: #F0F0F0">
+	<input type="hidden" id="totalPages" value="${companylist.totalPage!'0'}">
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+		提现管理 <span class="c-gray en">&gt;</span> 提现账单 <a
+			class="btn btn-success radius r mr-20" id="refresh"
+			style="line-height: 1.6em; margin-top: 3px"
+			href="javascript:location.replace(location.href);" title="刷新"> <i
+			class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<div class="pd-20 text-c">
+		
+		<div class="panel panel-default">
+			<div class="panel-header" style="height:30px;">
+				<div style="font-size:15px;float:left;">条件筛选</div>
+				<div style="float:right;">
+					<button type="submit" class="layui-btn layui-btn-small" onclick="data_form_submit()">
+						<i class="layui-icon" style="line-height: 12px;">&#xe615;</i> 搜索
+					</button>
+				</div>
+			</div>
+			<div class="panel-body">				
+				<div class="text-c">
+					<form action="" id="data_from">
+						<table class="table table-hover table-bg table-sort">
+							<tbody>
+								<tr>
+									<td>
+										<strong>所属商户：</strong> 
+										<select class="select" id="companyId" name="companyId" datatype="*" nullmsg="请选择！" style="width: 150px">
+											<option value="">全部</option> 
+											<#if companyList?? && companyList?size gt 0> 
+												<#list companyList as dl>
+													<option value="${dl.companyId!}"<#if dl.companyId == map.companyId> selected="selected" </#if>>${dl.companyName!}</option> 
+												</#list> 
+											</#if>
+										</select>
+										  <a href="javascript:;" id="tipsZero" style="text-decoration:none;font-size: 16px;"><i class="Hui-iconfont">&#xe633;</i></a>
+									</td>
+									
+									<td><strong>账单时间：</strong> <input placeholder="开始时间"
+										name="clearTimeBegin" type="text"
+										value="${map.clearTimeBegin!}"
+										onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',startDate:'%y-%M-%d',maxDate:'#F{$dp.$D(\'logmax\')}'})"
+										id="logmin" class="input-text Wdate" style="width:150px;">
+										<strong>至</strong> <input type="text" placeholder="结束时间"
+										name="clearTimeEnd" value="${map.clearTimeEnd!}"
+										onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',startDate:'%y-%M-%d',minDate:'#F{$dp.$D(\'logmin\')}'})"
+										id="logmax" class="input-text Wdate" style="width:150px;">
+									</td>
+									<td>
+										
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default mt-20">
+			<div class="panel-header" style="height:25px;">
+				<div style="float:left;font-size:15px;">提现账单列表</div>
+			</div>
+			<div class="panel-body">
+				<div id="tab_demo" class="HuiTab">
+					<div class="tabBar clearfix"><span>商户汇总</span><span>通道汇总</span></div>
+					<div class="tabCon">
+						<div class="mt-20">
+							<table class="table table-border table-bordered table-hover table-bg table-sort">
+								<thead>
+									<tr class="text-c">
+										<th width="80">账单时间</th>
+										<th width="80">商户名称</th>
+										<th width="60">日交易额 <a href="javascript:;" id="tipsOne" style="text-decoration:none;font-size: 16px;"><i class="Hui-iconfont">&#xe633;</i></a></th>
+										<th width="100">D0转T1交易额 <a href="javascript:;" id="tipsTwo" style="text-decoration:none;font-size: 16px;"><i class="Hui-iconfont">&#xe633;</i></a></th>
+										<th width="100">已提现交易额 <a href="javascript:;" id="tipsThree" style="text-decoration:none;font-size: 16px;"><i class="Hui-iconfont">&#xe633;</i></a></th>
+										<th width="100">提现手续费 <a href="javascript:;" id="tipsFour" style="text-decoration:none;font-size: 16px;"><i class="Hui-iconfont">&#xe633;</i></a></th>
+										<th width="100">提现次数 <a href="javascript:;" id="tipsFive" style="text-decoration:none;font-size: 16px;"><i class="Hui-iconfont">&#xe633;</i></a></th>
+										<th width="60">交易手续费 <a href="javascript:;" id="tipsSix" style="text-decoration:none;font-size: 16px;"><i class="Hui-iconfont">&#xe633;</i></a></th>
+										<th width="50">到账金额 <a href="javascript:;" id="tipsSeven" style="text-decoration:none;font-size: 16px;"><i class="Hui-iconfont">&#xe633;</i></a></th>
+									</tr>
+								</thead>
+								<tbody>
+									<#if companyClear.dataList?? && companyClear.dataList?size gt 0> 
+										<#list companyClear.dataList as dl >
+											<tr class="text-c">
+												<td>${dl.clearTime?string('yyyy-MM-dd')}</td>
+												<td>${dl.companyName!}</td>
+												<td>${dl.balance!}</td>
+												<td>${dl.t1Balance!}</td>
+												<td>${dl.txBalance!}</td>
+												<td>${dl.txServiceAmount!}</td>
+												<td>${dl.txCount!}</td>
+												<td>${dl.payServiceAmount!}</td>
+												<td>${dl.arrivalAmount!}</td>
+											</tr>
+										</#list> 
+									</#if>
+								</tbody>
+							</table>
+							</br> 
+							<#if companyClear.dataList?? && companyClear.dataList?size gt 0>
+								<div id="page_list" class="page_list"></div>
+							</#if>
+						</div>
+					</div>
+					<!-- ============================================================================================================================= -->
+					<div class="tabCon">
+						<div class="mt-20">
+							<table class="table table-border table-bordered table-hover table-bg table-sort">
+								<thead>
+									<tr class="text-c">
+										<th width="80">账单时间</th>
+										<th width="80">商户名称</th>
+										<th width="80">通道名称</th>
+										<th width="60">日交易额 </th>
+										<th width="100">D0转T1交易额 </th>
+										<th width="100">已提现交易额 </th>
+										<th width="100">提现手续费 </th>
+										<th width="100">提现次数 </th>
+										<th width="60">交易手续费 </th>
+										<th width="50">到账金额 </th>
+									</tr>
+								</thead>
+								<tbody>
+									<#if rateClear.dataList?? && rateClear.dataList?size gt 0> 
+										<#list rateClear.dataList as dl >
+											<tr class="text-c">
+												<td>${dl.clearTime?string('yyyy-MM-dd')}</td>
+												<td>${dl.companyName!}</td>
+												<td>${dl.payWayName!}</td>
+												<td>${dl.balance!}</td>
+												<td>${dl.t1Balance!}</td>
+												<td>${dl.txBalance!}</td>
+												<td>${dl.txServiceAmount!}</td>
+												<td>${dl.txCount!}</td>
+												<td>${dl.payServiceAmount!}</td>
+												<td>${dl.arrivalAmount!}</td>
+											</tr>
+										</#list> 
+									</#if>
+								</tbody>
+							</table>
+							</br> 
+							<#if rateClear.dataList?? && rateClear.dataList?size gt 0>
+								<div id="page_list1" class="page_list1"></div>
+							</#if>
+						</div>
+					</div>
+		    	</div>
+			
+			</div>
+		</div>
+	
+	
+		
+		
+		
+		
+		
+		
+	</div>
+	<script type="text/javascript">
+		function data_form_submit(){
+			$("#data_from").attr("action","${basePath}/enchashment/txBillList.do").submit();
+		}
+	layui.use(['laypage', 'layer'], function(){
+	  var laypage = layui.laypage,layer = layui.layer;
+		  laypage.render({
+		  		
+			    elem: 'page_list',	//容器。值支持id名、原生dom对象，jquery对象
+			    count: ${companyClear.totalData!'0'},	//数据总数。一般通过服务端得到
+			    //groups: 5,	//连续出现的页码个数
+			    limit: ${companyClear.pageData!'10'},
+			    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+				curr: ${companyClear.curPage!'1'}, //获取起始页
+			    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+			    
+			    jump: function(obj, first){
+			      if (!first) {
+						window.location.href = "${basePath}/enchashment/txBillList.do?curPageCom="
+								+ obj.curr
+								+ "&pageDataCom="
+								+ obj.limit
+								+ "&curPageRate="
+								+ ${rateClear.curPage!'1'}
+								+ "&pageDataRate="
+								+ ${rateClear.pageData!'10'}
+								+ "&companyId="
+								+ $("#companyId").val()
+								+ "&clearTimeBegin="
+								+ $("#logmin").val()
+								+ "&clearTimeEnd="
+								+ $("#logmax").val();
+					}
+			    }
+			  });
+			  
+			  laypage.render({
+			  	
+			    elem: 'page_list1',	//容器。值支持id名、原生dom对象，jquery对象
+			    count: ${rateClear.totalData!'0'},	//数据总数。一般通过服务端得到
+			    //groups: 5,	//连续出现的页码个数
+			    limit: ${rateClear.pageData!'10'},
+			    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+				curr: ${rateClear.curPage!'1'}, //获取起始页
+			    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+			    jump: function(obj, first){
+			      if (!first) {
+						window.location.href = "${basePath}/enchashment/txBillList.do?tabIndex=1&curPageRate="
+								+ obj.curr
+								+ "&pageDataRate="
+								+ obj.limit
+								+ "&curPageCom="
+								+ ${companyClear.curPage!'1'}
+								+ "&pageDataCom="
+								+ ${companyClear.pageData!'10'}
+								+ "&companyId="
+								+ $("#companyId").val()
+								+ "&clearTimeBegin="
+								+ $("#logmin").val()
+								+ "&clearTimeEnd="
+								+ $("#logmax").val();
+					}
+			    }
+			  });
+		});
+		    $(function(){
+			    // #tab_demo 父级id
+			    // #tab_demo .tabBar span 控制条
+			    // #tab_demo .tabCon 内容区
+			    // click 事件 点击切换，可以换成mousemove 移动鼠标切换
+			    // 1	默认第2个tab为当前状态（从0开始）
+    			$.Huitab("#tab_demo .tabBar span","#tab_demo .tabCon","current","click","${map.tabIndex!'0' }");
+    		});
+		/* $(function(){
+			$('select').searchableSelect();
+		}); */
+		var isChange=0;
+		$(document).ready(function(){
+			$('select').searchableSelect();
+			isChange++;
+		});
+	
+		$(function() {
+			
+			/* laypage({
+				cont : $('.page_list'), //容器。值支持id名、原生dom对象，jquery对象,
+				pages : ${companyClear.endPage!'0' }, //总页数
+				//skip: true, //是否开启跳页
+				// 	    	skin: 'molv',
+				groups : 10, //连续显示分页数
+				first : '首页', //若不显示，设置false即可
+				last : '尾页', //若不显示，设置false即可
+				curr : ${companyClear.curPage!'0'},
+				hash : true, //开启hash
+				skin : '#00AA91',
+				jump : function(obj, first) { //触发分页后的回调
+					if (!first) {
+						window.location.href = "${basePath}/enchashment/txBillList.do?curPageCom="
+								+ obj.curr
+								+ "&pageData="
+								+ 10
+								+ "&companyId="
+								+ $("#companyId").val()
+								+ "&clearTimeBegin="
+								+ $("#logmin").val()
+								+ "&clearTimeEnd="
+								+ $("#logmax").val();
+					}
+				}
+			}); */
+			/* laypage({
+				cont : $('.page_list1'), //容器。值支持id名、原生dom对象，jquery对象,
+				pages : ${rateClear.endPage!'0' }, //总页数
+				//skip: true, //是否开启跳页
+				// 	    	skin: 'molv',
+				groups : 10, //连续显示分页数
+				first : '首页', //若不显示，设置false即可
+				last : '尾页', //若不显示，设置false即可
+				curr : ${rateClear.curPage!'0'},
+				hash : true, //开启hash
+				skin : '#00AA91',
+				jump : function(obj, first) { //触发分页后的回调
+					if (!first) {
+						window.location.href = "${basePath}/enchashment/txBillList.do?tabIndex=1&curPageRate="
+								+ obj.curr
+								+ "&pageData="
+								+ 10
+								+ "&companyId="
+								+ $("#companyId").val()
+								+ "&clearTimeBegin="
+								+ $("#logmin").val()
+								+ "&clearTimeEnd="
+								+ $("#logmax").val();
+					}
+				}
+			}); */
+		});
+		
+		$("#tipsZero").click(function(){
+			layer.tips('只会显示有D0通道的商户', '#tipsZero');
+		});
+		
+		$("#tipsOne").click(function(){
+			layer.tips('商户日交易总额', '#tipsOne');
+		});
+		
+		$("#tipsTwo").click(function(){
+			layer.tips('1、每日22点未提现金额，自动转入T1<br/>2、每日22-24点交易金额，自动转入T1', '#tipsTwo');
+		});
+		$("#tipsThree").click(function(){
+			layer.tips('商户可在每日8-22点发起提现操作<br/>该值=提现手续费+交易手续费+到账金额', '#tipsThree');
+		});
+		$("#tipsFour").click(function(){
+			layer.tips('商户当日提现总共扣除的手续费', '#tipsFour');
+		});
+		$("#tipsFive").click(function(){
+			layer.tips('商户当日提现的次数(一个通道计一次)', '#tipsFive');
+		});
+		$("#tipsSix").click(function(){
+			layer.tips('商户提现的交易额所产生的交易手续费', '#tipsSix');
+		});
+		$("#tipsSeven").click(function(){
+			layer.tips('商户提现的交易额最终到账的金额', '#tipsSeven');
+		});
+		
+		
+
+		//详情
+		function fund_info(title, url, w, h) {
+			layer_show(title, url, w, h);
+		}
+
+		//编辑
+		function fund_edit(title, url, w, h) {
+			layer_show(title, url, w, h);
+		}
+
+		//发起回调
+		function callbackOrder(obj, id, str) {
+			layer.confirm("确定" + str + "？", function(index) {
+				var data = {};
+				data.id = id;
+				//后台请求保存数据
+				$.axse("${basePath}/Payv2PayOrder/callbackOrder.do", data,
+						function(d) {
+							if (d.resultCode == 200) {
+								layer.msg('已' + str + '!', {
+									icon : 1,
+									time : 1000
+								});
+							} else {
+								Huimodal_alert(str + "失败,请重试!", 1500);
+							}
+						}, function(d) {
+							Huimodal_alert(str + "失败,请重试!", 1500);
+						});
+			});
+		}
+
+		//导出Excel
+		function exportExcel() {
+			if ($("#totalPages").val() > 0) {
+				/* 				var number=$("#totalPages").val();
+				 if(number*10>20000){
+				 alert("数据量过大，请按时间段导出或者按某类型导出");
+				 return false;
+				 }else{ */
+				window.location.href = "${basePath}/Payv2PayOrder/exportExcelOrder.do?companyId="
+						+ $("#companyId").val()
+						+ "&appId="
+						+ $("#appId").val()
+						+ "&createTimeBegin="
+						+ $("#logmin").val()
+						+ "&createTimeEnd="
+						+ $("#logmax").val()
+						+ "&payWayId="
+						+ $("#payWayId").val()
+						+ "&rateId="
+						+ $("#rateId").val()
+						+ "&payMoneyMin="
+						+ $("#payMoneyMin").val()
+						+ "&payMoneyMax="
+						+ $("#payMoneyMax").val()
+						+ "&payStatus="
+						+ $("#payStatus").val();
+
+				//}
+			} else {
+				layer.msg('没有数据可导出', function(){});
+				return false;
+			}
+		}
+
+		
+		//验证输入的数字合法性
+		function ValidateFloat(e, pnumber) {
+			if (!/^\d+[.]?\d*$/.test(pnumber)) {
+				$(e).val(/^\d+[.]?\d*/.exec($(e).val()));
+			}
+			return false;
+		}
+		$(document).keypress(function(e) {			
+		  // 回车键事件  
+	      if(e.which == 13) {  
+	  		jQuery(".confirmButton").click();
+	  		data_form_submit()
+	      }  
+		});
+	</script>
+</body>
+</html>

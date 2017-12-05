@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<#include "lib/lib.html" />
+<title>客户信息列表</title>
+</head>
+<body>
+	<input type="hidden" id="totalPages" value="${list.totalPage!}">
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+		客户管理 <span class="c-gray en">&gt;</span> 客户信息列表
+		<a class="btn btn-success radius r mr-20" id="refresh" style="line-height: 1.6em; margin-top: 3px" href="javascript:location.replace(location.href);" title="刷新">
+		<i class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<div class="pd-20">
+
+		<div class="panel panel-default">
+			<div class="panel-header" style="height: 30px;">
+				<div style="float: left;font-size: 15px;">条件筛选</div>
+				<div style="float: right;">
+					<button class="layui-btn layui-btn-small" onclick="data_form_submit()">
+						<i class="layui-icon" style="line-height:12px;">&#xe615;</i>搜索
+					</button>
+				</div>
+			</div>
+			<div class="panel-body">
+				<form action="" id="data_form">
+					<table class="table table-hover table-bg table-sort">
+						<tbody>
+							<tr>
+								<td>
+									公司名称：
+									<input type="text" name="companyName" id="companyName" placeholder="请输入公司名字" style="width: 250px" class="input-text" value="${map.companyName!}">
+								</td>
+								<td>
+									提交时间：
+						        	<input  name="createTimeBegin"  type="text" value="${map.createTimeBegin!}" onfocus="WdatePicker({startDate:'%y',dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'logmax\')}'})" id="logmin" class="input-text Wdate" style="width:120px;">
+									<span>--</span>
+									<input type="text" name="createTimeEnd"   value="${map.createTimeEnd!}"  onfocus="WdatePicker({startDate:'%y',dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'logmin\')}'})" id="logmax" class="input-text Wdate" style="width:120px;">
+								</td>
+								<td width="300"></td>
+								<td width="300"></td>
+							</tr>
+						</tbody>
+					</table>      			
+				</form>
+			</div>
+		</div>
+
+		<div class="panel panel-default mt-20">
+			<div class="panel-header" style="height: 30px;">
+				<div style="float: left;font-size: 15px;">客户信息列表</div>
+				<div style="float: right;">
+					<a class="layui-btn layui-btn-small" onclick="exportExcel()">
+						<i class="layui-icon" style="line-height:26px;">&#xe601;</i>导出
+					</a>
+				</div>
+			</div>
+			<div class="panel-body">
+
+				<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<thead>
+						<tr class="text-c">
+							<!-- <th width="10">ID</th> -->
+							<th width="60">信息类型 </th>
+							<th width="100">公司名字</th>
+							<th width="100">联系人 </th>
+							<th width="100">联系电话</th>
+							<th width="80">联系邮箱</th>
+							<th width="120">创建时间 </th>
+							<th width="200">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<#if list.dataList?? && list.dataList?size gt 0>
+						<#list list.dataList as dl >
+							<tr class="text-c">
+								<!-- <td>${dl_index+1}</td> -->
+								<td>
+									<#if dl.sourceType ==1>商户app申请账号</#if>
+									<#if dl.sourceType ==2>官网申请账号</#if>
+									<#if dl.sourceType ==3>官网联系我们</#if>
+								</td>
+								<td>${dl.companyName!}</td>
+								<td>${dl.contactsName!}</td>
+								<td>${dl.contactsPhone!}</td>
+								<td>${dl.email!}</td>
+								<td>
+									<#if dl.createTime??>
+										${dl.createTime?string('yyyy-MM-dd')}
+									</#if>
+								</td>
+								<td class="td-manage">
+									<a title="编辑" href="javascript:;"  onclick="apply_edit('编辑','${basePath}/payv2CompanyApply/updateApplyGoTO.do?id='+${dl.id!},800,500);"  class="ml-5" style="text-decoration:none">编辑</a>
+									<a title="删除" onClick="apply_del('${dl.id!}')" href="javascript:;" class="ml-5" style="text-decoration:none">删除</a>
+								</td>	
+							</tr>
+						</#list>
+						</#if>
+					</tbody>
+				</table>
+				</br>
+				<#if list.dataList?? && list.dataList?size gt 0>
+					<div class="page_list text-c" id="page_list">
+					
+					</div>
+				</#if>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+
+		function data_form_submit(){
+			$("#data_form").attr("action","${basePath}/payv2CompanyApply/applyList.do").submit();
+		}
+
+
+
+			$(function(){
+			 	layui.use(['laypage', 'layer'], function(){
+			  		var laypage = layui.laypage,layer = layui.layer;
+				 	laypage.render({
+					    elem: 'page_list',	//容器。值支持id名、原生dom对象，jquery对象
+					    count: ${list.totalData!'0'},	//数据总数。一般通过服务端得到
+					    //groups: 5,	//连续出现的页码个数
+					    limit: ${list.pageData!'10'},
+					    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+						curr: ${list.curPage!'1'}, //获取起始页
+					    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+					    jump: function(obj, first){
+					      if (!first) {
+								 window.location.href="${basePath}/payv2CompanyApply/applyList.do?curPage="+obj.curr +"&pageData="+obj.limit
+			 	         	 +  "&companyName=" + $("#companyName").val()
+			 				 +  "&clearTimeBegin=" + $("#logmin").val()
+			 				 +  "&clearTimeEnd=" + $("#logmax").val();
+							}
+					    }
+					  });
+				});
+			 			
+			});
+			
+		//导出Excel
+		function exportExcel(){
+			if($("#totalPages").val()>0){
+				window.location.href="${basePath}/payv2CompanyApply/exportExcelApply.do";
+			}else{
+				alert("没有数据可导出");
+				return false;
+			}
+		}
+		
+		/* 删除 */
+		function apply_del(id){
+			layer.confirm("确认要删除吗？", function(index) {
+				var data = {};
+				data.id = id;
+				data.isDelete = 1;
+				//后台请求保存数据
+				$.axse("${basePath}/payv2CompanyApply/delApply.do",  data, function(d){
+					if(d.resultCode == 200){
+						layer.msg('已删除!', {
+							icon : 1,
+							time : 1000
+						});
+						window.location.href="${basePath}/payv2CompanyApply/applyList.do?curPage=1&pageData=10";
+					}else{
+						Huimodal_alert("删除失败,请重试!",1500);
+					}
+				},
+				function(d){
+					Huimodal_alert("删除失败,请重试!",1500);
+				});
+			});
+		}
+		//编辑
+		function apply_edit(title,url,w,h){
+			layer_show(title, url, w, h);
+		}
+		$(document).keypress(function(e) {			
+		  // 回车键事件  
+	      if(e.which == 13) {  
+	  		jQuery(".confirmButton").click();
+	  		data_form_submit()
+	      }  
+		});
+	</script>
+</body>
+</html>

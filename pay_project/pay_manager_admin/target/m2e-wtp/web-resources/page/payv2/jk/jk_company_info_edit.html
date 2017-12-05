@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>配置商户通道</title>
+	<#include "lib/lib.html" />
+</head>
+<body>
+	<form action="" method="post" class="form form-horizontal" id="form-company-df-rate">
+	<input type="hidden" id="companyId" name="companyId" value="${companyId}"/>
+	<div class="pop_main" style="padding-left:30px;width: 95%;">
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">接口资金</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>接口余额：</strong></td>
+	    		    		<td>
+	    		    			<div class="balance" style="float:left;font-weight:bolder;font-size: 18px;margin:0 28px;line-height:30px;">
+	    		    				${jkCompanyInfo.balance!''}
+	    		    			</div>
+    		    				<div class="readyPay" style="float:left;">
+    		    					<input type="button" value="充值" class="btn btn-primary radius readyPayBtn">
+    		    				</div>
+    		    				<div class="gotoPay" style="display: none;float:left;">
+    		    					<input style="width:100px;" class="input-text size-M" type="text"  placeholder="为资金池充值" id="paymentMoney" name="paymentMoney" style=" width:60%" onblur="ValidateFloat($(this),value)" >
+    		    					<input type="button" class="btn btn-primary radius confirmPay" value="确定" class="btn btn-primary radius">
+    		    					<input type="button" class="btn radius cancelPay" value="取消" class="btn radius">
+    		    				</div>
+	    		    		</td>
+	    		    		
+	    		    	</tr>	    		    	
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>价格：</strong></td>
+	    		    		<td>
+	    		    			<input value="${jkCompanyInfo.serviceMoney!''}" style="width:100px;" class="dd_input input-text size-M" type="text" id="serviceMoney" name="serviceMoney" style=" width:60%" onblur="ValidateFloat($(this),value)" datatype="*"  nullmsg="请输入接口服务费"> 元/笔
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+			<div class="submit_btn">
+				<button type="button" name="" value="提    交" onclick="submitAddInfo();" class="btn btn-success radius"><i class="Hui-iconfont">&#xe676;</i> 提    交</button>
+			</div>
+	</div>
+	</form>
+	<script type="text/javascript">
+		$(function(){
+			$("#form-company-df-rate").Validform({
+				tiptype:3,
+				showAllError:true,   //表单提交时显示所有提示信息
+				ignoreHidden: true,  //隐藏的表单元素不校验
+				ajaxPost:true,
+				callback:function(data){
+					$.Hidemsg();
+					if(data.resultCode==200){
+						layer.msg('操作成功!', {
+							icon : 1,
+							time : 1000
+						});
+						
+						//parent.location.replace("${basePath}/payv2PayWayRate/payv2PayWayRateListAll.do?payWayId="+$("#payViewType").val());
+						setTimeout(function () { 
+					        //layer_close();
+					        //window.parent.location.reload();
+					        /*刷新layer子页面*/
+					        location.replace(location.href);
+					        /*刷新layer父页面 , 并关闭子页面*/
+					        /* window.parent.location.reload();
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index); */
+					    }, 1000);
+					    //layer_show('代付设置','${basePath}/dfWayRate/configDfWayRateTc.do?companyId='+${dl.id!},800,600);
+					}else{
+						layer.msg('保存失败，请你检查数据!', {
+							icon : 2,
+							time : 1000
+						});
+					}
+				}
+			});
+		});
+		
+		$(".readyPayBtn").click(function(){
+			$(".readyPay").hide();
+			$(".gotoPay").show();
+		});
+		$(".cancelPay").click(function(){
+			$(".readyPay").show();
+			$(".gotoPay").hide();
+		});
+		$(".confirmPay").click(function(){
+			var paymentMoney = $("#paymentMoney").val();
+			var companyId = $("#companyId").val();
+			var serviceMoney = $("#serviceMoney").val();
+			if(paymentMoney == ''||serviceMoney == '') {
+				layer.msg('请检查你的数据！', function(){});
+				return false;
+			}
+			layer.confirm('本次充值的金额为:'+paymentMoney+'元<br/><br/>确认充值吗？', function(index) {
+				$.ajax({
+					type:"get",
+					url:"${basePath}/Payv2JK/editJKMoney.do?paymentMoney="+paymentMoney+"&companyId="+companyId+"&serviceMoney="+serviceMoney,
+					async:true,
+					success:function(data){
+						if(!!data){
+							if(data.resultCode==200) {
+								layer.msg('充值成功!', {
+									icon : 1,
+									time : 1000
+								});
+								setTimeout(function () { 
+							        location.replace(location.href);
+							    }, 1000);
+						    }
+							/* $("#paymentMoney").val('');
+							var totalMoney = $(".totalMoney").text();
+							var allMoney = totalMoney + money;
+							$(".totalMoney").text(allMoney);
+							$(".readyPay").show();
+							$(".gotoPay").hide(); */
+						}else{
+							layer.msg(data.message, function(){});
+						}
+					}
+				});
+			});
+		});	
+		function submitAddInfo(){
+			$("#form-company-df-rate").attr(
+					"action",
+					"${basePath}/Payv2JK/editJKMoney.do").submit(); 
+		}
+		//验证输入的数字合法性
+		function ValidateFloat(e, pnumber){ 
+			if (!/^\d+[.]?\d*$/.test(pnumber)){ 
+				$(e).val(/^\d+[.]?\d*/.exec($(e).val())); 
+				layer.msg('请输入整数金额！', function(){});
+			}
+			return false; 
+		}
+	</script>
+</body>
+</html>

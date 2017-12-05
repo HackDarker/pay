@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>账单详情</title>
+	<#include "lib/lib.html" />
+</head>
+<body>
+	<div class="pd-20">
+			<table class="table mb-30">
+				<thead>
+					<tr>
+				  		<td>基本信息：</td>
+			  		</tr>
+				</thead>
+			  	<tr>
+			  		<td>渠道商名称：${payv2Channel.channelName}</td>
+			  		<td>渠道商账号：${payv2Channel.channelLoginName}</td>
+			  	</tr>
+			  	<tr>
+			  		<td>联系人姓名：${payv2Channel.channelContactName}</td>
+			  		<td>联系人电话：${payv2Channel.channelContactPhone}</td>
+			  	</tr>
+			  	<tr>
+			  		<td>联系人邮箱：</td>
+			  		<td>注册地址：${payv2Channel.channelAddr}</td>			  		
+			  	</tr>
+			</table>
+			<div class="line1" style="font-size: 0px; line-height: 0px; border-top: solid 1px ;"></div>
+			<table class="table mt-30 mb-30">
+				<thead>
+					<tr>
+				  		<td>账户信息：</td>
+			  		</tr>
+				</thead>
+				<tr>
+			  		<td>账户类型：
+			  			<#if payv2Channel.bankType ==1>
+			  				公司账户
+			  			</#if>
+			  			<#if payv2Channel.bankType ==2>
+			  				个人账户
+			  			</#if>
+			  		</td>
+			  		<td>开户名称：${payv2Channel.bankUser}</td>
+			  	</tr>
+			  	<tr>
+			  		<td>开户银行：${payv2Channel.bankName}</td>
+			  		<td>开户账号：${payv2Channel.bankCard}</td>
+			  	</tr>  	
+			</table>
+			<div class="line1" style="font-size: 0px; line-height: 0px; border-top: solid 1px;margin-bottom:30px;"></div>
+			
+			<label>通道信息：</label>
+			<table class="table table-border table-bordered table-hover mt-20">
+				<thead>
+					<tr>
+				  		<td>支付方式</td>
+				  		<td>渠道费率</td>
+			  		</tr>
+				</thead>
+				<#if payTypeList ?? && payTypeList?size gt 0>
+					<#list payTypeList as dl>						
+						<tr>
+					  		<td>${dl.payTypeName}</td>
+					  		<td>${dl.payWayRate}‰</td>
+					  	</tr>
+					</#list>
+			  	</#if>
+			  	<#if payv2Channel.payWayRate! && payv2Channel.payWayRate gt 0>
+			  		<tr>
+				  		<td>代付</td>
+				  		<td> ${payv2Channel.payWayRate}元/笔</td>
+				  	</tr>
+			  	</#if>
+			</table>
+	</div>
+</body>
+<style type="text/css">	
+	table {width:960px;}
+	td {font-size: 14px;width:200px;}
+	thead , label{font-weight: bolder;}
+</style>
+</html>

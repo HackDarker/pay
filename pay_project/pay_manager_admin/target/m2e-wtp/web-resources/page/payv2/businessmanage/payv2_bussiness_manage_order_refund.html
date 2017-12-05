@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <#include "lib/lib.html" />
+    <title>退款订单查询</title>
+	
+  <meta charset="utf-8">
+  <meta name="renderer" content="webkit|ie-stand">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="x-ua-compatible" content="IE=11,10,9" >
+  <!-- <link rel="stylesheet" href="../../public/css/normal.css" /> -->
+  </head>
+  
+  <body style="background-color:rgb(240, 240, 240);">
+    <nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+        交易管理<span class="c-gray en">&gt;</span> 退款订单查询 <a
+          class="btn btn-success radius r mr-20"
+          style="line-height: 1.6em; margin-top: 3px"
+          href="javascript:location.replace(location.href);" title="刷新"> <i
+          class="Hui-iconfont">&#xe68f;</i></a>
+    </nav>
+
+
+    <div class="pd-20">      
+      <div class="panel panel-default">
+       <div class="panel-header" style="height:30px;">
+          <div style="float:left;font-size:15px;">条件筛选</div>
+          <div style="float:right;">
+            <button class="layui-btn layui-btn-small" type="button" onclick="query()">
+              <i class="layui-icon" style="line-height:12px;">&#xe615;</i>搜索
+            </button>
+            <a class="layui-btn layui-btn-small" onclick="exportExcel()">
+              <i class="layui-icon" style="line-height:26px;">&#xe601;</i>导出
+            </a>
+          </div>
+        </div>
+        <div class="panel-body">      
+          <div class="query">
+              <div class="line1">
+                <!-- 支付集订单号 -->
+                <div class="chooseOrderNum clearfix querychild">
+                  <label>平台订单:</label>
+                  <input type="text" name="orderNum" class="orderNum input-text" placeholder="请输入平台订单号">              
+                </div>
+                <!-- 退款订单号 -->
+                <div class="chooseRefundNum clearfix querychild">
+                  <label>退款订单:</label>
+                  <input type="text" name="refundNum" class="refundNum input-text" placeholder="请输入退款订单号">
+                </div>
+                <div class="data">
+                  <label>退款时间：</label>
+                  <input placeholder="开始时间" name="createTimeBegin" type="text"
+                  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 00:00:00',maxDate:'#F{$dp.$D(\'logmax\')}'})"
+                  id="logmin" class="input-text Wdate data1" style="width:150px;">
+                   <label>至</label>
+                  <input type="text" placeholder="结束时间" name="createTimeEnd"
+                  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 23:59:59',minDate:'#F{$dp.$D(\'logmin\')}'})"
+                  id="logmax" class="input-text Wdate data2" style="width:150px;">
+                </div>
+              </div>              
+              <div class="line3">
+                <!-- 选择渠道商 -->
+                <div class="chooseChannel clearfix querychild">
+                  <label>来源渠道:</label>
+                  <select name="channelId" id="channelId" onchange="showCompany()">
+                    <option value="">全部</option>
+                    <#if payv2ChannelList?? && payv2ChannelList?size gt 0>
+                    <#list payv2ChannelList as dl >
+                      <option value="${dl.id}">${dl.channelName}</option>
+                    </#list>
+                    </#if>
+                  </select>
+                </div>
+                <!-- 选择商户 -->
+                <div class="chooseCompany clearfix querychild">
+                  <label>来源商户:</label>
+                  <select name="companyId" id="companyId" onchange="getAppsPayWays()">
+                    <option value="">全部</option>
+                    <#if companyList?? && companyList?size gt 0>
+                    <#list companyList as dl >
+                      <option value="${dl.id}">${dl.companyName}</option>
+                    </#list>
+                    </#if>
+                  </select>
+                </div>
+                <!-- 选择应用 -->
+                <div class="chooseApp clearfix querychild">
+                  <label>来源应用:</label>
+                  <select name="appId" id="appId">
+                    <option value="">全部</option>
+                    <#if appList?? && appList?size gt 0>
+                    <#list appList as dl >
+                      <option value="${dl.id}">${dl.appName}</option>
+                    </#list>
+                    </#if>
+                  </select>
+                </div>
+              </div>
+
+              <div class="line4">
+                <div class="chooseChannel clearfix querychild">
+                  <label>支付平台:</label>
+                  <select name="payWayId" id="payWayId" onchange="getPayWayList();showPayType(this)">
+                    <option value="">全部</option>
+                    <#if payList?? && payList?size gt 0>
+                    <#list payList as dl >
+                      <option value="${dl.id}">${dl.wayName}</option>
+                    </#list>
+                    </#if>
+                  </select>
+                </div>
+                <div class="choosePayType clearfix querychild">
+                  <label>支付方式:</label>
+                  <select name="payType" id="payType" onchange="getPayWayList()">
+                    <option value="">全部</option>
+                    <#if typeList?? && typeList?size gt 0>
+                    <#list typeList as dl >
+                      <option value="${dl.id}">${dl.payTypeName}</option>
+                    </#list>
+                    </#if>
+                  </select>
+                </div>    
+                <div class="chooseWay querychild">
+                  <label>支付通道:</label>
+                  <select name="payWay" id="payWay">
+                   <option value="">全部</option>
+                    <#if payWayList?? && payWayList?size gt 0>
+                    <#list payWayList as dl >
+                      <option value="${dl.id}">${dl.rateName}</option>
+                    </#list>
+                    </#if>
+                  </select>
+                </div>
+                <div id="hiddenDic1">
+                  <#if typeList?? && typeList?size gt 0>
+                        <#list typeList as dl>
+                          <span id="tempSpan"><input type="hidden" id="hiddenDics" dicId="${dl.id!}" dic="${dl.dictName!}" payWayId="${dl.payWayId!}" payTypeName="${dl.payTypeName!}""/></span>
+                        </#list>
+                      </#if>
+                </div>
+              </div>
+          </div>      
+        </div>
+      </div>
+
+      <div class="panel panel-default mt-20">
+        <div class="panel-header" style="height:25px;">
+          <div style="float:left;font-size:15px;">退款订单列表</div>
+        </div>
+        <div class="panel-body">
+          <div class="dataTable">
+            <table class="table table-border table-bordered table-hover" style="font-weight: bolder;">
+              <thead>
+                <tr class="text-c">             
+                  <td>退款时间</td>
+                  <td>
+                    <p>支付集订单号</p>
+                    <p>退款订单号</p>
+                  </td>
+                  <td>来源渠道</td>
+                  <td>来源商户</td>
+                  <td>来源应用</td>
+                  <td>支付通道名称</td>
+                  <td>支付通道编号</td>
+                  <td>订单金额</td>
+                  <td>退款金额</td>
+                  <td>状态</td>
+                  <td>操作</td>
+                </tr>
+              </thead>
+              <tbody id="dataRefund">
+              </tbody>
+            </table>
+            <div id="page_list" style="text-align: center;"></div>
+          </div>
+        </div>
+      </div>
+
+
+
+      
+    </div>
+    <style type="text/css">      
+      .line1 , .line2 ,.line3 ,.line4{ height: 50px; }
+      .querychild {min-width: 300px; line-height: 26px; float: left;}
+      .chooseOrderNum input,.chooseRefundNum input { border: 1px solid #d9d9d9;width: 200px;}      
+    </style>
+  </body>
+
+<script type="text/javascript">
+
+  function print(curr,totalData,pageData){
+      layui.use(['laypage', 'layer'], function(){
+        var laypage = layui.laypage,layer = layui.layer;
+        laypage.render({
+            elem: 'page_list',  //容器。值支持id名、原生dom对象，jquery对象
+            count: totalData, //数据总数。一般通过服务端得到
+            //groups: 5,  //连续出现的页码个数
+            limit: pageData,
+            limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+            curr: curr, //获取起始页
+            layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+            jump: function(obj, first){
+              if (!first) {
+                param.pageData = obj.limit;
+                param.curPage = obj.curr;
+                query();
+            }
+            }
+        });
+    });
+    }
+  var isChange = 0; 
+  $(document).ready(function() {
+    $('select').searchableSelect();
+    isChange++;
+  })
+  function showPayType(obj){
+    if(isChange == 0){
+      return;
+    }else{
+      var wayId = $(obj).val();
+      var appendOptions = "<option value=\"\" dic=\"\" >全部</option>";
+      for(var i = 0, len = $("#hiddenDic1").children().length;i<len;i++){
+        var dicId = $("#hiddenDic1").children().eq(i).find("#hiddenDics").attr("dicId");
+        var payWayId = $("#hiddenDic1").children().eq(i).find("#hiddenDics").attr("payWayId");
+        var payTypeName = $("#hiddenDic1").children().eq(i).find("#hiddenDics").attr("payTypeName");
+        var dic = $("#hiddenDic1").children().eq(i).find("#hiddenDics").attr("dic");
+        if(payWayId == wayId || wayId == "") {
+          appendOptions+='<option value="'+dicId+'" dic="'+dic+'">'+payTypeName+'</option>';
+        }
+      }
+      // console.log(appendOptions);
+      $("#payType").empty();
+      $("#payType").append(appendOptions);
+      $(".choosePayType .searchable-select").remove();
+      $('#payType').searchableSelect();
+    }
+    
+  }
+  // 查询渠道商的商户
+  function showCompany(){
+      var channelId = $("#channelId").val();
+      
+      if(isChange == 0){
+          return;
+      }else{
+        $("#companyId").empty();
+        $("#companyId").append('<option value="">全部</option>');
+        $.ajax({
+          type:"get",
+          url:"${basePath}/Payv2CompanyMoneyClear/showCompany.do?channelId="+channelId,
+          async:true,
+          success:function(data){           
+            if(!!data&&data.resultCode==200){
+              var list = data.Data,
+                str="";
+              for(var i=0;i<list.length;i++){
+                str+='<option value="'+list[i].id+'">'+list[i].companyName+'</option>';
+              }
+              $("#companyId").append(str);
+              $(".chooseCompany .searchable-select").remove();
+              $('#companyId').searchableSelect();
+            }else{
+              alert(data.message);
+            }
+          }
+        });        
+      }     
+    };
+
+     function getAppsPayWays(){
+      // 查询商户的APP
+      var companyId = $("#companyId").val();
+      var payWay = $("#payWay").val();
+           
+      if(isChange == 0){
+        return;
+      }else{
+        $("#appId").empty();
+        $("#appId").append('<option value="">全部</option>');
+        
+        $.ajax({
+          type:"get",
+          url:"${basePath}/Payv2BussiManagerAlldata/getApps.do?companyId="+companyId,
+          async:true,
+          success:function(data){
+            if(!!data&&data.resultCode==200){
+              var list = data.Data,
+                str="";
+                var length = list.length;
+              for(var i=0;i<length;i++){
+                str+='<option value="'+list[i].id+'">'+list[i].appName+'</option>';
+              }
+              $("#appId").append(str);
+              $(".chooseApp .searchable-select").remove();
+              $('#appId').searchableSelect();
+            }else{
+              alert(data.message);
+            }
+          }
+        }); 
+      }       
+    }
+
+      function getPayWayList(){
+        if(isChange == 0){
+          return;
+        }else{
+          var payWayId = $("#payWayId").val();
+          var payType = $("#payType").val();
+          $("#payWay").empty();
+          $("#payWay").append('<option value="">全部</option>');
+          $.ajax({
+              type:"get",
+              url:"${basePath}/Payv2PayOrder/getRateList.do?payWayId="+payWayId+"&payType="+payType,
+              async:true,
+              success:function(data){
+                if(!!data&&data.resultCode==200){
+                  var list = data.Data,
+                    str="";
+                    var length = list.length;
+                  for(var i=0;i<length;i++){
+                    str+='<option value="'+list[i].id+'">'+list[i].rateName+'</option>';
+                  }
+                  $("#payWay").append(str);
+                  $(".chooseWay .searchable-select").remove();
+                  $('#payWay').searchableSelect();
+                }else{
+                  alert(data.message);
+                }
+              }
+          });
+        }        
+      }
+
+      var param = {};
+      param.orderNum = "";
+      param.refundNum = "";
+      param.startTime = "";
+      param.endTime = "";
+      param.channelId = "";
+      param.companyId = "";
+      param.appId = "";
+      param.payWayId = "";
+      param.rateType = "";
+      param.rateId = "";
+      param.curPage = 0;
+      param.pageData = 10;
+      var totalPage = 0;
+      var rateTypeName = "";
+
+      function query(){
+        $("#dataRefund").empty();
+        param.orderNum = $(".orderNum").val();
+        param.refundNum = $(".refundNum").val();
+        param.startTime = $(".data1").val();
+        param.endTime = $(".data2").val();
+        param.channelId = $("#channelId").val();
+        param.companyId = $("#companyId").val();
+        param.appId = $("#appId").val();
+        param.payWayId = $("#payWayId").val();
+        param.rateType = $("#payType").val();
+        param.rateId = $("#payWay").val();
+        if($(".data1").val() == null || $(".data1").val() == ""){
+          param.startTime = null;
+        }
+        if($(".data2").val() == null || $(".data2").val() == ""){
+          param.endTime = null;
+        }
+        $.ajax({
+          type:"get",
+          data:param,
+          url:"${basePath}/Payv2PayOrderRefund/queryRefunds.do",         
+          async:true,
+          success:function(data){
+            if(!!data&&data.resultCode==200){
+              // totalPage = data.Data.payOrderRefundVOList.totalPage;
+              // param.curPage = data.Data.payOrderRefundVOList.curPage;
+              pageInfo = data.Data.payOrderRefundVOList;
+              var list=data.Data.payOrderRefundVOList.dataList,
+              str="";
+              for(var i=0;i<list.length;i++){
+                str=""
+                  str += "<tr class='text-c'><td>"+FormatDate(list[i].refundTime)+"</td><td><p>"+list[i].orderNum+"</p><p>"+list[i].refundNum+"</P></td><td>"+list[i].channelName+"</td><td>"+list[i].companyName+"</td><td>"+list[i].appName+"</td><td>"+list[i].rateName+"</td><td>"+list[i].payWayName+"</td><td>"+list[i].payMoney+"</td><td>"+list[i].refundMoney+"</td><td>退款成功</td><td><input class='  btn btn-primary radius size-MINI' type='button' value='订单详情'onclick=detail('订单详情','${basePath}/Payv2PayOrderRefund/refundDetail.do?id="+list[i].id+"',1000)></td></tr>"
+                $("#dataRefund").append(str);
+              }
+              if($("#dataRefund").find("tr").length <= 0){
+                layer.msg('未找到数据', {icon: 7});
+                $("#page_list").css("display","none");
+              }else{
+                $("#page_list").css("display","block");
+              }
+              print(pageInfo.curPage,pageInfo.totalData,pageInfo.pageData);
+            }else{
+              alert(data.message);
+            }
+          }
+        });
+    }
+    
+    function FormatDate (strTime) {
+        if(strTime == null || strTime == ""){
+          return "未查询到退款时间";
+        }
+        var date = new Date(strTime);
+        // return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+        return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+ " "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+    }
+    function detail(title,url,w,h){
+      layer_show(title, url, w, h);
+    }
+    //导出Excel
+    function exportExcel(){
+      if($("#dataRefund").find("tr").length > 0){
+        param.orderNum = $(".orderNum").val();
+        param.refundNum = $(".refundNum").val();
+        param.startTime = $(".data1").val();
+        param.endTime = $(".data2").val();
+        param.channelId = $("#channelId").val();
+        param.companyId = $("#companyId").val();
+        param.appId = $("#appId").val();
+        param.payWayId = $("#payWayId").val();
+        param.rateType = $("#payType").val();
+        param.rateId = $("#payWay").val();        
+        if($(".data1").val() == null || $(".data1").val() == ""){
+          param.startTime = "";
+        }
+        if($(".data2").val() == null || $(".data2").val() == ""){
+          param.endTime = "";
+        }
+        // $.ajax({
+        //   type:"get",
+        //   data:param,
+        //   url:"${basePath}/Payv2PayOrderRefund/refundsExport.do",         
+        //   async:true,
+        // }); 
+        window.location.href="${basePath}/Payv2PayOrderRefund/refundsExport.do?orderNum=" + param.orderNum 
+                                             +  "&refundNum=" + param.refundNum
+                                             +  "&startTime=" + param.startTime
+                                             +  "&endTime=" + param.endTime
+                                             +  "&channelId=" + param.channelId
+                                             +  "&companyId=" + param.companyId
+                                             +  "&appId=" + param.appId
+                                             +  "&payWayId=" + param.payWayId
+                                             +  "&rateType=" + param.rateType
+                                             +  "&rateId=" + param.rateId
+      }else{
+        layer.msg('没有数据可导出', {icon: 7});
+      }
+    }
+    $(document).keypress(function(e) {			
+	   	// 回车键事件  
+	      if(e.which == 13) {  
+	  		jQuery(".confirmButton").click();
+	  		query()
+	      }  
+	});
+</script>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<#include "lib/lib.html" />
+<title>添加代付通道</title>
+</head>
+<body>
+	<form action="${basePath}/dfWayRate/addDfPayWayRate.do" method="post" class="form form-horizontal" id="form-payway-add">
+	<div class="pop_main" style="padding-left:30px;width: 95%;">
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">通道基础信息</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>代付通道名称：</strong></td>
+	    		    		<td>
+	    		    			<input style="width:300px;background-color: #F0F0F0" readonly="readonly" class="dd_input input-text size-M" type="text" id="dfRateName" name="dfRateName">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>上游通道：</strong></td>
+	    		    		<td>
+	    		    			<select style="width:300px;height:30px;" onchange="changeAlias()" class="select size-M" id="dicId" name="dicId" datatype="*"  nullmsg="请选择上游通道" >
+					           		<option value="">---请选择---</option>
+					           		<#if dicList?? && dicList?size gt 0>
+							        	<#list dicList as dl>
+							        		<option value="${dl.id!}">${dl.dictValue!}</option>
+							        	</#list>
+							        </#if>
+								</select>
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>主体公司：</strong></td>
+	    		    		<td>
+	    		    			<input style="width:300px;" class="dd_input input-text size-M" type="text" placeholder="请输入主体公司全称" id="companyName" name="companyName" datatype="*"  nullmsg="请输入主体公司全称" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>主体公司简称：</strong></td>
+	    		    		<td>
+	    		    			<input style="width:300px;" class="dd_input input-text size-M" type="text" placeholder="请输入主体公司简称" id="companyAlias" name="companyAlias" datatype="*"  nullmsg="请输入主体公司简称" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>备注：</strong></td>
+	    		    		<td>
+	    		    			<input style="width:300px;" class="dd_input input-text size-M" type="text" placeholder="备注" id="remark" name="remark" >
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+    	
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">费率及其他配置</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>代付成本费：</strong></td>
+	    		    		<td>
+	    		    			<input style="width:100px;" class="dd_input input-text size-M" type="text"  placeholder="代付成本费" id="payWayRate" name="payWayRate" style=" width:60%" onblur="ValidateFloat($(this),value)" datatype="*"  nullmsg="请输入代付成本费" > 元/笔
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+		<div class="panel panel-danger mt-20">
+	    	<div class="panel-header">通道重要字段(非技术人员请谨慎填写)</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段1：</strong></td>
+	    		    		<td>
+	    		    			<input style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段1" id="rateKey1" name="rateKey1"  datatype="*"  nullmsg="请输入第三方通道字段1" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段2：</strong></td>
+	    		    		<td>
+	    		    			<input style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段2" id="rateKey2" name="rateKey2"  datatype="*"  nullmsg="请输入第三方通道字段2" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段3：</strong></td>
+	    		    		<td>
+	    		    			<input style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段3" id="rateKey3" name="rateKey3" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段4：</strong></td>
+	    		    		<td>
+	    		    			<input style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段4" id="rateKey4" name="rateKey4">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段5：</strong></td>
+	    		    		<td>
+	    		    			<input style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段5" id="rateKey5" name="rateKey5" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段6：</strong></td>
+	    		    		<td>
+	    		    			<input style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段6" id="rateKey6" name="rateKey6">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>各字段备注说明：</strong></td>
+	    		    		<td>
+	    		    			<textarea style="width:500px;height:200px;" class="input-text size-M" placeholder="通道参数备注" id="keyRemark" name="keyRemark"></textarea>
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+		<div class="submit_btn">
+			<button style="width:100px;height:40px;" type="button" name="" value="提    交" onclick="submitButt()" class="btn btn-warning radius"><i class="Hui-iconfont">&#xe676;</i> 提    交</button>
+		</div>
+	</div>
+	</form>
+<script type="text/javascript">
+		$(function(){
+			$("#form-payway-add").Validform({
+				tiptype:3,
+				showAllError:true,   //表单提交时显示所有提示信息
+				ignoreHidden: true,  //隐藏的表单元素不校验
+				ajaxPost:true,
+				callback:function(data){
+					$.Hidemsg();
+					if(data.resultCode==200){
+						layer.msg('保存成功!', {
+							icon : 1,
+							time : 1000
+						});
+						parent.location.replace("${basePath}/dfWayRate/rateList.do");
+						/* setTimeout(function () { 
+					        layer_close();
+					    }, 1000); */
+					}else if(data.resultCode==201){
+						layer.msg('公司主体已存在!', {icon: 2});
+						$("#companyName").focus();
+						return false;
+					}else{
+						$("#form-app-add").resetForm();
+						layer.msg('保存失败，请你检查数据!', {
+							icon : 1,
+							time : 1000
+						});
+					}
+				}
+			});
+		});
+		
+
+		function submitButt(){
+			$("#form-payway-add").attr(
+					"action",
+					"${basePath}/dfWayRate/addDfPayWayRate.do").submit(); 
+		}
+		
+		$("#companyAlias").change(function(){
+		  changeAlias();
+		});
+		function changeAlias(){
+			var dicId = $("#dicId").val();
+			if(dicId != "") {
+				var dicValue = $("#dicId").find("option:selected").text();
+				var alias = $("#companyAlias").val();
+				if(alias != "") {
+					dicValue += "("+alias+")";
+				}
+				$("#dfRateName").val(dicValue);
+			}
+		}
+</script>
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>商户管理平台代付订单管理</title>
+		<meta name="renderer" content="webkit|ie-stand">
+		<meta name="force-rendering" content="webkit">
+		<meta http-equiv="x-ua-compatible" content="IE=11,10,9" >
+		<link rel="stylesheet" href="../public/css/normal.css" />
+		<link rel="stylesheet" href="../public/css/order.css" />
+		<link rel="stylesheet" href="../public/css/nav.css" />
+		<link rel="shortcut icon" href="../favico.ico" />
+	</head>
+
+	<body>
+		<header>
+			<div class="logo fl">
+				<img src="../public/img/logo.png" />
+			</div>
+			<!-- <div class="tips fr">
+				<div class="red"></div>
+			</div> -->
+			<div class="users fr user">
+				<span>全民金服</span>
+				<i></i>
+				<div class="change changeuser">
+					<div class="change1 setPayPW">设置支付密码</div>
+					<div class="change1 changepwd">修改登录密码</div>
+					<div class="change2 exitlogin">退出登录</div>
+				</div>
+			</div>
+			
+		</header>
+		<nav>
+			<ul>
+				<li class="stair datali" style="cursor: pointer;"><img src="../public/img/sjtj2.png"><span class="c_33">数据统计</span></li>
+				<li class="stair"><img src="../public/img/dd.png"><span class="c_80">订单</span></li>
+				<li class="secondLevel">
+					<a href="orderManager.html" class="c_33">交易订单</a>
+					<a href="refund.html" class="c_33">退款订单</a>
+					<a href="payOfAnother.html" class="c_33 active">代付订单</a>
+					<a href="accountManager.html" class="c_33">账单管理</a>
+				</li>
+				<li class="stair"><img src="../public/img/yy.png"><span class="c_80">应用</span></li>
+				<li class="secondLevel">
+					<a href="appManager.html" class="c_33">应用管理</a>
+				</li>
+				<li class="stair"><img src="../public/img/zh.png"><span class="c_80">账户</span></li>
+				<li class="secondLevel">
+					<a href="account.html" class="c_33">账户信息</a>
+					<a href="d0Tx.html" class="c_33">D0提现</a>
+					<a href="d0Account.html" class="c_33">D0账单</a>
+				</li>
+			</ul>
+			<div class="dld"><img src="../public/img/dld.png"/><span>下载SDK</span></div>
+		</nav>
+		
+		<div class="main">
+			<!--title-->
+			<div class="title">当前位置：代付订单</div>
+			<!--关键指标-->
+			<div class="index">
+				<div class="index-title">
+					<i></i>
+					<span>代付订单查询</span>					
+					<div class="fr dload">
+						<i class="fr"></i>
+						<span class="fr">导出数据</span>						
+					</div>
+				</div>
+				<div class="orderNumber">
+					<div class="numberInput orderNumberInput fl">
+						<label>订单号:</label>
+						<input type="text" placeholder="请输入商户代付单号" style='width:200px;margin-left:40px;text-indent:10px;'/>
+					</div>
+					<div class="search fl">查询</div>
+				</div>
+				<div class="tradeTime">
+					<label>交易时间：</label>
+					<ul class="timeLi TimeLi">
+						<li class="activess" dateType="1">
+							<i></i>
+							<span>今天</span>
+						</li>
+						<li dateType="2">
+							<i></i>
+							<span>昨天</span>
+						</li>
+						<li dateType="3">
+							<i></i>
+							<span>前7天</span>
+						</li>
+						<li dateType="4">
+							<i></i>
+							<span>前30天</span>
+						</li>
+					</ul>
+					<div class="data fl">
+						<label>选择日期：</label>
+						<input id="" class="condition-date data1" type="text" name="">
+						<span class="date-line">&nbsp;--&nbsp;</span>
+						<input id="" class="condition-date data2" type="text" name="">
+					</div>
+					
+				</div>
+				<div class="tradeTime tradeState">
+					<label>订单状态：</label>
+					<ul class="timeLi stateLi">
+						<li class="activess" dfStatus="">
+							<i></i>
+							<span>全部</span>
+						</li>
+						<li dfStatus="1">
+							<i></i>
+							<span>代付成功</span>
+						</li>
+						<li dfStatus="3">
+							<i></i>
+							<span>代付失败</span>
+						</li>
+						<li dfStatus="2">
+							<i></i>
+							<span>代付中</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!--表格-->
+			<div class="table">
+				<table cellpadding="0" cellspacing="0">
+					<thead>
+						<tr>
+							<th class='first' width='16%'>交易时间</th>
+							<th width='12%'>商户代付单号</th>
+							<th width='8%' class='money' style="padding-right:40px;min-width:121px;">代付金额</th>
+							<th width='10%' class='money' style="padding-right:40px;min-width:121px;">商户代付费</th>
+							<th width='12%'>开户行全称</th>
+							<th width='12%'>银行账号</th>
+							<th width='8%'>开户名称</th>
+							<th width='8%'>订单状态</th>
+							<th class="last" width='6%'>操作</th>
+						</tr>
+					</thead>
+					<tbody style='width:100%;'>
+						
+					</tbody>
+				</table>
+				<div class="set-footer">
+					<div class="set fl">
+						共<span></span>条记录，每页显示<input autocomplete="off" type="text" value="10" />条
+					</div>
+					<div class="jump fr">
+						<div class="firstPage">首页</div>
+						<div class="left">
+							<i></i>
+						</div>
+						<input autocomplete="off" type="text" value="1" />
+						<div class="right">
+							<i></i>
+						</div>
+						<div class="lastPage">尾页</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="bg">
+			<div class="windowd" style="height:666px;width:1130px;">
+				<div class="top2" style="text-indent:500px;">
+					订单详情
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;cursor:pointer;'>
+						<i></i>
+					</div>
+				</div>
+				<div class="bottomd">
+					<div class="bdCon">
+						<div class="platformInfor">
+							<div class="platformTitle">
+								<i></i>平台信息
+							</div>
+						</div>
+						<dl>
+							<dt>交易时间:</dt>
+							<dd class="payTime"></dd>
+						</dl>
+						<dl>
+							<dt>代付类型:</dt>
+							<dd class="dfType"></dd>
+						</dl>
+						<dl>
+							<dt>账号类型:</dt>
+							<dd class="accountType"></dd>
+						</dl>
+						<dl>
+							<dt>开户行全称:</dt>
+							<dd class="bankName"></dd>
+						</dl>
+						<dl>
+							<dt>银行账号:</dt>
+							<dd class="accountNum"></dd>
+						</dl>
+						<dl>
+							<dt>开户名称:</dt>
+							<dd class="accountName"></dd>
+						</dl>
+						<dl>
+							<dt>开户行支行联行号:</dt>
+							<dd class="bankBranchNum"></dd>
+						</dl>
+						<dl>
+							<dt>代付金额:</dt>
+							<dd class="dfPayMoney"></dd>
+						</dl>
+						<dl>
+							<dt>商户代付费:</dt>
+							<dd class="dfPayWayMoney"></dd>
+						</dl>
+						
+						<!--  <dl class="digest">
+							<dt>摘要:</dt>
+							<dd></dd>
+						</dl>-->
+						<div class="clearfix"></div>
+						<div class="line"></div>
+						<div class="platformInfor">
+							<div class="platformTitle">
+								<i></i>订单信息
+							</div>
+						</div>
+						<dl>
+							<dt>订单状态:</dt>
+							<dd class="dfStatus"></dd>
+						</dl>
+						<dl >
+							<dt>平台代付单号:</dt>
+							<dd class="dfOrderNum"></dd>
+						</dl>
+						<dl>
+							<dt>商户代付单号:</dt>
+							<dd class="dfMerchantOrderNum"></dd>
+						</dl>
+						<dl >
+							<dt>订单流水号:</dt>
+							<dd class="bankTransaction"></dd>
+						</dl>
+						<dl>
+							<dt>来源商户:</dt>
+							<dd class="companyName"></dd>
+						</dl>
+						<dl >
+							<dt>代付通道:</dt>
+							<dd class="dfPayWayName"></dd>
+						</dl>
+					</div>
+					
+				</div>
+			</div>
+			<div class="window3">
+				<div class="top2">
+					修改密码
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;cursor:pointer;'>
+						<i></i>
+					</div>
+				</div>
+				<div class="bottom3">
+					<div class="oldpwd">
+						<label>原密码:</label>
+						<input type="password" placeholder="请输入原密码" />
+						<span style="color:red;font-size:14px;display:none">请输入原密码</span>
+					</div>
+					<div class="newpwd">
+						<label>新密码:</label>
+						<input type="password" placeholder="6-16位密码(数字、字母组成)" />
+						<span style="color:red;font-size:14px;display:none">请输入新密码</span>
+					</div>
+					<div class="newpwda">
+						<label>确认密码:</label>
+						<input type="password" placeholder="请再次输入新密码" />
+						<span style="color:red;font-size:14px;display:none">请再次输入新密码</span>
+					</div>
+					<div class="surebtn">确定</div>
+				</div>
+			</div>
+			<div class="windowPw">
+				<div class="top2">
+					设置支付密码
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;'>
+						<i></i>
+					</div>
+				</div>
+				<div class="bottom3">
+					<div class="oldpwd">
+						<label>验证码:</label>
+						<input type="text" placeholder="账户绑定邮箱查看" style="margin-left:32px" />
+						<span class="getSmS" thistime='0'>获取</span>
+						<span style="color:red;font-size:14px;display:none">请输入验证码</span>
+					</div>
+					<div class="newpwd">
+						<label>支付密码:</label>
+						<input type="password" maxlength="6" placeholder="6位数密码" style="margin-left:16px" />
+						<span style="color:red;font-size:14px;display:none">请输入密码</span>
+					</div>
+					<div class="newpwda">
+						<label>确认密码:</label>
+						<input type="password" maxlength="6" placeholder="请再次输入6位数密码" style="margin-left:16px" />
+						<span style="color:red;font-size:14px;display:none">请再次输入密码</span>
+					</div>
+					<div class="surebtn">确定</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../public/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../public/js/echarts.min.js"></script>
+		<script type="text/javascript" src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+		<script type="text/javascript" src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+		<script type="text/javascript" src="../public/js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="../public/js/md5.js"></script>
+		<script type="text/javascript" src="../public/js/exit.js"></script>
+		<script id="trmode" type="text/plain">
+			<tr>
+				<td class='first'></td>
+				<td></td>
+				<td class='money' style="padding-right:40px;"></td>
+				<td class='money' style="padding-right:40px;"></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<a href="#" class="show">详情</a>
+				</td>
+			</tr>			
+		</script>
+		<script>
+			var totaldata = 0;
+			var totalpage = 0;
+			var Param = {};
+			var stateArr = ["","代付成功","代付中","代付失败","处理异常"];
+			var typeArr=["","余额代付","垫资代付"];
+			var accountArr=["","借记卡","贷记卡","公户"];
+			Param.curPage = "1";
+			Param.dateType = "1";
+			Param.dfOrderNum = "";
+			Param.dfStatus = "";
+			Param.pageData = "10";
+			Param.startTime = "";
+			Param.endTime = "";
+			$("body").on("click", ".getSmS", function() {
+				var _this = $(this);
+				if($(this).attr("thistime") == 0) {
+					_this.attr("thistime", "60");
+					_this.css("background", "#ccc");
+					setTimeout(function() {
+						ret()
+					}, 1000)
+					function ret() {
+						if(_this.attr("thistime") != 0) {
+							_this.html(_this.attr("thistime") - 1 + "s")
+							_this.attr("thistime", _this.attr("thistime") - 1);
+							setTimeout(function() {
+								ret()
+							}, 1000)
+						} else {
+							_this.attr("thistime", "0");
+							_this.html("获取")
+							_this.css("background", "#2581f4");
+						}
+					}
+
+					$.ajax({
+						type: 'get',
+						url: "/sys/sendEmail.do",
+						async: true,
+						success: function(data) {
+							if(!!data && data.resultCode == 200) {
+								
+							} else {
+								alert(data.message)
+							}
+						}
+					})
+				}
+
+			})
+			$("body").on("keydown",".windowPw .oldpwd input,.windowPw .newpwd input,.windowPw .newpwda input",function(){
+				$(this).parent().find('span').not(".getSmS").hide();
+			})
+			$("body").on("click", ".windowPw .surebtn", function() {
+				var param = {};
+				param.code = $(".windowPw .oldpwd input").val();
+				param.payPassWord = $(".windowPw .newpwd input").val();
+				pw2 =  $(".windowPw .newpwda input").val();
+				param.payPassWordMD5 = md5(md5(param.payPassWord))
+				$(".windowPw .oldpwd span").not(".getSmS").hide();
+				$(".windowPw .newpwd span").hide();
+				$(".windowPw .newpwda span").hide();
+				var isCode = false,
+					pwd1 = false,
+					pwd2 = false;
+				if($(".windowPw .oldpwd input").val()){
+					isCode = true;
+				}else{
+					$(".windowPw .oldpwd span").not(".getSmS").show();
+				}
+				
+				if($(".windowPw .newpwd input").val() ){
+					//console.log($(".windowPw .newpwd input").val())
+					if(/^\d{6}$/.test($(".windowPw .newpwd input").val())){
+						pwd1 = true;
+					}else{
+						$(".windowPw .newpwd span").html("密码格式不正确")
+						$(".windowPw .newpwd span").show();
+					}
+					
+				}else{
+					$(".windowPw .newpwd span").html("请输入密码")
+					$(".windowPw .newpwd span").show();
+				}
+				
+				if($(".windowPw .newpwda input").val()){
+					if(/^\d{6}$/.test($(".windowPw .newpwd input").val())){
+						pwd2 = true;
+					}else{
+						$(".windowPw .newpwd span").html("密码格式不正确")
+						$(".windowPw .newpwd span").show();
+					}
+					
+				}else{
+					$(".windowPw .newpwd span").html("请再次输入密码")
+					$(".windowPw .newpwda span").show();
+				}
+				
+				if($(".windowPw .newpwd input").val()&&$(".windowPw .newpwda input").val()){
+					if($(".windowPw .newpwd input").val()!=$(".windowPw .newpwda input").val()){
+						alert("两次密码不一样")
+						$(".windowPw .newpwd input").val("");
+						$(".windowPw .newpwda input").val("");
+					}
+					
+				}
+				if(isCode && pwd1 && pwd2){
+					console.log()
+					console.log()
+					if(param.payPassWord == pw2){
+						$.ajax({
+							type:"get",
+							url:'/sys/checkEmailCode.do',
+							async:false,
+							data:param,
+							success:function(data){
+								console.log(data);
+								if(!!data && data.resultCode==200){
+									alert("修改成功")
+									$(".oldpwd input").val("");
+									$(".newpwd input").val("");
+									$(".newpwda input").val("");
+									$(".bg").hide();
+									$(".windowPw").hide();
+									$(".window").hide();
+								}else {
+									alert(data.message)
+								}
+							}
+						})
+					}
+				}
+				
+			});
+			$(".dload").on("click",function(){
+				var url = "/dfWayRate/ordersExport.do?dateType="+Param.dateType+"&dfStatus="+Param.dfStatus+"&orderNum="+$(".orderNumberInput input").val()+"&startTime="+$(".data1").val()+"&endTime="+$(".data2").val();	
+				location.href = url;
+			});
+			$("body").on("focus",".data1",function(){
+				if($(".data2").val()){
+					WdatePicker({"maxDate":$(".data2").val()});
+				}else{
+					WdatePicker({"maxDate":new Date()});
+				}
+			})
+			
+			$("body").on("focus",".data2",function(){
+					if($(".data1").val()){
+						WdatePicker({"minDate":$(".data1").val(),"maxDate":new Date()});
+					}else{
+						WdatePicker({"maxDate":new Date()});
+					}
+			})
+			$(".data1,.data2").on("blur",function(){
+				$(".TimeLi li").removeClass("activess");
+				$(".orderNumberInput input").val("");
+				Param.dfOrderNum="";
+				if($(".data1").val()&& $(".data2").val()) {
+					Param.dateType=5;
+					Param.startTime=$(".data1").val();
+					Param.endTime=$(".data2").val();
+					$(".jump input").val("1");
+					Param.curPage=1;
+					getTable();
+					Param.startTime="";
+					Param.endTime="";
+				}
+			})
+			$(".search,.reset,.dld").on("mousedown",function(){
+				$(this).css("background-color","#2ea1f9")
+			})
+			$(".search,.reset,.dld").on("mouseup",function(){
+				$(this).css("background-color","#2581f4")
+			})
+			$(".user i").on("click", function() {
+				$(".changeuser").show();
+			})
+			$(".user").on("mouseleave", function() {
+				$(".changeuser").hide();
+			})
+			
+			$(".user i").on("mouseenter", function() {
+				$(this).css("background-image","url(../public/img/down2.png)");
+			})
+			$(".user i").on("mouseleave", function() {
+				$(this).css("background-image","url(../public/img/down1.png)");
+			})
+			$(".line").on("click mouseenter", function() {
+				$(".changeline").show();
+			})
+			$(".line").on("click mouseleave", function() {
+				$(".changeline").hide();
+			})
+			$(".datali").on("click",function(){
+				window.location="data.html"
+			})
+			$(".dld").on("click",function(){
+				window.open("http://pay.aijinfu.cn/sdk-download.html")
+			})
+			$("body").on("click",".show",function(){
+				$(".bg").show();
+				$(".windowd").show();
+				//console.log($(this).parent().parent().attr("thisid"))
+				detail($(this).parent().parent().attr("id"));
+			})
+			$("body").on("click",".closex",function(){
+				$(".bg").hide();
+			})
+			$("body").on("mouseleave",".closex",function(){
+				$(this).css("background","rgba(0,0,0,0)")
+				$(this).find("i").css("background-image","url(../public/img/close.png)")
+			})
+			$(".set input").on("change",function(){
+				
+				if($(this).val()>totaldata){
+					$(this).val(totaldata)
+				}
+				if($(this).val()<1){
+					$(this).val("1")
+				}
+				if(!/^[0-9]*$/.test($(this).val())){
+					alert("请输入正确的数字");
+					$(this).val(10);
+					Param.pageData=10;
+					Param.curPage=1
+					$(".jump input").val("1");
+					getTable();
+					window.getSelection().removeAllRanges();
+			    }else{
+			    	$(this).val(parseInt($(this).val()))
+			    	Param.pageData=$(this).val();
+			    	Param.curPage=1
+					$(".jump input").val("1");
+			    	getTable();
+			    }
+				
+			});
+			$(".jump .left").on("click",function(){
+				if($(".jump input").val()>1){
+					$(".jump input").val(Number($(".jump input").val())-1);
+					Param.curPage=$(".jump input").val()
+					getTable();
+				}else{
+					
+				}
+			})
+			$(".jump .right").on("click",function(){
+				if($(".jump input").val()<totalpage){
+					$(".jump input").val(Number($(".jump input").val())+1);
+					Param.curPage=$(".jump input").val()
+					getTable();
+				}else{
+					
+				}
+			})
+			$(".jump .firstPage").on("click",function(){
+				$(".jump input").val("1")
+				Param.curPage=1;
+				getTable();
+				
+			})
+			$(".jump .lastPage").on("click",function(){
+				if(totalpage){
+					$(".jump input").val(totalpage)
+					Param.curPage=totalpage;
+					getTable();
+				}else{
+					$(".jump input").val(1)
+					Param.curPage=1;
+					getTable();
+				}
+				
+			})
+			$(".jump input").on("change",function(){
+				
+				if($(this).val()>totalpage){
+					$(this).val(totalpage)
+				}
+				if($(this).val()<1){
+					$(this).val("1")
+				}
+				if(!/^[0-9]*$/.test($(this).val())){
+					$(this).val("1");
+			    }else{
+			    	$(".jump input").val(parseInt($(".jump input").val()))
+			    }
+				Param.curPage=$(".jump input").val()
+				getTable();
+			})
+			$("body").on("click",".search",function(){
+				$(".data1,.data2").val("");
+				$(".timeLi li,.typeLi li").removeClass("activess");
+				Param.dateType=""
+				Param.orderNum = $(".orderNumberInput input").val()
+			
+				$(".jump input").val("1");
+				Param.curPage=1;
+				getTable();
+				//console.log(Param)
+				//getTableData()
+			})
+			
+			$("body").on("click",".TimeLi li,.typeLi li,.stateLi li",function(){
+				//console.log($(this).parent().children())
+				$(".orderNumberInput input,.reFundNumberInput input").val("");
+				Param.merchantOrderNum=""
+				$(this).addClass("activess").siblings().removeClass("activess");
+				if($(this).parent().hasClass("TimeLi")){
+					if(!$(".stateLi li").hasClass("activess")){
+						$(".stateLi li").eq(0).addClass("activess").siblings().removeClass("activess");
+						Param.payWayId=""
+					}
+					$(".data1,.data2").val("");
+					
+					Param.dateType=$(this).attr("datetype");
+					Param.curPage=1;
+					getTable();
+				}
+				if($(this).parent().hasClass("stateLi")){
+					if(!$(".TimeLi li").hasClass("activess")&&!$(".data1").val()){
+						$(".TimeLi li").eq(0).addClass("activess").siblings().removeClass("activess");
+						Param.dateType="1"
+					}
+					Param.dfStatus = $(this).attr("dfStatus")
+					getTable();
+				}
+				//console.log(param.payWayId)				
+			});
+			getTable();
+			function getTable(){
+				$.ajax({
+					type:"get",
+					url:"/dfWayRate/dfOrderList.do",
+					data:Param,
+					async:true,
+					success:function(data){
+						//console.log(data)
+						if(!!data&&data.resultCode==200){
+							data = data.Data.list.dataList;
+							$("tbody").html("")
+							var str="";
+							var length = data.length;
+							for(var i =0;i<length;i++){
+								str += $("#trmode").html();
+							}
+							$("tbody").append(str)
+							render(data);
+						}else{
+							if(!!data.message){
+								alert(data.message);
+							}else{
+								$("body").html(data);
+							}
+						}
+						
+					}
+				})
+			}
+			function render(list){
+				//console.log(list)
+				var length = list.length;
+				//console.log(length);
+				if(length==0){
+					$(".dload").hide();
+					$(".table tbody").html("<div class='nodata' style='text-align:center;height:60px;line-height:60px;'>很抱歉,没有找到订单信息……</div>")
+					$(".nodata").css("width",$(".nodata").parent().eq(0).width()+'px')
+				}else{
+					for(var i=0;i<length;i++){
+						$("tbody tr").eq(i).attr("id",list[i].id)
+						if(list[i].payTime){
+							$("tbody tr").eq(i).find("td").eq(0).html(gettime(list[i].payTime))
+						}
+						$("tbody tr").eq(i).find("td").eq(1).html(list[i].dfMerchantOrderNum)
+						$("tbody tr").eq(i).find("td").eq(2).html(list[i].dfPayMoney)
+						$("tbody tr").eq(i).find("td").eq(3).html(list[i].dfPayWayMoney)
+						$("tbody tr").eq(i).find("td").eq(4).html(list[i].bankName)
+						$("tbody tr").eq(i).find("td").eq(5).html(list[i].accountNum)
+						$("tbody tr").eq(i).find("td").eq(6).html(list[i].accountName)
+						$("tbody tr").eq(i).find("td").eq(7).html(stateArr[list[i].dfStatus])
+					}
+				}
+				
+			}
+			function detail(id){
+				$.ajax({
+					type:"get",
+					url:"/dfWayRate/getOrderDetail.do",
+					data:{"id":id},
+					async:true,
+					success:function(data){
+						console.log(data);
+						if(!!data&&data.resultCode==200){
+							var len = $(".bdCon dd").length;
+							var data = data.Data.orderDetail;
+							for(var i=0;i<len;i++){
+								$(".bdCon dd").eq(i).html(data[$(".bdCon dd").eq(i).attr("class")])
+							}
+							$(".payTime").html(gettime(data.payTime));
+							$(".dfStatus").html(stateArr[data.dfStatus])
+							$(".dfType").html(typeArr[data.dfType])
+							$(".accountType").html(accountArr[data.accountType])
+						}else{
+							alert(data.message)
+						}
+					}
+				})
+				
+			}
+			function gettime(time){
+				time = new Date(time);
+				var timeStr='';
+				timeStr+=time.getFullYear();
+				timeStr = time.getMonth()<9 ? timeStr+'-0'+(time.getMonth()+1) : timeStr+'-'+(time.getMonth()+1);
+				timeStr = time.getDate()<10 ? timeStr+'-0'+time.getDate() : timeStr+'-'+time.getDate();
+				timeStr = time.getHours()<10 ? timeStr+' 0'+time.getHours() : timeStr+' '+time.getHours();;
+				timeStr = time.getMinutes()<10 ? timeStr+':0'+time.getMinutes() : timeStr+':'+time.getMinutes();
+				timeStr = time.getSeconds()<10 ? timeStr+':0'+time.getSeconds() : timeStr+':'+time.getSeconds();
+				return timeStr;
+			}
+		</script>
+
+	</body>
+
+</html>

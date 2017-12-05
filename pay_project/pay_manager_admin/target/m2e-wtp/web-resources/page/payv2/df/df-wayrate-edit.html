@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<#include "lib/lib.html" />
+<title>修改代付通道</title>
+</head>
+<body>
+	<form action="" method="post" class="form form-horizontal" id="form-payway-edit">
+	<input type="hidden" id="curPage" name="curPage" value="${curPage}"/>
+	<input type="hidden" name="id" value="${dfWayRate.id!}">
+	<div class="pop_main" style="padding-left:30px;width: 95%;">
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">其他信息</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+							<td>下游可见名称：${dfWayRate.dfPayWayName!}</td>
+							<td>添加者：${createUserName!}</td>
+							<td>最后修改者：${updateUserName!}</td>
+						</tr>
+						<tr>
+							<td>添加时间：${dfWayRate.createTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+							<td>最后修改时间：${dfWayRate.updateTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+							<td>&nbsp;&nbsp;</td>
+						</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">通道基础信息</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>支付通道名称：</strong></td>
+	    		    		<td>
+	    		    			<input value="${dfWayRate.dfRateName!}" style="width:300px;background-color: #F0F0F0" readonly="readonly" class="dd_input input-text size-M" type="text" id="dfRateName" name="dfRateName">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>上游通道：</strong></td>
+	    		    		<td>
+	    		    			<select style="width:300px;height:30px;" onchange="changeAlias()" class="select size-M" id="dicId" name="dicId" datatype="*"  nullmsg="请选择上游通道" >
+					           		<option value="">---请选择---</option>
+					           		<#if dicList?? && dicList?size gt 0>
+							        	<#list dicList as dl>
+							        		<#if dl.id == dfWayRate.dicId>
+						           				<option value="${dl.id!}" selected="selected">${dl.dictValue!}</option>
+						           			<#else>
+						           				<option value="${dl.id!}">${dl.dictValue!}</option>
+						           			</#if>
+							        	</#list>
+							        </#if>
+								</select>
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>主体公司：</strong></td>
+	    		    		<td>
+	    		    			<input value="${dfWayRate.companyName!}" style="width:300px;" class="dd_input input-text size-M" type="text" placeholder="请输入主体公司全称" id="companyName" name="companyName" datatype="*"  nullmsg="请输入主体公司全称" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>主体公司简称：</strong></td>
+	    		    		<td>
+	    		    			<input value="${dfWayRate.companyAlias!}" style="width:300px;" class="dd_input input-text size-M" type="text" placeholder="请输入主体公司简称" id="companyAlias" name="companyAlias" datatype="*"  nullmsg="请输入主体公司简称" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>备注：</strong></td>
+	    		    		<td>
+	    		    			<input value="${dfWayRate.remark!}" style="width:300px;" class="dd_input input-text size-M" type="text" placeholder="备注" id="remark" name="remark" >
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+    	
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">费率及其他配置</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>代付成本费：</strong></td>
+	    		    		<td>
+	    		    			<input value="${dfWayRate.payWayRate!}" style="width:100px;" class="dd_input input-text size-M" type="text"  placeholder="代付成本费" id="payWayRate" name="payWayRate" style=" width:60%" onblur="ValidateFloat($(this),value)" datatype="*"  nullmsg="请输入代付成本费" > 元/笔
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+		<div class="panel panel-danger mt-20">
+	    	<div class="panel-header">通道重要字段(非技术人员请谨慎填写)</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段1：</strong></td>
+	    		    		<td>
+	    		    			<input value="${dfWayRate.rateKey1!}" style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段1" id="rateKey1" name="rateKey1"  datatype="*"  nullmsg="请输入第三方通道字段1" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段2：</strong></td>
+	    		    		<td>
+	    		    			<input value="${dfWayRate.rateKey2!}" style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段2" id="rateKey2" name="rateKey2"  datatype="*"  nullmsg="请输入第三方通道字段2" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段3：</strong></td>
+	    		    		<td>
+	    		    			<input value="${dfWayRate.rateKey3!}" style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段3" id="rateKey3" name="rateKey3" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段4：</strong></td>
+	    		    		<td>
+	    		    			<input value="${dfWayRate.rateKey4!}" style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段4" id="rateKey4" name="rateKey4">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段5：</strong></td>
+	    		    		<td>
+	    		    			<input value="${dfWayRate.rateKey5!}" style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段5" id="rateKey5" name="rateKey5" >
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>第三方通道字段6：</strong></td>
+	    		    		<td>
+	    		    			<input value="${dfWayRate.rateKey6!}" style="width:400px;" class="dd_input input-text size-M" type="text" placeholder="第三方通道字段6" id="rateKey6" name="rateKey6">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>各字段备注说明：</strong></td>
+	    		    		<td>
+	    		    			<textarea style="width:500px;height:200px;" class="input-text size-M" placeholder="通道参数备注" id="keyRemark" name="keyRemark">${dfWayRate.keyRemark!}</textarea>
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+		<div class="submit_btn">
+			<button style="width:100px;height:40px;" type="button" name="" value="提    交" onclick="submitButt()" class="btn btn-warning radius"><i class="Hui-iconfont">&#xe676;</i> 提    交</button>
+		</div>
+	</div>
+	</form>
+	
+<script type="text/javascript">
+		$(function(){
+			$("#form-payway-edit").Validform({
+				tiptype:3,
+				showAllError:true,   //表单提交时显示所有提示信息
+				ignoreHidden: true,  //隐藏的表单元素不校验
+				ajaxPost:true,
+				callback:function(data){
+					$.Hidemsg();
+					if(data.resultCode==200){
+						layer.msg('保存成功!', {
+							icon : 1,
+							time : 1000
+						});
+						//parent.location.replace("${basePath}/payv2PayWayRate/payv2PayWayRateListAll.do?curPage="+$("#curPage").val());
+						
+						setTimeout(function () { 
+					        layer_close();
+					    }, 1000);
+					}else if(data.resultCode==201){
+						layer.msg('公司主体已存在!', {icon: 2});
+						return false;
+					}else{
+						$("#form-app-add").resetForm();
+						layer.msg('保存失败，请你检查数据!', {
+							icon : 1,
+							time : 1000
+						});
+					}
+				}
+			});
+		});
+
+		function submitButt(){
+			$("#form-payway-edit").attr(
+					"action",
+					"${basePath}/dfWayRate/updateDfWayRate.do").submit(); 
+		}
+		
+		$("#companyAlias").change(function(){
+		  changeAlias();
+		});
+		function changeAlias(){
+			var dicId = $("#dicId").val();
+			if(dicId != "") {
+				var dicValue = $("#dicId").find("option:selected").text();
+				var alias = $("#companyAlias").val();
+				if(alias != "") {
+					dicValue += "("+alias+")";
+				}
+				$("#dfRateName").val(dicValue);
+			}
+		}
+		
+		function ValidateNumber(e, pnumber){ 
+			if (!(/^1[34578]\d{9}$/.test(pnumber)||/^0\d{2,3}-?\d{7,8}$/.test(pnumber))){ 
+				$(e).val("")
+			}
+			return false; 
+		}
+		
+		//验证输入的数字合法性
+		function ValidateFloat(e, pnumber){ 
+			if (!/^\d+[.]?\d*$/.test(pnumber)){ 
+				$(e).val(/^\d+[.]?\d*/.exec($(e).val())); 
+			}
+			return false; 
+		}
+</script>
+</body>
+</html>

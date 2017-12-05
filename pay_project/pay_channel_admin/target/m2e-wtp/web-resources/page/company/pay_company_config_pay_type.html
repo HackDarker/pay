@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>配置渠道商支付方式</title>
+	<#include "lib/lib.html" />
+</head>
+<body>
+	<input type="hidden" name="id" value="${map.id}"/>
+	<div class="pop_main" style="padding-left:30px;width: 95%;">
+		<div class="panel panel-primary mt-20">
+			<div id="hiddenDic">
+				<#if channelPayTypeList?? && channelPayTypeList?size gt 0>
+		        	<#list channelPayTypeList as dl>
+		        		<span id="tempSpan"><input type="hidden" id="hiddenDics" dicId="${dl.payTypeId!}" payWayId="${dl.payWayId!}" payTypeName="${dl.payTypeName!}""/></span>
+		        	</#list>
+		        </#if>
+			</div>
+	    	<div class="panel-header">添加新的支付方式</div>
+	    	<div class="panel-body pd-20 text-c">
+	    		<table class="table table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td>
+	    		    			<strong>支付平台：</strong> 
+	    		    			<select class="select" id="payWayId" name="payWayId" datatype="*" nullmsg="请选择！" style="width: 150px!important;width: 40px;" onchange="changePayType(this)">
+	    		    				<option value="">请选择</option> 
+									<#if channelPayTypeList2?? && channelPayTypeList2?size gt 0> 
+										<#list channelPayTypeList2 as dl>
+											<option value="${dl.payWayId!}">${dl.wayName}</option>
+										</#list>
+									</#if>
+								</select>
+		    		    	</td>
+	    		    		<td>
+	    		    			<strong>支付方式：</strong> 
+	    		    			<select class="select" id="payTypeId" name="payTypeId" datatype="*" nullmsg="请选择！" style="width: 150px!important;width: 40px;">
+	    		    				<option value="">请选择</option> 
+								</select>
+		    		    	</td>
+		    		    	<td>
+		    		    		<strong>费率设置：</strong>
+		    		    		<input type="text" name="payWayRate" id="payWayRate" placeholder="费率" style="width: 50px" class="input-text" onchange="ValidateFloat($(this),value)">‰
+		    		    		<input type="text" id="companyId" style="display: none;" value="${companyId!}">
+							</td>
+		    		    	<td>
+		    		    		<button name="" id="" class="btn btn-success" onclick="addPayType()"> <i class="Hui-iconfont"></i> 添加 </button>
+							</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+    	
+    	<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">该商户支持的支付方式</div>
+	    	<div class="panel-body">
+			    <table class="table table-border table-bordered table-hover table-bg table-sort">
+			    	<thead>
+						<tr class="text-c">
+							<th width="150">支付平台</th>
+							<th width="150">支付方式</th>
+							<th width="80">费率</th>
+							<th width="200">操作</th>
+						</tr>
+			    	</thead>
+					<tbody id="companyPayTypeList">
+	    		    	<#if companyPayTypeList?? && companyPayTypeList?size gt 0>
+						<#list companyPayTypeList as dl >
+							<tr class="text-c">
+								<td>${dl.wayName!}</td>
+								<td>${dl.payTypeName!}</td>
+								<td id="rate-td"><span id="rate-span">${dl.payWayRate!}‰</span><input type="text" name="updateRate" id="updateRate" value="${dl.payWayRate!}" style="width: 50px;display: none;" class="input-text" onchange="ValidateFloat($(this),value)" ></td>
+								<td class="td-manage">
+									<div id="update-and-delete" style="display: block;">
+										<button id="update" class="btn btn-success" onclick="toUpdate(this)">编辑费率</button>
+										<button id="delete" class="btn btn-danger" onclick="deletePayType(${dl.payTypeId!})">删除</button>
+									</div>
+									<div id="save-and-cancel" style="display: none;">
+										<button id="save" class="btn btn-primary" onclick="confirmUpdate(${dl.id!},${dl.payWayId!},${dl.payTypeId!},this)">保存</button>
+										<button id="cancel" class="btn" onclick="cancelUpdate(this)">取消</button>
+									</div>
+								</td>
+							</tr>
+						</#list>
+						</#if>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+	</div>
+	<script type="text/javascript">
+		var param = {};
+		param.companyId = "";
+		param.payWayId = "";
+		param.payTypeId = "";
+		param.payWayRate = "";
+		function ValidateFloat(e, pnumber){ 
+			if (!/^\d+[.]?\d*$/.test(pnumber)){ 
+				$(e).val(/^\d+[.]?\d*/.exec($(e).val())); 
+				layer.msg('请输入整数！', function(){});
+			}
+			if(pnumber >= 1000) {
+				$(e).val(""); 
+				$(e).focus();
+				layer.msg('请输入1000以内的整数！', function(){});
+			}
+			if(pnumber == 0) {
+				$(e).val(""); 
+				$(e).focus();
+				layer.msg('请输入大于0的整数！', function(){});
+			}			
+			return false; 
+		}
+		function changePayType(obj) {
+			var wayId = $(obj).val();
+			var appendOptions = "";
+			for(var i = 0, len = $("#hiddenDic").children().length;i<len;i++){
+				var dicId = $("#hiddenDic").children().eq(i).find("#hiddenDics").attr("dicId");
+				var payWayId = $("#hiddenDic").children().eq(i).find("#hiddenDics").attr("payWayId");
+				var payTypeName = $("#hiddenDic").children().eq(i).find("#hiddenDics").attr("payTypeName");
+				if(payWayId == wayId) {
+					appendOptions+='<option value="'+dicId+'">'+payTypeName+'</option>';
+				}
+			}
+			$("#payTypeId").html(appendOptions);
+		}
+		function addPayType(){
+			param.companyId = $("#companyId").val();
+			param.payWayId = $("#payWayId").val();
+			param.payTypeId = $("#payTypeId").val();
+			param.payWayRate = $("#payWayRate").val();
+			if(param.payWayId == null || param.payWayId == "" || param.payTypeId == null || param.payTypeId == "" || param.payWayRate == null || param.payWayRate == ""){
+				layer.msg('参数不能为空！');
+				return;
+			}
+			$.ajax({
+				type: "post",
+				url: "${basePath}/payv2BussCompany/addPayType.do",
+				async: true,
+				data: param,
+				success: function(data) {
+					//console.log(data)
+					if(!!data && data.resultCode == 200) {
+						if(data.Data.code == 200){
+							layer.msg("添加成功", {icon:1});
+							$("#companyPayTypeList").empty();
+							var list=data.Data.companyPayTypeList,
+							str = "";
+							for(var i=0;i<list.length;i++){
+								str += "<tr class='text-c'><td>"+list[i].wayName+"</td><td>"+list[i].payTypeName+"</td><td id='rate-td'><span id='rate-span'>"+list[i].payWayRate+"‰</span><input type='text' name='updateRate' id='updateRate' value='"+list[i].payWayRate+"' style='width: 50px;display: none;' class='input-text' onchange='ValidateFloat($(this),value)'></td><td class='td-manage'><div id='update-and-delete' style='display: block;'><button id='update' class='btn btn-success' onclick='toUpdate(this)'>编辑费率</button><button id='delete' class='btn btn-danger' onclick='deletePayType("+list[i].payTypeId+")'>删除</button></div><div id='save-and-cancel' style='display: none;'><button id='save' class='btn btn-primary' onclick='confirmUpdate("+list[i].id+","+list[i].payWayId+","+list[i].payTypeId+",this)'>保存</button><button id='cancel' class='btn' onclick='cancelUpdate(this)'>取消</button></div></td></tr>"
+							}
+							$("#companyPayTypeList").append(str);
+							// location.replace(location.href);
+						}else if (data.Data.code == 201){
+							layer.msg("不合法的费率", {icon:3});
+						}else if (data.Data.code == 202){
+							layer.msg("该支付方式已存在", {icon:6});
+						}
+					}else if(data.resultCode == 500){
+						layer.msg("服务器异常，请联系技术人员", {icon:2});
+					}else{
+						layer.msg("登录已失效，请重新登录", {icon:3});
+					}
+				}
+			});
+		}
+		function toUpdate(obj){
+			$(obj).parent().parent().find("#update-and-delete").hide();
+			$(obj).parent().parent().find("#save-and-cancel").show();
+			$(obj).parent().parent().parent().find("#rate-td").find("#rate-span").hide();
+			$(obj).parent().parent().parent().find("#rate-td").find("#updateRate").show();
+		}
+		
+		function cancelUpdate(obj){
+			$(obj).parent().parent().find("#update-and-delete").show();
+			$(obj).parent().parent().find("#save-and-cancel").hide();
+			$(obj).parent().parent().parent().find("#rate-td").find("#rate-span").show();
+			$(obj).parent().parent().parent().find("#rate-td").find("#updateRate").hide();
+		}
+		function confirmUpdate(tid,payWayId,payTypeId,obj){
+			var companyId = $("#companyId").val();
+			var newRate = $(obj).parent().parent().parent().find("#rate-td").find("#updateRate").val();
+			ajaxFunction("/payv2BussCompany/updatePayWayRate.do",{id:tid,payWayId:payWayId,payTypeId:payTypeId,payWayRate:newRate,parentId:companyId},"JSON",true,function(data){
+				if(!!data && data.resultCode == 200) {
+					if(data.Data.code == 200){
+						layer.msg('保存成功!', {icon : 1});
+						location.replace(location.href);
+					}else if (data.Data.code == 201){
+						layer.msg("不合法的费率", {icon:3});
+					}
+				}else if(data.resultCode == 500){
+					layer.msg("服务器异常，请联系技术人员", {icon:2});
+				}else{
+					layer.msg("登录已失效，请重新登录", {icon:3});
+				}
+			});
+		}
+		function deletePayType(payTypeId){
+			var companyId = $("#companyId").val();
+			ajaxFunction("/payv2BussCompany/deletePayWayRate.do",{payTypeId:payTypeId,parentId:companyId},"JSON",true,function(data){
+				if(!!data && data.resultCode == 200) {
+					if(data.Data.code == 200){
+						layer.msg('删除成功!', {
+							icon : 1,
+							time : 1000
+						});
+						location.replace(location.href);
+					}else if (data.Data.code == 201){
+						layer.alert("删除失败，原因如下：<br/>该支付方式下有支付通道，请先删除该支付方式下的支付通道");
+						// layer.msg("该支付方式下有支付通道，请先删除该支付方式下的支付通道", {
+						// 	icon : 2,
+						// 	time : 2000
+						// });
+					}
+				}else if(data.resultCode == 500){
+					layer.msg("服务器异常，请联系技术人员", {icon:2});
+				}else{
+					layer.msg("登录已失效，请重新登录", {icon:3});
+				}
+			});
+		}
+	</script>
+</body>
+</html>

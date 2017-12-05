@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<#include "lib/lib.html" />
+<title>商户财务管理</title>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+</head>
+<body style="background-color: #F0F0F0">
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+		合作渠道管理<span class="c-gray en">&gt;</span> 收款码管理 
+		<a	class="btn btn-success radius r mr-20" style="line-height: 1.6em; margin-top: 3px" href="javascript:location.replace(location.href);" title="刷新">
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+		
+	<div class="pd-20">
+		<div class="panel panel-default">
+			<div class="panel-header" style="height: 30px;">
+				<div style="float: left;font-size: 15px;">条件筛选</div>
+				<div style="float: right;">
+					<button class="layui-btn layui-btn-small" onclick="data_from_submit()">
+						<i class="layui-icon" style="line-height:12px;">&#xe615;</i>搜索
+					</button>
+				</div>
+			</div>
+			<div class="panel-body">
+				<form action="" id="myForm">
+					<table>
+						<tr>
+							<td>
+								<label>来源渠道:</label>
+								<select class="select"  name="channelId" id="channelId" onchange="showCompany()">
+									<option value="">全部</option>
+									<#if payv2ChannelList?? && payv2ChannelList?size gt 0>
+									<#list payv2ChannelList as dl >
+										<option value="${dl.id}" <#if dl.id==map.channelId>selected="selected"</#if>>${dl.channelName}</option>
+									</#list>
+									</#if>
+								</select>
+							</td>
+							<td class="chooseCompany">
+								<label>来源商户:</label>
+								<select class="select"  name="companyId" id="companyId">
+									<option value="">全部</option>
+									<#if companyList?? && companyList?size gt 0>
+									<#list companyList as dl >
+										<option value="${dl.id}"<#if dl.id==map.companyId>selected="selected"</#if>>${dl.companyName}</option>
+									</#list>
+									</#if>
+								</select>
+							</td>
+							<td width="200"></td>
+							<td width="200"></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+		<div class="panel panel-default mt-20">
+			<div class="panel-header" style="height:25px;">
+				<div style="float: left;font-size:15px;">收款码列表</div>
+			</div>
+			<div class="panel-body">
+				<table class="table table-border table-bordered table-hover">
+					<thead>
+						<tr class="text-c">
+	    					<td>收款码ID</td>
+	    					<td>收款码域名</td>
+	    					<td>所属商户</td>
+	    					<td>所属渠道</td>
+	    					<td>操作</td>
+						</tr>
+					</thead>
+					<tbody class="text-c">
+						<#if codeList.dataList?? && codeList.dataList?size gt 0>
+							<#list codeList.dataList as dl>
+								<tr>
+									<td>${dl.id}</td>
+									<td>${dl.codeUrl}</td>
+									<td>${dl.companyName}</td>
+									<td>${dl.channelName}</td>
+									<td>
+										<a style="text-decoration:none" onclick="showCode(${dl.companyId})">
+											<i class="Hui-iconfont edit-btn">查看</i>
+										</a>
+										<a style="text-decoration:none" onclick="delCode(${dl.id})">
+											<i class="Hui-iconfont edit-btn">删除</i>
+										</a>
+									</td>
+								</tr>
+							</#list>
+						</#if>
+					</tbody>
+				</table>
+				<#if codeList.dataList?? && codeList.dataList?size gt 0>
+					<div id="page_list" class="page_list text-c mt-20"></div>
+				</#if>
+			</div>
+		</div>
+	</div>
+</body>
+	<script type="text/javascript" >
+		var isChange = 0; 
+		$(document).ready(function() {
+		    $('select').searchableSelect();
+		    isChange++;
+		})
+		
+		function data_from_submit(){
+			$("#myForm").attr("action","").submit();
+		}
+		// 查询渠道商的商户
+	  	function showCompany(){
+	      var channelId = $("#channelId").val();
+	      if(isChange == 0){
+	          return;
+	      }else{
+	        $("#companyId").empty();
+	        $("#companyId").append('<option value="">全部</option>');
+	        $.ajax({
+	          type:"get",
+	          url:"${basePath}/Payv2CompanyMoneyClear/showCompany.do?channelId="+channelId,
+	          async:true,
+	          success:function(data){
+	            if(!!data&&data.resultCode==200){
+	              var list = data.Data,
+	                str="";
+	              for(var i=0;i<list.length;i++){
+	                str+='<option value="'+list[i].id+'">'+list[i].companyName+'</option>';
+	              }
+	              $("#companyId").append(str);
+	              $(".chooseCompany .searchable-select").remove();
+	              $('#companyId').searchableSelect();
+	            }else{
+	              layer.msg(data.message);
+	            }
+	          }
+	        });
+	      }
+	    };
+
+	    layui.use(['laypage', 'layer'], function(){
+	  		var laypage = layui.laypage,layer = layui.layer;
+			laypage.render({
+			    elem: 'page_list',	//容器。值支持id名、原生dom对象，jquery对象
+			    count: ${codeList.totalData!'0'},	//数据总数。一般通过服务端得到
+			    //groups: 5,	//连续出现的页码个数
+			    limit: ${codeList.pageData!'10'},
+			    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+				curr: ${codeList.curPage!'1'}, //获取起始页
+			    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+			    jump: function(obj, first){
+			      if (!first) {
+						window.location.href="${basePath}/bussComapnyCode/codeList.do?curPage="+obj.curr +"&pageData="+obj.limit+"&channelId="+$("#channelId").val()+"&companyId="+$("#companyId").val();
+					}
+			    }
+			  });
+		});
+		function showCode(companyId){
+			var index = layer.load(2, {
+			  shade: [0.1,'#fff'] //0.1透明度的白色背景
+			});
+			$.ajax({
+	          type:"get",
+	          url:"${basePath}/bussComapnyCode/getCode.do?id="+companyId,
+	          async:true,
+	          success:function(data){
+	          layer.close(index);
+		          if(!!data&&data.resultCode==200){		          	
+		            layer.open({
+					  title:'收款码',
+					  type: 1,
+					  skin: 'layui-layer-demo', //样式类名
+					  closeBtn: 1, //不显示关闭按钮
+					  anim: 2,
+					  shadeClose: true, //开启遮罩关闭
+					  content: '<img src="'+data.Data.codeFileUrl+'" width="341px" height="468px">'
+					});
+		          }else{
+		          	layer.msg(data.message, {icon:2});
+		          }
+	          	
+	          }
+	        });
+			
+		}
+		function delCode(id){
+		 layer.confirm('再给你一次机会!确认要这样做吗？', function(index) {
+		 	var index = layer.load(2, {
+			  shade: [0.1,'#fff'] //0.1透明度的白色背景
+			});
+			$.ajax({
+	          type:"get",
+	          url:"${basePath}/bussComapnyCode/delCode.do?id="+id,
+	          async:true,
+	          success:function(data){
+          		layer.close(index);
+		          if(!!data&&data.resultCode==200){
+		            layer.msg('操作成功!', {
+						icon : 1,
+						time : 1000
+					});
+					location.replace(location.href);
+		          }else{
+		          	layer.msg(data.message, {icon:2});
+		          }
+	          }
+	        })	       
+		 })
+		}
+		$(document).keypress(function(e) {			
+		   	// 回车键事件  
+		      if(e.which == 13) {  
+		  		jQuery(".confirmButton").click();
+		  		data_from_submit()
+		      }  
+		});
+	</script>
+</html>

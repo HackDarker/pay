@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>配置商户通道</title>
+	<#include "lib/lib.html" />
+</head>
+<body>
+	<form action="" method="post" class="form form-horizontal" id="form-company-df-rate">
+	<input type="hidden" id="companyId" name="companyId" value="${map.companyId}"/>
+	<div class="pop_main" style="padding-left:30px;width: 95%;">
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">代付通道配置</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>商户资金池余额：</strong></td>
+	    		    		<td>
+	    		    			<div style="float:left;">
+	    		    				&nbsp;&nbsp;
+	    		    			</div>
+	    		    			<div class="totalMoney" style="float:left;">
+	    		    				<strong>
+	    		    					<#if configObj.dfRateId!=''>
+	    		    						${configObj.totalAmount!'请先配置代付通道'}
+	    		    					<#else>	
+	    		    						请先配置代付通道
+	    		    					</#if>
+	    		    				</strong>
+	    		    			</div>
+	    		    			<div style="float:left;">
+	    		    				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    		    			</div>
+	    		    			<#if configObj.dfRateId != ''>
+	    		    				<div class="readyPay" style="float:left;">
+	    		    					<input type="button" value="为商户资金池充值" class="btn btn-primary radius readyPayBtn">
+	    		    				</div>
+	    		    				<div class="gotoPay" style="display: none;float:left;">
+	    		    					<input style="width:100px;" class="input-text size-M" type="text"  placeholder="为资金池充值" id="paymentMoney" style=" width:60%" onblur="ValidateFloat($(this),value)" >
+	    		    					<input type="button" class="btn btn-primary radius confirmPay" value="充值" class="btn btn-primary radius">
+	    		    					<input type="button" class="btn radius cancelPay" value="取消" class="btn radius">
+	    		    				</div>
+								</#if>
+	    		    		</td>
+	    		    		
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>代付通道：</strong></td>
+	    		    		<td> 
+	    		    			<select <#if configObj.dfRateId != ''> disabled="disabled" style="width: 200px;height: 30px;background-color: #F0F0F0;" <#else> style="width: 200px;height: 30px;" </#if> class="select" id="dfRateId" name="dfRateId" size="1" datatype="*"  nullmsg="请选择代付通道">
+	    		    				<#if configObj.dfRateId == ''>
+										<option value="">未配置代付通道!请选择</option>
+									</#if>
+									<#if rateList?? && rateList?size gt 0>
+							        	<#list rateList as dl>
+							        		<#if dl.id == configObj.dfRateId>
+						           				<option value="${dl.id!}" selected="selected">${dl.dfRateName!}</option>
+						           			<#else>
+						           				<option value="${dl.id!}">${dl.dfRateName!}</option>
+						           			</#if>
+							        	</#list>
+							        </#if>
+								</select>
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>代付手续费：</strong></td>
+	    		    		<td>
+	    		    			<input value="${configObj.payWayRate!''}" style="width:100px;" class="dd_input input-text size-M" type="text"  placeholder="如:1.55" id="payWayRate" name="payWayRate" style=" width:60%" onblur="ValidateFloat($(this),value)" datatype="*"  nullmsg="请输入代付成本费" readonly="readonly"> 元/笔
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+		<#if configObj.dfRateId == ''>
+			<div class="submit_btn">
+				<button type="button" name="" value="提    交" onclick="submitAddInfo();" class="btn btn-success radius"><i class="Hui-iconfont">&#xe676;</i> 提    交</button>
+			</div>
+		<#else>
+			<div class="submit_btn">
+				<!-- <button type="button" onclick="submitUpdateInfo();" class="btn btn-success radius"><i class="Hui-iconfont">&#xe676;</i> 修改代付配置</button> -->
+    			<#if configObj.status == 1>
+					<button style="margin-left: 20px;" type="button" onclick="submitUpdateStatus(2);" class="btn btn-warning radius">停用代付功能</button>
+				<#else>
+					<button style="margin-left: 20px;" type="button" onclick="submitUpdateStatus(1);" class="btn btn-primary radius">启用代付功能</button>
+				</#if>
+				<button style="margin-left: 20px;" type="button" onclick="submitDeleteInfo();" class="btn btn-danger radius">删除代付配置</button>
+			</div>
+		</#if>
+	</div>
+	</form>
+	<script type="text/javascript">
+		$(function(){
+			$("#form-company-df-rate").Validform({
+				tiptype:3,
+				showAllError:true,   //表单提交时显示所有提示信息
+				ignoreHidden: true,  //隐藏的表单元素不校验
+				ajaxPost:true,
+				callback:function(data){
+					$.Hidemsg();
+					if(data.resultCode==200){
+						layer.msg('操作成功!', {
+							icon : 1,
+							time : 1000
+						});
+						
+						//parent.location.replace("${basePath}/payv2PayWayRate/payv2PayWayRateListAll.do?payWayId="+$("#payViewType").val());
+						setTimeout(function () { 
+					        //layer_close();
+					        //window.parent.location.reload();
+					        /*刷新layer子页面*/
+					        location.replace(location.href);
+					        /*刷新layer父页面 , 并关闭子页面*/
+					        /* window.parent.location.reload();
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index); */
+					    }, 1000);
+					    //layer_show('代付设置','${basePath}/dfWayRate/configDfWayRateTc.do?companyId='+${dl.id!},800,600);
+					}else if(data.resultCode==201){
+						layer.msg('该商户已配置了代付通道!请重新打开本窗口!', {icon: 2});
+						setTimeout(function () { 
+					        layer_close();
+					    }, 2000);
+						return false;
+					}else if(data.resultCode==202){
+						layer.msg('该商户未配置代付通道!请重新打开本窗口!', {icon: 2});
+						setTimeout(function () { 
+					        layer_close();
+					    }, 2000);
+						return false;
+					}else if(data.resultCode==203){
+						layer.msg('该商户资金池还有余额!暂不能删除配置!', {icon: 2});
+						return false;
+					}else{
+						layer.msg('保存失败，请你检查数据!', {
+							icon : 1,
+							time : 1000
+						});
+					}
+				}
+			});
+		});
+		
+		$(".readyPayBtn").click(function(){
+			$(".readyPay").hide();
+			$(".gotoPay").show();
+		});
+		$(".cancelPay").click(function(){
+			$(".readyPay").show();
+			$(".gotoPay").hide();
+		});
+		$(".confirmPay").click(function(){
+			var money = $("#paymentMoney").val();
+			var companyId = $("#companyId").val();
+			if(money == '') {
+				layer.msg('请输入整数金额！', function(){});
+				return false;
+			}
+			layer.confirm('本次充值的金额为:'+money+'元<br/><br/>确认充值吗？', function(index) {
+				$.ajax({
+					type:"get",
+					url:"${basePath}/dfWayRate/companyDfPayWayRatePayment.do?money="+money+"&companyId="+companyId,
+					async:true,
+					success:function(data){
+						if(!!data){
+							if(data.resultCode==200) {
+								layer.msg('充值成功!', {
+									icon : 1,
+									time : 1000
+								});
+								setTimeout(function () { 
+							        location.replace(location.href);
+							    }, 1000);
+						    } else if(data.resultCode==201) {
+						    	layer.msg('该商户暂无代付通道!或已被其他人删除!', function(){});
+						    }
+							/* $("#paymentMoney").val('');
+							var totalMoney = $(".totalMoney").text();
+							var allMoney = totalMoney + money;
+							$(".totalMoney").text(allMoney);
+							$(".readyPay").show();
+							$(".gotoPay").hide(); */
+						}else{
+							layer.msg(data.message, function(){});
+						}
+					}
+				});
+			});
+		});
+		
+		function submitUpdateStatus(status){
+			if(status == 2) {
+				layer.confirm('停用后,商户将无法使用代付功能!<br/><br/>确认停用吗？', function(index) {
+					gotoUpdateStatus(status);
+				});
+			} else {
+				gotoUpdateStatus(status);
+			}
+		}
+		
+		function gotoUpdateStatus(status){
+			$.ajax({
+				type:"get",
+				url:"${basePath}/dfWayRate/updateCompanyDfPayWayRateStatus.do?status="+status+"&companyId="+$("#companyId").val(),
+				async:true,
+				success:function(data){
+					if(!!data){
+						if(data.resultCode==200) {
+							layer.msg('修改成功!', {
+								icon : 1,
+								time : 1000
+							});
+							setTimeout(function () { 
+						        location.replace(location.href);
+						    }, 1000);
+					    } else if(data.resultCode==201) {
+					    	layer.msg('该商户暂无代付通道!或已被其他人删除!', function(){});
+					    }
+						/* $("#paymentMoney").val('');
+						var totalMoney = $(".totalMoney").text();
+						var allMoney = totalMoney + money;
+						$(".totalMoney").text(allMoney);
+						$(".readyPay").show();
+						$(".gotoPay").hide(); */
+					}else{
+						layer.msg(data.message, function(){});
+					}
+				}
+			});
+		}
+	
+		function submitAddInfo(){
+			$("#form-company-df-rate").attr(
+					"action",
+					"${basePath}/dfWayRate/updateCompanyDfPayWayRate.do").submit(); 
+		}
+		function submitUpdateInfo(){
+			$("#form-company-df-rate").attr(
+					"action",
+					"${basePath}/dfWayRate/updateCompanyDfPayWayRate.do").submit(); 
+		}
+		function submitDeleteInfo(){
+			layer.confirm('删除操作无法回复!!!!<br/><br/>确认要这样做吗？', function(index) {
+				$("#form-company-df-rate").attr(
+						"action",
+						"${basePath}/dfWayRate/deleteCompanyDfPayWayRate.do").submit(); 
+			});
+		}
+	    
+	    
+		function ValidateNumber(e, pnumber){ 
+			if (!(/^1[34578]\d{9}$/.test(pnumber)||/^0\d{2,3}-?\d{7,8}$/.test(pnumber))){ 
+				$(e).val("");
+			}
+			return false; 
+		}
+		
+		//验证输入的数字合法性
+		function ValidateFloat(e, pnumber){ 
+			if (!/^\d+[.]?\d*$/.test(pnumber)){ 
+				$(e).val(/^\d+[.]?\d*/.exec($(e).val())); 
+				layer.msg('请输入整数金额！', function(){});
+			}
+			return false; 
+		}
+	</script>
+</body>
+</html>

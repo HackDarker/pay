@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>回调信息列表</title>
+	<#include "lib/lib.html" />
+</head>
+<body>
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+		交易管理<span class="c-gray en">&gt;</span>订单管理<span class="c-gray en">&gt;</span>回调信息
+		<a	class="btn btn-success radius r mr-20" style="line-height: 1.6em; margin-top: 3px" href="javascript:location.replace(location.href);" title="刷新">
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+	<div class="pd-20">
+		<div class="panel panel-default mt-20">
+			<div class="panel-header" style="height:25px;">
+				<div style="float: left;font-size:15px;">回调信息列表</div>
+			</div>
+			<div class="panel-body">
+				<table class="table table-border table-bordered table-hover">
+					<thead>
+						<tr class="text-c">
+	    					<td>订单号</td>
+	    					<td>回调地址</td>
+	    					<td>回调参数</td>
+	    					<td>消耗时间(毫秒)</td>
+	    					<td>接收信息</td>
+	    					<td>接收信息长度</td>
+	    					<td>回调时间</td>
+						</tr>
+					</thead>
+					<tbody class="text-c">
+						<#if list.dataList?? && list.dataList?size gt 0>
+							<#list list.dataList as dl>
+								<tr>								
+									<td>${dl.orderNum}</td>
+									<td>${dl.notifyUrl}</td>
+									<#if dl.param ? length gt 50>
+										<td>
+											<a style="text-decoration: none;" href="javascript:;" onclick="showAllParam(this)">${dl.param?substring(0,50)} ...</a>
+											<input class="allParam" type="hidden" value="${dl.param!}">
+										</td>
+									<#else>
+										<td>${dl.param!}</td>
+									</#if>
+									<td>${dl.time!}</td>
+									<#if dl.result ? length gt 50>
+										<td>
+											<a style="text-decoration: none;" href="javascript:;" onclick="showAllParam(this)">${dl.result?substring(0,50)} ...</a>
+											<input class="allParam" type="hidden" value="${dl.result!}">
+										</td>
+									<#else>
+										<td>${dl.result!}</td>
+									</#if>
+									<td>${dl.resultLen!}</td>
+									<td>${dl.callTime?string('yyyy-MM-dd HH:mm:ss')!}</td>
+								</tr>
+							</#list>
+						</#if>
+					</tbody>
+					<input type="hidden" name="" id="orderNum" value="${map.orderNum}">
+				</table>
+				<#if list.dataList?? && list.dataList?size gt 0>
+					<div id="page_list" class="page_list text-c mt-20"></div>
+				</#if>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function showAllParam(obj){
+			var param = $(obj).parent().find(".allParam").val();
+			layer.confirm(param, function(index) {
+				layer.close(index);
+			});
+		}
+		layui.use(['laypage', 'layer'], function(){
+	  		var laypage = layui.laypage,layer = layui.layer;
+			laypage.render({
+			    elem: 'page_list',	//容器。值支持id名、原生dom对象，jquery对象
+			    count: ${list.totalData!'0'},	//数据总数。一般通过服务端得到
+			    //groups: 5,	//连续出现的页码个数
+			    limit: ${list.pageData!'10'},
+			    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+				curr: ${list.curPage!'1'}, //获取起始页
+			    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+			    jump: function(obj, first){
+			      if (!first) {
+						window.location.href="${basePath}/Payv2PayOrder/callBackInfo.do?curPage="+obj.curr +"&pageData="+obj.limit+"&orderNum="+$("#orderNum").val();
+					}
+			    }
+			  });
+		});
+	</script>
+</body>
+</html>

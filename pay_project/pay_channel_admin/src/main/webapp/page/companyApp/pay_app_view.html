@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<#include "lib/lib.html" />
+<title>查看原因</title>
+</head>
+<body>
+<div class="pop_main" style="padding-left:30px;width: 95%;">
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">原因</div>
+	    	<div class="panel-body">
+    		    <table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td>
+	    		    			${payv2BussCompanyApp.appPassReason!'无'}
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+    	</div>
+<script type="text/javascript">
+
+ //提交数据
+function _save(){
+
+		if($("#appPassReason").val()!=""){
+			$("#form-menu-add").attr("action","${basePath}/payv2BussCompanyApp/updatePayv2BussCompanyApp.do");
+			$("#form-menu-add").ajaxSubmit({
+				dataType : "json",
+				success:function(data){
+					if(data.resultCode==200){
+						window.parent.location.replace("${basePath}/payv2BussCompanyApp/payv2BussCompanyAppList.do?");//返回任务列表
+						layer_close();
+					}else if(data.resultCode==-1){
+						alert("提交失败,参数异常！");
+						return false;
+					}
+				}
+			}); 
+		}else{
+			alert("不通过理由不能为空");
+			return false;
+		}
+
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.pay.business.df.mapper.DfRechargeRecordMapper">
+
+	<resultMap id="dfrechargerecord_result_map" type="com.pay.business.df.entity.DfRechargeRecord" >
+		<id column="id" property="id" />
+		<result column="company_id" property="companyId"/>
+		<result column="df_rate_id" property="dfRateId"/>
+		<result column="rate_money" property="rateMoney"/>
+		<result column="create_user_by" property="createUserBy"/>
+		<result column="create_time" property="createTime"/>
+	</resultMap>
+	
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from df_recharge_record  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="dfRateId!=null and dfRateId!=''">
+				and df_rate_id = #{dfRateId}
+			</if>
+			<if test="rateMoney!=null and rateMoney!=''">
+				and rate_money like CONCAT('%',#{rateMoney},'%')
+			</if>
+			<if test="createUserBy!=null and createUserBy!=''">
+				and create_user_by = #{createUserBy}
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id"   -->
+	<insert id="insertByEntity" parameterType="com.pay.business.df.entity.DfRechargeRecord" useGeneratedKeys="true" keyProperty="id">
+		insert into df_recharge_record
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="companyId!=null ">
+				company_id,
+			</if>
+      		<if test="dfRateId!=null ">
+				df_rate_id,
+			</if>
+      		<if test="rateMoney!=null ">
+				rate_money,
+			</if>
+      		<if test="createUserBy!=null ">
+				create_user_by,
+			</if>
+      		<if test="createTime!=null ">
+				create_time,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id},
+			</if>
+      		<if test="companyId!=null ">
+      			#{companyId},
+			</if>
+      		<if test="dfRateId!=null ">
+      			#{dfRateId},
+			</if>
+      		<if test="rateMoney!=null ">
+      			#{rateMoney},
+			</if>
+      		<if test="createUserBy!=null ">
+      			#{createUserBy},
+			</if>
+      		<if test="createTime!=null ">
+      			#{createTime},
+			</if>
+    	</trim>
+	</insert>
+	
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.df.entity.DfRechargeRecord">
+		delete from df_recharge_record
+		<where>
+      		<if test="id!=null ">
+				and id=#{id}
+			</if>
+      		<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+      		<if test="dfRateId!=null ">
+				and df_rate_id=#{dfRateId}
+			</if>
+      		<if test="rateMoney!=null ">
+				and rate_money=#{rateMoney}
+			</if>
+      		<if test="createUserBy!=null ">
+				and create_user_by=#{createUserBy}
+			</if>
+      		<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.df.entity.DfRechargeRecord">
+		update df_recharge_record
+		<set>
+			<if test="companyId!=null ">
+				company_id=#{companyId},
+			</if>
+			<if test="dfRateId!=null ">
+				df_rate_id=#{dfRateId},
+			</if>
+			<if test="rateMoney!=null ">
+				rate_money=#{rateMoney},
+			</if>
+			<if test="createUserBy!=null ">
+				create_user_by=#{createUserBy},
+			</if>
+			<if test="createTime!=null ">
+				create_time=#{createTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.df.entity.DfRechargeRecord" resultMap="dfrechargerecord_result_map">
+		select id,company_id,df_rate_id,rate_money,create_user_by,create_time from df_recharge_record
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="dfRateId!=null ">
+				and df_rate_id=#{dfRateId}
+			</if>
+			<if test="rateMoney!=null ">
+				and rate_money=#{rateMoney}
+			</if>
+			<if test="createUserBy!=null ">
+				and create_user_by=#{createUserBy}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据对象查询列表-->
+	<select id="selectByObject" resultMap="dfrechargerecord_result_map" >
+		select id,company_id,df_rate_id,rate_money,create_user_by,create_time from df_recharge_record
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="dfRateId!=null ">
+				and df_rate_id=#{dfRateId}
+			</if>
+			<if test="rateMoney!=null ">
+				and rate_money=#{rateMoney}
+			</if>
+			<if test="createUserBy!=null ">
+				and create_user_by=#{createUserBy}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="dfrechargerecord_result_map" >
+		
+		SELECT id,company_id,df_rate_id,rate_money,create_user_by,create_time FROM df_recharge_record 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="dfRateId!=null and dfRateId!=''">
+				and df_rate_id = #{dfRateId}
+			</if>
+			<if test="rateMoney!=null and rateMoney!=''">
+				and rate_money like  CONCAT('%',#{rateMoney},'%')
+			</if>
+			<if test="createUserBy!=null and createUserBy!=''">
+				and create_user_by = #{createUserBy}
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	
+</mapper>

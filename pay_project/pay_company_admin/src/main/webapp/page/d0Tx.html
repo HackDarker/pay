@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>商户管理平台代付订单管理</title>
+		<meta name="renderer" content="webkit|ie-stand">
+		<meta name="force-rendering" content="webkit">
+		<meta http-equiv="x-ua-compatible" content="IE=11,10,9" >
+		<link rel="stylesheet" href="../public/css/normal.css" />
+		<link rel="stylesheet" href="../public/css/order.css" />
+		<link rel="stylesheet" href="../public/css/nav.css" />
+		<link rel="shortcut icon" href="../favico.ico" />
+	</head>
+
+	<body>
+		<header>
+			<div class="logo fl">
+				<img src="../public/img/logo.png" />
+			</div>
+			<!-- <div class="tips fr">
+				<div class="red"></div>
+			</div> -->
+			<div class="users fr user">
+				<span>全民金服</span>
+				<i></i>
+				<div class="change changeuser">
+					<div class="change1 setPayPW">设置支付密码</div>
+					<div class="change1 changepwd">修改登录密码</div>
+					<div class="change2 exitlogin">退出登录</div>
+				</div>
+			</div>
+			
+		</header>
+		<nav>
+			<ul>
+				<li class="stair datali" style="cursor: pointer;"><img src="../public/img/sjtj2.png"><span class="c_33">数据统计</span></li>
+				<li class="stair"><img src="../public/img/dd.png"><span class="c_80">订单</span></li>
+				<li class="secondLevel">
+					<a href="orderManager.html" class="c_33">交易订单</a>
+					<a href="refund.html" class="c_33">退款订单</a>
+					<a href="refund.html" class="c_33 ">代付订单</a>
+					<a href="accountManager.html" class="c_33">账单管理</a>
+				</li>
+				<li class="stair"><img src="../public/img/yy.png"><span class="c_80">应用</span></li>
+				<li class="secondLevel">
+					<a href="appManager.html" class="c_33">应用管理</a>
+				</li>
+				<li class="stair"><img src="../public/img/zh.png"><span class="c_80">账户</span></li>
+				<li class="secondLevel">
+					<a href="account.html" class="c_33">账户信息</a>
+					<a href="d0Tx.html" class="c_33 active">D0提现</a>
+					<a href="d0Account.html" class="c_33">D0账单</a>
+				</li>
+			</ul>
+			<div class="dld"><img src="../public/img/dld.png"/><span>下载SDK</span></div>
+		</nav>
+		
+		<div class="main">
+			<!--title-->
+			<div class="title">当前位置：D0提现</div>
+			<!--关键指标-->
+			<div class="index" style="height:165px;">
+				<div class="index-title">
+					<i></i>
+					<span>D0提现</span>	
+				</div>
+				<div style="width:100%">
+					<ul class="txUl">
+						<li class="bdRight extra">
+							<div class="liTitle">
+							可提现交易金额
+								<div class="liTips litips1">?</div>
+								<div class="tipsC1">计算公式:可提现交易额=今日D0交易金额-今日已提现交易额<br/>D0交易金额：商户交易资金可实时结算到商户D0平台账户中</div>
+							</div>
+							<div class="liNum txBalance" ></div>
+							<div class="liBtn">提现</div>
+						</li>
+						<li class="bdRight">
+							<div class="liTitle">今日交易金额</div>
+							<div class="liNum  txIngAmount"></div>
+						</li>
+						<li class="bdRight">
+							<div class="liTitle">今日转T1交易金额</div>
+							<div class="liNum  txSucAmount"></div>
+						</li>
+						<li class="bdRight">
+							<div class="liTitle">今日提现手续费</div>
+							<div class="liNum arrivalAmount"></div>
+						</li>
+						<li>
+							<div class="liTitle">
+								今日提现到账金额
+								<div class="liTips litips2">?</div>
+								<div class="tipsC2">计算公式:今日到账金额≈今日提现成功金额-今日提现手续费</div>
+							</div>
+							<div class="liNum serviceAmount"></div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="index" style="height:165px;">
+				<div class="index-title">
+					<i></i>
+					<span>D0提现订单查询</span>					
+					<div class="fr dload">
+						<i class="fr"></i>
+						<span class="fr">导出数据</span>						
+					</div>
+				</div>
+				<div class="tradeTime">
+					<label>提现时间：</label>
+					<ul class="timeLi TimeLi">
+						<li class="activess" dateType="1">
+							<i></i>
+							<span>今天</span>
+						</li>
+						<li dateType="2">
+							<i></i>
+							<span>昨天</span>
+						</li>
+						<li dateType="3">
+							<i></i>
+							<span>前7天</span>
+						</li>
+						<li dateType="4">
+							<i></i>
+							<span>前30天</span>
+						</li>
+					</ul>
+					<div class="data fl">
+						<label>选择日期：</label>
+						<input id="" class="condition-date data1" type="text" name="">
+						<span class="date-line">&nbsp;--&nbsp;</span>
+						<input id="" class="condition-date data2" type="text" name="">
+					</div>
+					
+				</div>
+				<div class="tradeTime tradeState">
+					<label>订单状态：</label>
+					<ul class="timeLi stateLi">
+						<li class="activess" dfStatus="">
+							<i></i>
+							<span>全部</span>
+						</li>
+						<li dfStatus="1">
+							<i></i>
+							<span>提现成功</span>
+						</li>
+						<li dfStatus="2">
+							<i></i>
+							<span>提现中</span>
+						</li>
+						<li dfStatus="3">
+							<i></i>
+							<span>提现失败</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!--表格-->
+			<div class="table">
+				<table cellpadding="0" cellspacing="0">
+					<thead>
+						<tr>
+							<th class='first' width='14%'>提现时间</th>
+							<th width='12%'>提现订单号</th>
+							<th width='8%'>支付通道</th>
+							<th width='12%'>开户行全称</th>
+							<th width='12%'>银行账号</th>
+							<th width='8%'>开户名称</th>
+							<th width='8%'>订单状态</th>
+							<th width='10%'  class='money' style="padding-right:40px;min-width:121px;">交易金额</th>
+							<th width='10%'  class='money' style="padding-right:40px;min-width:121px;">提现手续费</th>
+							<th width='10%'  class='money' style="padding-right:40px;min-width:121px;">交易手续费</th>
+							<th class="last money" width='10%'  class='money' style="padding-right:40px;min-width:121px;">提现到账金额</th>
+						</tr>
+					</thead>
+					<tbody style='width:100%;'>
+						
+					</tbody>
+				</table>
+				<div class="set-footer">
+					<div class="set fl">
+						共<span></span>条记录，每页显示<input autocomplete="off" type="text" value="10" />条
+					</div>
+					<div class="jump fr">
+						<div class="firstPage">首页</div>
+						<div class="left">
+							<i></i>
+						</div>
+						<input autocomplete="off" type="text" value="1" />
+						<div class="right">
+							<i></i>
+						</div>
+						<div class="lastPage">尾页</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="bg">
+			<div class="windowTx" style="height:516px;width:600px;">
+				<div class="top2" style="text-indent:280px;">
+					提现
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;cursor:pointer;'>
+						<i></i>
+					</div>
+				</div>
+				<div class="bottome" style="height:;">
+					<div class="wdTips">注:1,单通道可提现金额小于5元不会发起提现;<br/>&nbsp;&nbsp;&nbsp;&nbsp;2,每次提现会提出所有可提现交易金额<br/>&nbsp;&nbsp;&nbsp;&nbsp;3,每日22点后，8点前不可提现</div>
+					<div class="table-c" style="margin:0 40px;height:300px;overflow-y:scroll;">
+						<table  cellpadding="0" cellspacing="0">
+							<thead>
+								<tr>
+									<th style="text-align:center;">支付通道</th>
+									<th style="text-align:center;">可提现交易金额</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td style="text-align:center;"></td>
+									<td style="text-align:center;"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="tx_btn" isClick="true">提现</div>
+				</div>
+			</div>
+			<div class="window3">
+				<div class="top2">
+					修改密码
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;cursor:pointer;'>
+						<i></i>
+					</div>
+				</div>
+				<div class="bottom3">
+					<div class="oldpwd">
+						<label>原密码:</label>
+						<input type="password" placeholder="请输入原密码" />
+						<span style="color:red;font-size:14px;display:none">请输入原密码</span>
+					</div>
+					<div class="newpwd">
+						<label>新密码:</label>
+						<input type="password" placeholder="6-16位密码(数字、字母组成)" />
+						<span style="color:red;font-size:14px;display:none">请输入新密码</span>
+					</div>
+					<div class="newpwda">
+						<label>确认密码:</label>
+						<input type="password" placeholder="请再次输入新密码" />
+						<span style="color:red;font-size:14px;display:none">请再次输入新密码</span>
+					</div>
+					<div class="surebtn">确定</div>
+				</div>
+			</div>
+			<div class="windowPw">
+				<div class="top2">
+					设置支付密码
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;'>
+						<i></i>
+					</div>
+				</div>
+				<div class="bottom3">
+					<div class="oldpwd">
+						<label>验证码:</label>
+						<input type="text" placeholder="账户绑定邮箱查看" style="margin-left:32px" />
+						<span class="getSmS" thistime='0'>获取</span>
+						<span style="color:red;font-size:14px;display:none">请输入验证码</span>
+					</div>
+					<div class="newpwd">
+						<label>支付密码:</label>
+						<input type="password" maxlength="6" placeholder="6位数密码" style="margin-left:16px" />
+						<span style="color:red;font-size:14px;display:none">请输入密码</span>
+					</div>
+					<div class="newpwda">
+						<label>确认密码:</label>
+						<input type="password" maxlength="6" placeholder="请再次输入6位数密码" style="margin-left:16px" />
+						<span style="color:red;font-size:14px;display:none">请再次输入密码</span>
+					</div>
+					<div class="surebtn">确定</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../public/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../public/js/echarts.min.js"></script>
+		<script type="text/javascript" src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+		<script type="text/javascript" src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+		<script type="text/javascript" src="../public/js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="../public/js/md5.js"></script>
+		<script type="text/javascript" src="../public/js/exit.js"></script>
+		<script id="trmode" type="text/plain">
+			<tr>
+				<td class='first' datas="txTime"></td>
+				<td datas="orderNum"></td>
+				<td datas="payWayWame"></td>
+				<td datas="accountBank"></td>
+				<td datas="accountCard"></td>
+				<td datas="accountName"></td>
+				<td datas="status"></td>
+				<td datas="amount" class='money' style="padding-right:40px;"></td>
+				<td datas="serviceAmount" class='money' style="padding-right:40px;"></td>
+				<td datas="payServiceAmount" class='money' style="padding-right:40px;"></td>
+				<td datas="arrivalAmount" class='money' style="padding-right:40px;"></td>
+			</tr>		
+		</script>
+		<script>
+			var totalpage,totalpage;
+			var orderArr=["","提现成功","提现中","提现失败"]
+			var d0Param={};
+			d0Param.curPage = 1;
+			d0Param.dateType = "1";
+			d0Param.endTime = "";
+			d0Param.pageData = 10;
+			d0Param.startTime = "";
+			d0Param.status = "";
+			$("body").on("click", ".getSmS", function() {
+				var _this = $(this);
+				if($(this).attr("thistime") == 0) {
+					_this.attr("thistime", "60");
+					_this.css("background", "#ccc");
+					setTimeout(function() {
+						ret()
+					}, 1000)
+					function ret() {
+						if(_this.attr("thistime") != 0) {
+							_this.html(_this.attr("thistime") - 1 + "s")
+							_this.attr("thistime", _this.attr("thistime") - 1);
+							setTimeout(function() {
+								ret()
+							}, 1000)
+						} else {
+							_this.attr("thistime", "0");
+							_this.html("获取")
+							_this.css("background", "#2581f4");
+						}
+					}
+
+					$.ajax({
+						type: 'get',
+						url: "/sys/sendEmail.do",
+						async: true,
+						success: function(data) {
+							if(!!data && data.resultCode == 200) {
+
+							} else {
+								alert(data.message)
+							}
+						}
+					})
+				}
+
+			})
+			$("body").on("keydown",".windowPw .oldpwd input,.windowPw .newpwd input,.windowPw .newpwda input",function(){
+				$(this).parent().find('span').not(".getSmS").hide();
+			})
+			$("body").on("click", ".windowPw .surebtn", function() {
+				var param = {};
+				param.code = $(".windowPw .oldpwd input").val();
+				param.payPassWord = $(".windowPw .newpwd input").val();
+				pw2 =  $(".windowPw .newpwda input").val()
+				param.payPassWordMD5 = md5(md5(param.payPassWord))
+				$(".windowPw .oldpwd span").not(".getSmS").hide();
+				$(".windowPw .newpwd span").hide();
+				$(".windowPw .newpwda span").hide();
+				var isCode = false,
+					pwd1 = false,
+					pwd2 = false;
+				if($(".windowPw .oldpwd input").val()){
+					isCode = true;
+				}else{
+					$(".windowPw .oldpwd span").not(".getSmS").show();
+				}
+				
+				if($(".windowPw .newpwd input").val() ){
+					//console.log($(".windowPw .newpwd input").val())
+					if(/^\d{6}$/.test($(".windowPw .newpwd input").val())){
+						pwd1 = true;
+					}else{
+						$(".windowPw .newpwd span").html("密码格式不正确")
+						$(".windowPw .newpwd span").show();
+					}
+					
+				}else{
+					$(".windowPw .newpwd span").html("请输入密码")
+					$(".windowPw .newpwd span").show();
+				}
+				
+				if($(".windowPw .newpwda input").val()){
+					if(/^\d{6}$/.test($(".windowPw .newpwd input").val())){
+						pwd2 = true;
+					}else{
+						$(".windowPw .newpwd span").html("密码格式不正确")
+						$(".windowPw .newpwd span").show();
+					}
+					
+				}else{
+					$(".windowPw .newpwd span").html("请再次输入密码")
+					$(".windowPw .newpwda span").show();
+				}
+				
+				if($(".windowPw .newpwd input").val()&&$(".windowPw .newpwda input").val()){
+					if($(".windowPw .newpwd input").val()!=$(".windowPw .newpwda input").val()){
+						alert("两次密码不一样")
+						$(".windowPw .newpwd input").val("");
+						$(".windowPw .newpwda input").val("");
+					}
+					
+				}
+				if(isCode && pwd1 && pwd2){
+					if(param.payPassWord == pw2){
+						$.ajax({
+							type:"get",
+							url:'/sys/checkEmailCode.do',
+							async:false,
+							data:param,
+							success:function(data){
+								console.log(data);
+								if(!!data && data.resultCode==200){
+									alert("修改成功")
+									$(".oldpwd input").val("");
+									$(".newpwd input").val("");
+									$(".newpwda input").val("");
+									$(".bg").hide();
+									$(".windowPw").hide();
+									$(".window").hide();
+								}else {
+									alert(data.message)
+								}
+							}
+						})
+					}
+				}
+				
+			});
+			$(".dload").on("click",function(){
+				var url = "/TX/ordersExport.do?dateType="+d0Param.dateType+"&status="+d0Param.status+"&startTime="+$(".data1").val()+"&endTime="+$(".data2").val();	
+				location.href = url;
+			});
+			$("body").on("focus",".data1",function(){
+				if($(".data2").val()){
+					WdatePicker({"maxDate":$(".data2").val()});
+				}else{
+					WdatePicker({"maxDate":new Date()});
+				}
+			})
+			
+			$("body").on("focus",".data2",function(){
+					if($(".data1").val()){
+						WdatePicker({"minDate":$(".data1").val(),"maxDate":new Date()});
+					}else{
+						WdatePicker({"maxDate":new Date()});
+					}
+			})
+			$(".data1,.data2").on("blur",function(){
+				$(".TimeLi li").removeClass("activess");
+				$(".orderNumberInput input").val("");
+				d0Param.dfOrderNum="";
+				if($(".data1").val()&& $(".data2").val()) {
+					d0Param.dateType=5;
+					d0Param.startTime=$(".data1").val();
+					d0Param.endTime=$(".data2").val();
+					$(".jump input").val("1");
+					d0Param.curPage=1;
+					txOrderList();
+					curData()
+					d0Param.startTime="";
+					d0Param.endTime="";
+				}
+			})
+			$(".user i").on("click", function() {
+				$(".changeuser").show();
+			})
+			$(".user").on("mouseleave", function() {
+				$(".changeuser").hide();
+			})
+			
+			$(".user i").on("mouseenter", function() {
+				$(this).css("background-image","url(../public/img/down2.png)");
+			})
+			$(".user i").on("mouseleave", function() {
+				$(this).css("background-image","url(../public/img/down1.png)");
+			})
+			$(".line").on("click mouseenter", function() {
+				$(".changeline").show();
+			})
+			$(".line").on("click mouseleave", function() {
+				$(".changeline").hide();
+			})
+			$(".datali").on("click",function(){
+				window.location="data.html"
+			})
+			$(".dld").on("click",function(){
+				window.open("http://pay.aijinfu.cn/sdk-download.html")
+			})
+			$("body").on("click",".closex",function(){
+				$(".bg").hide();
+			})
+			$("body").on("mouseleave",".closex",function(){
+				$(this).css("background","rgba(0,0,0,0)")
+				$(this).find("i").css("background-image","url(../public/img/close.png)")
+			})
+			$(".set input").on("change",function(){
+				
+				if($(this).val()>totaldata){
+					$(this).val(totaldata)
+				}
+				if($(this).val()<1){
+					$(this).val("1")
+				}
+				if(!/^[0-9]*$/.test($(this).val())){
+					alert("请输入正确的数字");
+					$(this).val(10);
+					d0Param.pageData=10;
+					d0Param.curPage=1
+					$(".jump input").val("1");
+					txOrderList();
+					window.getSelection().removeAllRanges();
+			    }else{
+			    	$(this).val(parseInt($(this).val()))
+			    	d0Param.pageData=$(this).val();
+			    	d0Param.curPage=1
+					$(".jump input").val("1");
+			    	txOrderList();
+			    }
+				
+			});
+			$(".jump .left").on("click",function(){
+				if($(".jump input").val()>1){
+					$(".jump input").val(Number($(".jump input").val())-1);
+					d0Param.curPage=$(".jump input").val()
+					txOrderList();
+				}else{
+					
+				}
+			})
+			$(".jump .right").on("click",function(){
+				debugger;
+				if($(".jump input").val()<totalpage){
+					$(".jump input").val(Number($(".jump input").val())+1);
+					d0Param.curPage=$(".jump input").val()
+					txOrderList();
+				}else{
+					
+				}
+			})
+			$(".jump .firstPage").on("click",function(){
+				$(".jump input").val("1")
+				d0Param.curPage=1;
+				txOrderList();
+				
+			})
+			$(".jump .lastPage").on("click",function(){
+				if(totalpage){
+					$(".jump input").val(totalpage)
+					d0Param.curPage=totalpage;
+					txOrderList();
+				}else{
+					$(".jump input").val(1)
+					d0Param.curPage=1;
+					txOrderList();
+				}
+				
+			})
+			$(".jump input").on("change",function(){
+				
+				if($(this).val()>totalpage){
+					$(this).val(totalpage)
+				}
+				if($(this).val()<1){
+					$(this).val("1")
+				}
+				if(!/^[0-9]*$/.test($(this).val())){
+					$(this).val("1");
+			    }else{
+			    	$(".jump input").val(parseInt($(".jump input").val()))
+			    }
+				d0Param.curPage=$(".jump input").val()
+				txOrderList();
+			})
+			$("body").on("click",".TimeLi li,.typeLi li,.stateLi li",function(){
+				//console.log($(this).parent().children())
+				$(".orderNumberInput input,.reFundNumberInput input").val("");
+				d0Param.merchantOrderNum=""
+				$(this).addClass("activess").siblings().removeClass("activess");
+				if($(this).parent().hasClass("TimeLi")){
+					if(!$(".stateLi li").hasClass("activess")){
+						$(".stateLi li").eq(0).addClass("activess").siblings().removeClass("activess");
+						d0Param.payWayId=""
+					}
+					$(".data1,.data2").val("");
+					
+					d0Param.dateType=$(this).attr("datetype");
+					d0Param.curPage=1;
+					txOrderList();
+					curData();
+				}
+				if($(this).parent().hasClass("stateLi")){
+					if(!$(".TimeLi li").hasClass("activess")&&!$(".data1").val()){
+						$(".TimeLi li").eq(0).addClass("activess").siblings().removeClass("activess");
+					}
+					d0Param.status = $(this).attr("dfStatus")
+					txOrderList();
+					curData();
+				}
+				//console.log(param.payWayId)				
+			});
+			$("body").on("mouseenter",".litips1",function(){
+				$(".tipsC1").show();
+			})
+			$("body").on("mouseleave",".litips1",function(){
+				$(".tipsC1").hide();
+			})
+			$("body").on("mouseenter",".litips2",function(){
+				$(".tipsC2").show();
+			})
+			$("body").on("mouseleave",".litips2",function(){
+				$(".tipsC2").hide();
+			})
+			$("body").on("click",".liBtn",function(){
+				$(".bg").show();
+				$(".windowTx").show();
+				$(".window3").hide();
+				$("body,html").css({"height":"100%","width":"100%","overflow":"hidden"});
+				detail();
+			})
+			$("body").on("click",".closex",function(){
+				$(".bg").hide();
+			})
+			$("body").on("click",".tx_btn",function(){
+				var _this = this;
+				//console.log((new Date().getHours()))
+				if($(this).attr("isClick")){
+					$(this).attr("isClick","false");
+					if((new Date().getHours())>7){
+						$.ajax({
+							type:"get",
+							url:"/TX/single.do",
+							async:false,
+							success:function(data){
+								$(_this).attr("isClick","true");
+								if(!!data&&data.code==200){
+									alert("提现成功");
+									location.href="d0Tx.html"
+								}else{
+									alert(data.msg);
+								}
+							}
+						})
+					}else{
+						alert("每日0:00:00~7:59:59不可提现")
+					}
+				}
+			})
+			curData();
+			txOrderList();
+			function curData(){
+				$.ajax({
+					type:"get",
+					url:"/TX/curData.do",
+					async:true,
+					success:function(data){
+						if(!!data&&data.resultCode==200){
+							$(".liBtn").attr("shId",data.Data.id)
+							$(".txBalance").html(data.Data.txPayRateBalance.txBalance)
+							$(".txIngAmount").html(data.Data.txPayRateBalance.balance)
+							$(".txSucAmount").html(data.Data.txPayRateBalance.t1Balance)
+							$(".arrivalAmount").html(data.Data.txNowAmount.serviceAmount)
+							$(".serviceAmount").html(data.Data.txNowAmount.arrivalAmount)
+						}else if(!!data&&data.resultCode==201){
+							alert("该商户没有D0通道");
+						}else{
+							if(!!data.message){
+								alert(data.message);
+							}else{
+								$("body").html(data);
+							}
+						}
+					}
+				})
+			}
+			function txOrderList(){
+				$.ajax({
+					type:"get",
+					url:"/TX/txOrderList.do",
+					data:d0Param,
+					async:true,
+					success:function(data){
+						//console.log(data)
+						if(!!data&&data.resultCode==200){
+							var str = ''
+							totalpage = data.Data.txOrders.totalPage;
+							totaldata = data.Data.txOrders.totalData;
+							$('.set span').html(totaldata);
+							var length = data.Data.txOrders.dataList.length;
+							data = data.Data.txOrders.dataList;
+							$(".table tbody").html();
+							if(length == 0){
+								//$(".dload").hide()
+								$(".table tbody").html("<div class='nodata' style='text-align:center;height:60px;line-height:60px;'>很抱歉,没有找到账单信息……</div>")
+								$(".nodata").css("width",$(".nodata").parent().eq(0).width()+'px')
+							}else{
+								for(var i = 0;i < length;i++){
+									str += $("#trmode").html()
+								}
+								$(".table tbody").html(str);
+								for(var i = 0;i < length;i++){
+									for(var j = 0;j < $(".table tr").eq(i).children().length;j++){
+										//console.log($(".table tr").eq(i).children().eq(j))
+										$(".table tbody tr").eq(i).children().eq(j).html(data[i][$(".table  tbody tr").eq(i).children().eq(j).attr("datas")])
+									}
+									if(gettime(data[i].txTime)){
+										$(".table tbody tr").eq(i).children().eq(0).html(gettime(data[i].txTime))
+									}
+									$(".table tbody tr").eq(i).children().eq(6).html(orderArr[data[i].status])
+								}
+							}
+						}else{
+							alert(data.message);
+						}
+					}
+				})
+			}
+			function detail(){
+				var trStr="<tr><td style='text-align:center;'></td><td style='text-align:center;'></td></tr>";
+				var str="";
+				$.ajax({
+					type:"get",
+					url:"/TX/txRateMoney.do",
+					async:true,
+					success:function(data){
+					//	console.log(data)
+						if(!!data&&data.resultCode==200){
+							data = data.Data.txRateMoney;
+							var length = data.length;
+							for(var i=0 ;i<length;i++){
+								str +=trStr;
+							}
+							$(".table-c tbody").html(str);
+							$(".table-c tbody tr").last().children().addClass("lasttr");
+							for(var i=0 ;i<length;i++){
+								$(".table-c tbody tr").eq(i).find("td").eq(0).html(data[i].payWayName)
+								$(".table-c tbody tr").eq(i).find("td").eq(1).html(data[i].txBalance)
+							}
+						}else{
+							
+						}
+					}
+				})
+			}
+			function gettime(time){
+				time = new Date(time);
+				var timeStr='';
+				timeStr+=time.getFullYear();
+				timeStr = time.getMonth()<9 ? timeStr+'-0'+(time.getMonth()+1) : timeStr+'-'+(time.getMonth()+1);
+				timeStr = time.getDate()<10 ? timeStr+'-0'+time.getDate() : timeStr+'-'+time.getDate();
+				timeStr = time.getHours()<10 ? timeStr+' 0'+time.getHours() : timeStr+' '+time.getHours();;
+				timeStr = time.getMinutes()<10 ? timeStr+':0'+time.getMinutes() : timeStr+':'+time.getMinutes();
+				timeStr = time.getSeconds()<10 ? timeStr+':0'+time.getSeconds() : timeStr+':'+time.getSeconds();
+				return timeStr;
+			}
+		</script>
+
+	</body>
+
+</html>

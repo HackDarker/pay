@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pay.business.tx.mapper.TxPayRateBalanceMapper">
+
+	<resultMap id="txpayratebalance_result_map" type="com.pay.business.tx.entity.TxPayRateBalance">
+		<id column="id" property="id" />
+		<result column="company_id" property="companyId" />
+		<result column="rate_id" property="rateId" />
+		<result column="balance" property="balance" />
+		<result column="tx_balance" property="txBalance" />
+		<result column="t1_balance" property="t1Balance" />
+		<result column="create_time" property="createTime" />
+
+		<result column="pay_way_name" property="payWayName" />
+		<result column="company_name" property="companyName" />
+	</resultMap>
+
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from tx_pay_rate_balance
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="balance!=null and balance!=''">
+				and balance like CONCAT('%',#{balance},'%')
+			</if>
+			<if test="txBalance!=null and txBalance!=''">
+				and tx_balance like CONCAT('%',#{txBalance},'%')
+			</if>
+			<if test="t1Balance!=null and t1Balance!=''">
+				and t1_balance like CONCAT('%',#{t1Balance},'%')
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]>
+				str_to_date(#{createTimeBegin}, '%Y-%m-%d')
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]>
+				str_to_date(#{createTimeEnd}, '%Y-%m-%d')
+			</if>
+		</where>
+	</select>
+
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id" -->
+	<insert id="insertByEntity" parameterType="com.pay.business.tx.entity.TxPayRateBalance"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into tx_pay_rate_balance
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id!=null ">
+				id,
+			</if>
+			<if test="companyId!=null ">
+				company_id,
+			</if>
+			<if test="rateId!=null ">
+				rate_id,
+			</if>
+			<if test="balance!=null ">
+				balance,
+			</if>
+			<if test="txBalance!=null ">
+				tx_balance,
+			</if>
+			<if test="t1Balance!=null ">
+				t1_balance,
+			</if>
+			<if test="createTime!=null ">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id!=null ">
+				#{id},
+			</if>
+			<if test="companyId!=null ">
+				#{companyId},
+			</if>
+			<if test="rateId!=null ">
+				#{rateId},
+			</if>
+			<if test="balance!=null ">
+				#{balance},
+			</if>
+			<if test="txBalance!=null ">
+				#{txBalance},
+			</if>
+			<if test="t1Balance!=null ">
+				#{t1Balance},
+			</if>
+			<if test="createTime!=null ">
+				#{createTime},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.tx.entity.TxPayRateBalance">
+		delete from tx_pay_rate_balance
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="rateId!=null ">
+				and rate_id=#{rateId}
+			</if>
+			<if test="balance!=null ">
+				and balance=#{balance}
+			</if>
+			<if test="txBalance!=null ">
+				and tx_balance=#{txBalance}
+			</if>
+			<if test="t1Balance!=null ">
+				and t1_balance=#{t1Balance}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.tx.entity.TxPayRateBalance">
+		update tx_pay_rate_balance
+		<set>
+			<if test="companyId!=null ">
+				company_id=#{companyId},
+			</if>
+			<if test="rateId!=null ">
+				rate_id=#{rateId},
+			</if>
+			<if test="balance!=null ">
+				balance=#{balance},
+			</if>
+			<if test="txBalance!=null ">
+				tx_balance=#{txBalance},
+			</if>
+			<if test="t1Balance!=null ">
+				t1_balance=#{t1Balance},
+			</if>
+			<if test="createTime!=null ">
+				create_time=#{createTime},
+			</if>
+		</set>
+		<where>
+			id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.tx.entity.TxPayRateBalance"
+		resultMap="txpayratebalance_result_map">
+		select id,company_id,rate_id,balance,tx_balance,t1_balance,create_time
+		from tx_pay_rate_balance
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="rateId!=null ">
+				and rate_id=#{rateId}
+			</if>
+			<if test="balance!=null ">
+				and balance=#{balance}
+			</if>
+			<if test="txBalance!=null ">
+				and tx_balance=#{txBalance}
+			</if>
+			<if test="t1Balance!=null ">
+				and t1_balance=#{t1Balance}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+
+	<!-- 根据对象查询列表 -->
+	<select id="selectByObject" resultMap="txpayratebalance_result_map">
+		select id,company_id,rate_id,balance,tx_balance,t1_balance,create_time
+		from tx_pay_rate_balance
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="rateId!=null ">
+				and rate_id=#{rateId}
+			</if>
+			<if test="balance!=null ">
+				and balance=#{balance}
+			</if>
+			<if test="txBalance!=null ">
+				and tx_balance=#{txBalance}
+			</if>
+			<if test="t1Balance!=null ">
+				and t1_balance=#{t1Balance}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="txpayratebalance_result_map">
+
+		SELECT id,company_id,rate_id,balance,tx_balance,t1_balance,create_time
+		FROM tx_pay_rate_balance
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="balance!=null and balance!=''">
+				and balance like CONCAT('%',#{balance},'%')
+			</if>
+			<if test="txBalance!=null and txBalance!=''">
+				and tx_balance like CONCAT('%',#{txBalance},'%')
+			</if>
+			<if test="t1Balance!=null and t1Balance!=''">
+				and t1_balance like CONCAT('%',#{t1Balance},'%')
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]>
+				str_to_date(#{createTimeBegin}, '%Y-%m-%d')
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]>
+				str_to_date(#{createTimeEnd}, '%Y-%m-%d')
+			</if>
+		</where>
+		<if test="sortName!=null and sortName!=''">
+			ORDER BY ${sortName} ${sortOrder}
+		</if>
+		<include refid="base_page_query_end" />
+	</select>
+
+	<!-- 插入或更新 -->
+	<select id="insertOrUpdate" parameterType="com.pay.business.tx.entity.TxPayRateBalance">
+		INSERT INTO tx_pay_rate_balance
+		(company_id,rate_id,balance
+		<if test="txBalance!=null ">
+			,tx_balance
+		</if>
+		,create_time
+		<if test="t1Balance!=null ">
+			,t1_balance
+		</if>
+		)
+		VALUE
+		(#{companyId},#{rateId},#{balance}
+		<if test="txBalance!=null ">
+			,#{txBalance}
+		</if>
+		,#{createTime}
+		<if test="t1Balance!=null ">
+			,#{t1Balance}
+		</if>
+		)
+		ON DUPLICATE KEY UPDATE
+		balance=balance+#{balance}
+		<if test="txBalance!=null ">
+			,tx_balance=tx_balance+#{txBalance}
+		</if>
+		<if test="t1Balance!=null ">
+			,t1_balance=t1_balance+#{t1Balance}
+		</if>
+	</select>
+
+	<!-- 查询可提现金额 -->
+	<select id="getTxBalance" resultType="DOUBLE">
+		select SUM(tx_balance) from tx_pay_rate_balance
+		<where>
+			<if test="id!=null and id!=''">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id=#{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id=#{rateId}
+			</if>
+			<if test="txBalance!=null and txBalance!=''">
+				and tx_balance=#{txBalance}
+			</if>
+			<if test="createTime!=null and createTime!=''">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	<!-- 提现金额详情（商户在每个渠道下的提现金额） -->
+	<select id="getTxRateMoney" resultMap="txpayratebalance_result_map">		
+		select prate.pay_way_name,tx.tx_balance from tx_pay_rate_balance tx
+		LEFT JOIN payv2_buss_support_pay_way brate ON brate.rate_id = tx.rate_id
+		LEFT JOIN payv2_pay_way_rate prate on prate.id = brate.rate_id
+		where
+			brate.parent_id=#{companyId}
+	</select>
+
+
+	<!-- 根据group by查询当前有余额的所有商户 -->
+	<select id="selectCompanyByTx" resultMap="txpayratebalance_result_map">
+		select
+		tprb.company_id,
+		pbc.company_name
+		from
+		tx_pay_rate_balance tprb,
+		payv2_buss_company pbc
+		where
+		tprb.company_id=pbc.id
+		group by tprb.company_id
+	</select>
+
+	<!-- 所有数据清零 -->
+	<update id="updateClearZero">
+		update tx_pay_rate_balance set tx_balance=0,t1_balance=0,balance=0
+	</update>
+	<!-- 获取可提现交易金额，获取今日交易金额，今日转T1交易金额 三个关键数据 -->
+	<select id="getCurDate" resultType="com.pay.business.tx.entity.TxPayRateBalance" resultMap="txpayratebalance_result_map">
+		select
+			IFNULL(SUM(tx.balance),0.00) as balance
+			,IFNULL(SUM(tx.tx_balance),0.00) as tx_balance
+			,IFNULL(SUM(tx.t1_balance),0.00) as t1_balance
+		from tx_pay_rate_balance tx
+		LEFT JOIN payv2_buss_support_pay_way rate ON rate.rate_id = tx.rate_id
+		<if test="companyId!=null and companyId!=''">
+				where rate.parent_id=#{companyId}
+		</if>
+	</select>
+	
+</mapper>

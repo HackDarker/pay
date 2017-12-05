@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.pay.business.merchant.mapper.Payv2CompanyPayTypeMapper">
+
+	<resultMap id="payv2companypaytype_result_map" type="com.pay.business.merchant.entity.Payv2CompanyPayType" >
+		<id column="id" property="id" />
+		<result column="company_id" property="companyId"/>
+		<result column="pay_way_id" property="payWayId"/>
+		<result column="pay_type_id" property="payTypeId"/>
+		<result column="pay_way_rate" property="payWayRate"/>
+		<result column="create_time" property="createTime"/>
+		
+		<result column="way_name" property="wayName"/>
+		<result column="pay_type_name" property="payTypeName"/>
+	</resultMap>
+	
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from payv2_company_pay_type  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="payWayId!=null and payWayId!=''">
+				and pay_way_id = #{payWayId}
+			</if>
+			<if test="payTypeId!=null and payTypeId!=''">
+				and pay_type_id = #{payTypeId}
+			</if>
+			<if test="payWayRate!=null and payWayRate!=''">
+				and pay_way_rate like CONCAT('%',#{payWayRate},'%')
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id"   -->
+	<insert id="insertByEntity" parameterType="com.pay.business.merchant.entity.Payv2CompanyPayType" useGeneratedKeys="true" keyProperty="id">
+		insert into payv2_company_pay_type
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="companyId!=null ">
+				company_id,
+			</if>
+      		<if test="payWayId!=null ">
+				pay_way_id,
+			</if>
+      		<if test="payTypeId!=null ">
+				pay_type_id,
+			</if>
+      		<if test="payWayRate!=null ">
+				pay_way_rate,
+			</if>
+      		<if test="createTime!=null ">
+				create_time,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id},
+			</if>
+      		<if test="companyId!=null ">
+      			#{companyId},
+			</if>
+      		<if test="payWayId!=null ">
+      			#{payWayId},
+			</if>
+      		<if test="payTypeId!=null ">
+      			#{payTypeId},
+			</if>
+      		<if test="payWayRate!=null ">
+      			#{payWayRate},
+			</if>
+      		<if test="createTime!=null ">
+      			#{createTime},
+			</if>
+    	</trim>
+	</insert>
+	
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.merchant.entity.Payv2CompanyPayType">
+		delete from payv2_company_pay_type
+		<where>
+      		<if test="id!=null ">
+				and id=#{id}
+			</if>
+      		<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+      		<if test="payWayId!=null ">
+				and pay_way_id=#{payWayId}
+			</if>
+      		<if test="payTypeId!=null ">
+				and pay_type_id=#{payTypeId}
+			</if>
+      		<if test="payWayRate!=null ">
+				and pay_way_rate=#{payWayRate}
+			</if>
+      		<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.merchant.entity.Payv2CompanyPayType">
+		update payv2_company_pay_type
+		<set>
+			<if test="companyId!=null ">
+				company_id=#{companyId},
+			</if>
+			<if test="payWayId!=null ">
+				pay_way_id=#{payWayId},
+			</if>
+			<if test="payTypeId!=null ">
+				pay_type_id=#{payTypeId},
+			</if>
+			<if test="payWayRate!=null ">
+				pay_way_rate=#{payWayRate},
+			</if>
+			<if test="createTime!=null ">
+				create_time=#{createTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.merchant.entity.Payv2CompanyPayType" resultMap="payv2companypaytype_result_map">
+		select id,company_id,pay_way_id,pay_type_id,pay_way_rate,create_time from payv2_company_pay_type
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="payWayId!=null ">
+				and pay_way_id=#{payWayId}
+			</if>
+			<if test="payTypeId!=null ">
+				and pay_type_id=#{payTypeId}
+			</if>
+			<if test="payWayRate!=null ">
+				and pay_way_rate=#{payWayRate}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据对象查询列表-->
+	<select id="selectByObject" resultMap="payv2companypaytype_result_map" >
+		select id,company_id,pay_way_id,pay_type_id,pay_way_rate,create_time from payv2_company_pay_type
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="payWayId!=null ">
+				and pay_way_id=#{payWayId}
+			</if>
+			<if test="payTypeId!=null ">
+				and pay_type_id=#{payTypeId}
+			</if>
+			<if test="payWayRate!=null ">
+				and pay_way_rate=#{payWayRate}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="payv2companypaytype_result_map" >
+		
+		SELECT id,company_id,pay_way_id,pay_type_id,pay_way_rate,create_time FROM payv2_company_pay_type 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="payWayId!=null and payWayId!=''">
+				and pay_way_id = #{payWayId}
+			</if>
+			<if test="payTypeId!=null and payTypeId!=''">
+				and pay_type_id = #{payTypeId}
+			</if>
+			<if test="payWayRate!=null and payWayRate!=''">
+				and pay_way_rate like  CONCAT('%',#{payWayRate},'%')
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	
+	<!-- 获取商户支持的支付平台与支付方式-->
+	<select id="payTypeList" resultMap="payv2companypaytype_result_map" >
+		select company.id,company.company_id,company.pay_way_id,company.pay_type_id,company.pay_way_rate
+		,company.create_time 
+		,way.way_name,type.pay_type_name
+		from payv2_company_pay_type company
+		LEFT JOIN payv2_pay_way way on company.pay_way_id = way.id
+		LEFT JOIN payv2_pay_type type on company.pay_type_id = type.id
+		where		
+			company.company_id=#{companyId}
+	</select>
+	
+	
+	<!-- 查询某组companyId是否有某个支付方式-->
+	<select id="selectCompanyHasThisPayType" resultMap="payv2companypaytype_result_map" >
+		select * from payv2_company_pay_type where pay_type_id=#{payTypeId} and company_id in (${ids})
+	</select>
+	
+	<!-- 官方后台修改渠道商支付方式费率时,检查该渠道商下所有商户的费率是否都依然大于修改后的费率 -->
+	<select id="checkRateIsLargeValue" resultType="java.lang.Integer">
+		SELECT 
+			count(*) 
+		FROM 
+			payv2_company_pay_type a,
+			payv2_buss_company b 
+		WHERE 
+			a.company_id=b.id 
+			AND b.channel_id=#{channelId} 
+			AND a.pay_type_id=#{payTypeId} 
+			AND a.pay_way_rate<![CDATA[ < ]]>#{payWayRate};
+	</select>
+</mapper>

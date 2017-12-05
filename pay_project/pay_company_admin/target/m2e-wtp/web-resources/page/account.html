@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>商户管理平台账户信息</title>
+		<meta name="renderer" content="webkit|ie-stand">
+		<meta name="force-rendering" content="webkit">
+		<meta http-equiv="x-ua-compatible" content="IE=11,10,9">
+		<link rel="stylesheet" href="../public/css/normal.css" />
+		<link rel="stylesheet" href="../public/css/order.css" />
+		<link rel="stylesheet" href="../public/css/nav.css" />
+		<link rel="shortcut icon" href="../favico.ico" />
+	</head>
+
+	<body>
+		<header>
+			<div class="logo fl">
+				<img src="../public/img/logo.png" />
+			</div>
+			<!-- <div class="tips fr">
+				<div class="red"></div>
+			</div> -->
+			<div class="users fr user">
+				<span>全民金服</span>
+				<i></i>
+				<div class="change changeuser">
+					<div class="change1 setPayPW">设置支付密码</div>
+					<div class="change1 changepwd">修改登录密码</div>
+					<div class="change2 exitlogin">退出登录</div>
+				</div>
+			</div>
+			<!-- <div class="users fr line">
+				<span>线上应用</span>
+				<i></i>
+				<div class="change changeline">
+					<div class="change2">线下门店</div>
+				</div>
+			</div> -->
+		</header>
+		<nav>
+			<ul>
+				<li class="stair datali" style="cursor: pointer;"><img src="../public/img/sjtj2.png"><span class="c_33">数据统计</span></li>
+				<li class="stair"><img src="../public/img/dd.png"><span class="c_80">订单</span></li>
+				<li class="secondLevel">
+					<a href="orderManager.html" class="c_33">交易订单</a>
+					<a href="refund.html" class="c_33">退款订单</a>
+					<a href="payOfAnother.html" class="c_33">代付订单</a>
+					<a href="accountManager.html" class="c_33">账单管理</a>
+				</li>
+				<li class="stair"><img src="../public/img/yy.png"><span class="c_80">应用</span></li>
+				<li class="secondLevel">
+					<a href="appManager.html" class="c_33">应用管理</a>
+				</li>
+				<li class="stair"><img src="../public/img/zh.png"><span class="c_80">账户</span></li>
+				<li class="secondLevel ">
+					<a href="account.html" class="c_33 active">账户信息</a>
+					<a href="d0Tx.html" class="c_33">D0提现</a>
+					<a href="d0Account.html" class="c_33">D0账单</a>
+				</li>
+			</ul>
+			<div class="dld"><img src="../public/img/dld.png" /><span>下载SDK</span></div>
+		</nav>
+		<div class="main">
+			<!--title-->
+			<div class="title">当前位置：账户信息</div>
+			<!--基础信息-->
+			<div class="ac-tips">
+				<div class="base fl"><i></i><span>账户信息</span></div>
+				<div class="edit fr"><i></i><span>编辑</span></div>
+			</div>
+			<div class="account-infor" style="height:140px">
+				<div class="account-infor-title">
+					<i></i><span>代付信息</span>
+				</div>
+				<ul>
+					<li class="totalAmount">
+						<dl><dt class="fl">代付余额：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
+			<div class="scan-code" style="height:240px" thisid="">
+				<div class="account-infor-title">
+					<i></i><span>收款码</span>
+				</div>
+				<ul>
+					<li class="codeInfo">
+						<dl><dt class="fl">商户收款码：</dt>
+							<dd class="fl">
+								<div class="showcode fl noimg">查看</div>
+								<div class="dldcode fl noimg" href="" download="code">下载</div>
+							</dd>
+						</dl>
+					</li>
+					<li class="">
+						
+					</li>
+					<li class="isRemark">
+						<dl><dt class="fl">备注信息：</dt>
+							<dd class="fl">
+								
+							</dd>
+						</dl>
+					</li>
+					<li class="">
+						
+					</li>
+					<li class="notifyUrl">
+						<dl><dt class="fl">收款码回调地址：</dt>
+							<dd class="fl">
+							
+							</dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
+			<div class="base-infor" style="height:328px;">
+				<div class="account-infor-title">
+					<i></i><span>基础信息</span>
+				</div>
+				<ul>
+					<li class="companyName">
+						<dl><dt class="fl">商户名称：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+					<li class="userName">
+						<dl><dt class="fl">商户账号：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+					<li class="companyStatus">
+						<dl><dt class="fl">商户状态：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+					<li class="companyTradeVar">
+						<dl><dt class="fl">所属行业：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+					<li class="companyKey">
+						<dl><dt class="fl">商户号：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+					<!--	<li class="companyRangeCityName"><dl><dt class="fl">所在城市：</dt><dd class="fl"></dd></dl></li> -->
+					<li class="companyAddr">
+						<dl><dt class="fl">联系地址：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+					<li class="contactsName">
+						<dl><dt class="fl">管理员名称：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+					<li class="contactsPhone">
+						<dl><dt class="fl">联系方式：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+					<li class="contactsMail">
+						<dl><dt class="fl">联系邮箱：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+
+				</ul>
+			</div>
+			<div class="account-infor">
+				<div class="account-infor-title">
+					<i></i><span>账户信息</span>
+				</div>
+				<ul>
+					<li class="accountType">
+						<dl><dt class="fl">账户类型：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+					<li class="accountName">
+						<dl><dt class="fl">开户名称：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+					<li class="accountBank">
+						<dl><dt class="fl">开户银行：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+					<li class="accountCard">
+						<dl><dt class="fl">银行卡号：</dt>
+							<dd class="fl"></dd>
+						</dl>
+					</li>
+
+				</ul>
+			</div>
+			<div class="table-account-a">
+				<div class="account-infor-title">
+					<i></i><span>支付通道及交易费率</span>
+				</div>
+				<div class="table-c">
+					<table cellpadding="0" cellspacing="0">
+						<thead>
+							<tr>
+								<th class='first'>支付通道</th>
+								<th>交易费率</th>
+								<th>结算周期</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="account-footer">
+			<div class="cancel fl">取消编辑</div>
+			<div class="save fl">保存</div>
+		</div>
+		</div>
+		<div class="bg">
+			<div class="window3">
+				<div class="top2">
+					修改密码
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;cursor:pointer;'>
+						<i></i>
+					</div>
+				</div>
+				<div class="bottom3">
+					<div class="oldpwd">
+						<label>原密码:</label>
+						<input type="password" placeholder="请输入原密码" />
+						<span style="color:red;font-size:14px;display:none">请输入原密码</span>
+					</div>
+					<div class="newpwd">
+						<label>新密码:</label>
+						<input type="password" placeholder="6-16位密码(数字、字母组成)" />
+						<span style="color:red;font-size:14px;display:none">请输入新密码</span>
+					</div>
+					<div class="newpwda">
+						<label>确认密码:</label>
+						<input type="password" placeholder="请再次输入新密码" />
+						<span style="color:red;font-size:14px;display:none">请再次输入新密码</span>
+					</div>
+					<div class="surebtn">确定</div>
+				</div>
+			</div>
+			<div class="windowPw">
+				<div class="top2">
+					设置支付密码
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;cursor:pointer;'>
+						<i></i>
+					</div>
+				</div>
+				<div class="bottom3">
+					<div class="oldpwd">
+						<label>验证码:</label>
+						<input type="text" placeholder="账户绑定邮箱查看" style="margin-left:32px" />
+						<span class="getSmS" thistime='0'>获取</span>
+						<span style="color:red;font-size:14px;display:none">请输入验证码</span>
+					</div>
+					<div class="newpwd">
+						<label>支付密码:</label>
+						<input type="password" maxlength="6" placeholder="6位数密码" style="margin-left:16px" />
+						<span style="color:red;font-size:14px;display:none">请输入密码</span>
+					</div>
+					<div class="newpwda">
+						<label>确认密码:</label>
+						<input type="password" maxlength="6" placeholder="请再次输入6位数密码" style="margin-left:16px" />
+						<span style="color:red;font-size:14px;display:none">请再次输入密码</span>
+					</div>
+					<div class="surebtn">确定</div>
+				</div>
+			</div>
+			<div class="codeImg">
+				<img src=""/>
+				<div class="closeImg"></div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../public/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../public/js/echarts.min.js"></script>
+		<script type="text/javascript" src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+		<script type="text/javascript" src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+		<script type="text/javascript" src="../public/js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="../public/js/md5.js"></script>
+		<script type="text/javascript" src="../public/js/exit.js"></script>
+		<script type="text/plain" id="trmode">
+			<tr>
+				<td class='first'></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</script>
+		<script>
+			var isSwitch = localStorage.isSwitch,
+				companyName = localStorage.companyname;
+			var statusArr = ['', '未审核', '通过(合作中)', '未通过', '终止合作'];
+			$(".user span").text(companyName);
+			if(isSwitch == 1) {
+				$(".changeline").remove();
+			}
+
+			var cname, name, mail, phone, id, param = {},
+				param2 = {};
+			$("body").on("click", ".getSmS", function() {
+				var _this = $(this);
+				if($(this).attr("thistime") == 0) {
+					_this.attr("thistime", "60");
+					_this.css("background", "#ccc");
+					setTimeout(function() {
+						ret()
+					}, 1000)
+					function ret() {
+						if(_this.attr("thistime") != 0) {
+							_this.html(_this.attr("thistime") - 1 + "s")
+							_this.attr("thistime", _this.attr("thistime") - 1);
+							setTimeout(function() {
+								ret()
+							}, 1000)
+						} else {
+							_this.attr("thistime", "0");
+							_this.html("获取")
+							_this.css("background", "#2581f4");
+						}
+					}
+
+					$.ajax({
+						type: 'get',
+						url: "/sys/sendEmail.do",
+						async: true,
+						success: function(data) {
+							if(!!data && data.resultCode == 200) {
+								
+							} else {
+								alert(data.message)
+							}
+						}
+					})
+				}
+
+			})
+			$("body").on("keydown",".windowPw .oldpwd input,.windowPw .newpwd input,.windowPw .newpwda input",function(){
+				$(this).parent().find('span').not(".getSmS").hide();
+			})
+			$("body").on("click", ".windowPw .surebtn", function() {
+				var param = {};
+				param.code = $(".windowPw .oldpwd input").val();
+				param.payPassWord = $(".windowPw .newpwd input").val();
+				pw2 =  $(".windowPw .newpwda input").val()
+				param.payPassWordMD5 = md5(md5(param.payPassWord))
+				$(".windowPw .oldpwd span").not(".getSmS").hide();
+				$(".windowPw .newpwd span").hide();
+				$(".windowPw .newpwda span").hide();
+				var isCode = false,
+					pwd1 = false,
+					pwd2 = false;
+				if($(".windowPw .oldpwd input").val()){
+					isCode = true;
+				}else{
+					$(".windowPw .oldpwd span").not(".getSmS").show();
+				}
+				
+				if($(".windowPw .newpwd input").val() ){
+					//console.log($(".windowPw .newpwd input").val())
+					if(/^\d{6}$/.test($(".windowPw .newpwd input").val())){
+						pwd1 = true;
+					}else{
+						$(".windowPw .newpwd span").html("密码格式不正确")
+						$(".windowPw .newpwd span").show();
+					}
+					
+				}else{
+					$(".windowPw .newpwd span").html("请输入密码")
+					$(".windowPw .newpwd span").show();
+				}
+				
+				if($(".windowPw .newpwda input").val()){
+					if(/^\d{6}$/.test($(".windowPw .newpwd input").val())){
+						pwd2 = true;
+					}else{
+						$(".windowPw .newpwd span").html("密码格式不正确")
+						$(".windowPw .newpwd span").show();
+					}
+					
+				}else{
+					$(".windowPw .newpwd span").html("请再次输入密码")
+					$(".windowPw .newpwda span").show();
+				}
+				
+				if($(".windowPw .newpwd input").val()&&$(".windowPw .newpwda input").val()){
+					if($(".windowPw .newpwd input").val()!=$(".windowPw .newpwda input").val()){
+						alert("两次密码不一样")
+						$(".windowPw .newpwd input").val("");
+						$(".windowPw .newpwda input").val("");
+					}
+					
+				}
+				if(isCode && pwd1 && pwd2){
+					if(param.payPassWord == pw2){
+						$.ajax({
+							type:"get",
+							url:'/sys/checkEmailCode.do',
+							async:false,
+							data:param,
+							success:function(data){
+								console.log(data);
+								if(!!data && data.resultCode==200){
+									alert("修改成功")
+									$(".oldpwd input").val("");
+									$(".newpwd input").val("");
+									$(".newpwda input").val("");
+									$(".bg").hide();
+									$(".windowPw").hide();
+									$(".window").hide();
+								}else {
+									alert(data.message)
+								}
+							}
+						})
+					}
+				}
+				
+			});
+			$("body").on("click", ".changeline .change2", function() {
+				$.ajax({
+					type: "get",
+					url: "/sys/tabSwitch.do",
+					async: false,
+					success: function(data) {
+						//console.log(data);
+						if(!!data && data.resultCode == 200) {
+							if(data.Data.isTabSwitch == 2) {
+								location.href = "dataOffline.html";
+							}
+						} else {
+							if(!!data.message) {
+								alert(data.message);
+							} else {
+								$("body").html(data);
+							}
+						}
+					}
+				})
+			})
+			/*header 事件start*/
+			$(".user i").on("click", function() {
+				$(".changeuser").show();
+			})
+			$(".user").on("mouseleave", function() {
+				$(".changeuser").hide();
+			})
+			$(".user i").on("mouseenter", function() {
+				$(this).css("background-image", "url(../public/img/down2.png)");
+			})
+			$(".user i").on("mouseleave", function() {
+				$(this).css("background-image", "url(../public/img/down1.png)");
+			})
+			$(".line").on("click mouseenter", function() {
+				$(".changeline").show();
+			})
+			$(".line").on("click mouseleave", function() {
+				$(".changeline").hide();
+			})
+			$(".cancel,.save,.dld").on("mousedown", function() {
+				$(this).css("background-color", "#2ea1f9")
+			})
+			$(".cancel,.save,.dld").on("mouseup", function() {
+				$(this).css("background-color", "#2581f4")
+			})
+			/*header 事件start*/
+			/*nav 事件start*/
+			$(".datali").on("click", function() {
+				window.location = "data.html"
+			})
+			$(".dld").on("click", function() {
+				window.open("http://pay.aijinfu.cn/sdk-download.html")
+			})
+			/*nav 事件end*/
+			/*弹窗start*/
+			$(".show").on("click", function() {
+				$(".bg").show();
+			})
+			$(".closex i").on("click", function() {
+				$(".bg").hide();
+			})
+			/*弹窗start*/
+			/*编辑*/
+
+			$(".edit").on("click", function() {
+				//console.log()
+				if($(".account-footer").css("display") == 'block') {
+
+				} else {
+					$(this).hide();
+					$(this).addClass("sureclick");
+					$(".account-footer").show();
+					cname = $(".companyName dd").text(),
+						name = $(".contactsName dd").text(),
+						mail = $(".contactsMail dd").text()
+					phone = $(".contactsPhone dd").text();
+					console.log($(".notifyUrl dd").html())
+					$(".isRemark dd").html('<label><input class="choose" type="radio" name="bj" checked="checked" />选填</label><label><input class="must" type="radio" name="bj" />必填</label>')
+					$(".notifyUrl dd").html("<input type='text' placeholder='" + $(".notifyUrl dd").html() + " '/>");
+					$(".companyName dd").html("<input maxlength='30' type='text' placeholder=" + $(".companyName dd").text() + " />");
+					$(".contactsName dd").html("<input maxlength='10' type='text' placeholder=" + $(".contactsName dd").text() + " />");
+					$(".contactsPhone dd").html("<input type='text' placeholder=" + $(".contactsPhone dd").text() + " />");
+					$(".contactsMail dd").html("<input type='mail' placeholder=" + $(".contactsMail dd").text() + " />");
+				}
+			})
+			$(".cancel").on("click", function() {
+				$(".companyName dd").html(cname);
+				$(".contactsName dd").html(name);
+				$(".contactsPhone dd").html(phone);
+				$(".account-footer").hide();
+				$(".edit").show();
+			})
+			$.ajax({
+				type: "get",
+				url: "/dfWayRate/dfInfo.do",
+				async: true,
+				success: function(data) {
+					//console.log(data)
+					if(!!data && data.resultCode == 200) {
+						if(data.Data.totalAmount){
+							$(".totalAmount dd").html((+data.Data.totalAmount).toFixed(2) + "  元")
+						}
+						
+					}
+				}
+			})
+			$("body").on("click",".showcode",function(){
+				if(!$(this).hasClass("noimg")){
+					$.ajax({
+						type:"get",
+						url:"/bussComapnyCode/getCode.do",
+						async:true,
+						success:function(data){
+							if(!!data && data.resultCode == 200) {
+								$(".codeImg img").attr("src",data.Data.codeFileUrl);
+								//$(".dldcode").attr("href",data.Data.codeFileUrl)
+								$(".bg").show();
+								$(".codeImg").show();
+								$(".window3").hide();
+								$(".windowPw").hide();
+							}else{
+								alert(data.message)
+							}
+						}
+					})
+				}
+			})
+			$(".dldcode").on("click",function(){
+				if(!$(this).hasClass("noimg")){
+					location.href="/bussComapnyCode/downloadCode.do";
+				}
+			})
+			$("body").on("click",".closeImg",function(){
+				$(".bg").hide();
+				$(".codeImg").hide();
+				$(".window3").hide();
+				$(".windowPw").hide();
+			})
+			
+			$.ajax({
+				type: "get",
+				url: "/bussComapnyCode/codeInfo.do",
+				async: true,
+				success: function(data) {
+					console.log(data)
+					if(!!data && data.resultCode == 200) {
+						data = data.Data;
+						if(data.isHasCode==1){
+							$(".dldcode").removeClass("noimg");
+							$(".showcode").removeClass("noimg");
+						}
+						if(data.payv2BussCompanyCode){
+							$(".notifyUrl dd").html(data.payv2BussCompanyCode.notifyUrl)
+							$(".scan-code").attr("thisid",data.payv2BussCompanyCode.id)
+							if( data.payv2BussCompanyCode.isRemark==1){
+								$(".isRemark dd").html("必填");
+							}else{
+								$(".isRemark dd").html("选填");
+							}
+						}
+						
+					}else{
+						alert(data.message)
+					}
+				}
+			})
+			
+			$("body").on("click",".choose",function(){
+				$(".must").attr("isc","2")
+			})
+			$("body").on("click",".must",function(){
+				$(".must").attr("isc","1")
+			})
+			$(".save").on("click", function() {
+				var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+				param.id = id;
+				var isPhone = true,
+					ismail = true;
+				if($(".contactsMail dd input").val()) {
+					if(!reg.test($(".contactsMail dd input").val())) {
+						ismail = false;
+					}
+				}
+				if($(".contactsPhone dd input").val()) {
+					if((/^0\d{2,3}-?\d{7,8}$/.test($(".contactsPhone dd input").val())) || (!/^1[3|4|5|7|8][0-9]\d{8}$/.test($(".contactsPhone dd input").val()))) {
+						isPhone = false;
+					}
+				}
+				if(isPhone && ismail) {
+					param.companyName = $(".companyName dd input").val() || cname;
+					param.contactsName = $(".contactsName dd input").val() || name;
+					param.contactsPhone = $(".contactsPhone dd input").val() || phone;
+					param.contactsMail = $(".contactsMail dd input").val() || mail;
+					param.id = $(".scan-code").attr("thisid");
+					param.isRemark = $(".isRemark .must").attr("isc");
+					param.notifyUrl = $(".notifyUrl dd input").val();
+					console.log(param)
+					$.ajax({
+						type: "get",
+						url: " /online/payv2BussCompany/updatePayv2BussCompany.do",
+						data: param,
+						async: false,
+						success: function(data) {
+							//console.log(data);
+							if(!!data && data.resultCode == 200) {
+								console.log(param)
+								alert("修改成功");
+								$(".account-footer").hide();
+								getdata();
+								$(".edit").show()
+							} else {
+								if(!!data.message) {
+									alert(data.message);
+								} else {
+									$("body").html(data);
+								}
+							}
+						}
+					})
+					
+					
+				} else if(!isPhone) {
+					alert("手机号码格式错误")
+				} else if(!ismail) {
+					alert("邮箱格式错误")
+				}
+			})
+			getdata();
+
+			function getdata() {
+				param2.time = new Date();
+				//console.log(param2);
+				$.ajax({
+				type: "get",
+				url: "/bussComapnyCode/codeInfo.do",
+				async: true,
+				success: function(data) {
+					console.log(data)
+					if(!!data && data.resultCode == 200) {
+						data = data.Data;
+						if(data.payv2BussCompanyCode){
+							$(".notifyUrl dd").html(data.payv2BussCompanyCode.notifyUrl)
+							$(".scan-code").attr("thisid",data.payv2BussCompanyCode.id)
+							if( data.payv2BussCompanyCode.isRemark==1){
+								$(".isRemark dd").html("必填");
+								
+							}else{
+								$(".isRemark dd").html("选填");
+								
+							}
+						}
+						
+					}
+				}
+			})
+				$.ajax({
+					type: "get",
+					url: "/online/payv2BussCompany/toViewPayv2BussCompany.do",
+					data: param2,
+					async: false,
+					success: function(data) {
+						console.log(data);
+						if(!!data && data.resultCode == 200) {
+							data = data.Data.obj;
+							id = data.id;
+							localStorage.mail = data.contactsMail;
+							$(".companyName dd").html(data.companyName);
+							$(".userName dd").html(data.userName);
+							$(".companyStatus dd").html(statusArr[data.companyStatus]);
+							$(".companyTradeVar dd").html(data.companyTradeVar);
+							$(".companyKey dd").html(data.companyKey);
+							$(".companyRangeCityName dd").html(data.companyRangeCityName);
+							$(".companyAddr dd").html(data.licenseAddr);
+							$(".contactsName dd").html(data.contactsName);
+							$(".contactsPhone dd").html(data.contactsPhone);
+							$(".contactsMail dd").html(data.contactsMail);
+							if(data.accountType == 1) {
+								$(".accountType dd").html("公司账户");
+							} else if(data.accountType == 2) {
+								$(".accountType dd").html("个人账户");
+							}
+							$(".accountName dd").html(data.accountName);
+							$(".accountBank dd").html(data.accountBank);
+							$(".accountCard dd").html(data.accountCard);
+						} else {
+							if(!!data.message) {
+								alert(data.message);
+							} else {
+								$("body").html(data);
+							}
+						}
+					}
+				})
+			}
+			gettable()
+
+			function gettable() {
+				$.ajax({
+					type: "get",
+					url: "/online/payv2BussCompany/getPaywayInfoList.do",
+					async: false,
+					success: function(data) {
+						//console.log(data)
+						if(!!data && data.resultCode == 200) {
+							inidata(data.Data.paywayList);
+						} else {
+							alert(data.message);
+						}
+
+					}
+				})
+			}
+
+			function inidata(obj) {
+				//console.log(obj)\
+				var datas;
+				$.ajax({
+					type: "get",
+					url: "/dfWayRate/dfInfo.do",
+					async: false,
+					success: function(data) {
+						//console.log(data)
+						if(!!data && data.resultCode == 200) {
+							datas = data.Data.comRates;
+
+						} else {
+							alert(data.message);
+						}
+
+					}
+				})
+				var str = "";
+				if(obj.length) {
+					for(var i = 0; i < obj.length; i++) {
+						str += $("#trmode").html();
+					}
+					if(datas) {
+						for(var j = 0; j < datas.length; j++) {
+							str += $("#trmode").html();
+						}
+					}
+
+					$(".table-c tbody").html(str);
+					for(var i = 0; i < obj.length; i++) {
+						$(".table-c tbody tr").eq(i).find("td").eq(0).html(obj[i].wayName);
+						$(".table-c tbody tr").eq(i).find("td").eq(1).html(obj[i].payWayRate + "‰");
+						if(obj[i].weekType == 1) {
+							$(".table-c tbody tr").eq(i).find("td").eq(2).html("T+" + obj[i].wayArrivalValue + "(工作日)");
+						} else if(obj[i].weekType == 3) {
+							$(".table-c tbody tr").eq(i).find("td").eq(2).html("T+" + obj[i].wayArrivalValue);
+						} else if(obj[i].weekType == 2) {
+							$(".table-c tbody tr").eq(i).find("td").eq(2).html("实时到账");
+						} else {
+							$(".table-c tbody tr").eq(i).find("td").eq(2).html("");
+						}
+					}
+					if(datas) {
+						for(var j = 0; j < datas.length; j++) {
+							$(".table-c tbody tr").eq(obj.length + j).find("td").eq(0).html(datas[j].dfPayWayName);
+							$(".table-c tbody tr").eq(obj.length + j).find("td").eq(1).html(datas[j].payWayRate.toFixed(2) + "  元/笔");
+							$(".table-c tbody tr").eq(obj.length + j).find("td").eq(2).html("——");
+						}
+					}
+
+					$(".table-c tr").eq(obj.length + datas.length).find("td").addClass("lasttd");
+				} else {
+					$(".table-c tbody").html("暂时没有数据")
+				}
+			}
+		</script>
+
+	</body>
+
+</html>

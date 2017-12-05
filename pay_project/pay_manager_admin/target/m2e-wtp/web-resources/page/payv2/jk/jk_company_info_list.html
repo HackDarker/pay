@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<#include "lib/lib.html" />
+<title>商户管理</title>
+</head>
+<body style="background-color: #F0F0F0">
+	<nav class="breadcrumb">
+	 	 <i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 合作渠道商管理 <span class="c-gray en">&gt;</span> 接口商户管理
+		 <a  class="btn btn-success radius r mr-20"  style="line-height: 1.6em; margin-top: 3px" href="javascript:location.replace(location.href);" title="刷新">
+		 <i class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<div class="pd-20 ">
+		<div class="panel panel-default" >
+			<div class="panel-header" style="height: 30px;">
+				<div class="fl" style="font-size: 15px;">条件筛选</div>
+				<div class="r">
+					<!-- <button name="" id="" class="btn btn-success" type="submit"> <i class="Hui-iconfont"></i> 搜索 </button> -->
+					<button class="layui-btn layui-btn-small" onclick="data_form_submit()"><i class="layui-icon" style="line-height:12px;">&#xe615;</i>搜索</button>
+					<!-- <button class="layui-btn layui-btn-small" onclick="exportExcel()"><i class="layui-icon" style="line-height: 12px;">&#xe601;</i>导出</button> -->
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="">
+			        <form action="" method="post" id="comForm">
+			        	<div class="layui-row">						    
+						    <div class="layui-col-xs4">
+						      <div class="grid-demo">
+						      	<label>来源渠道:</label>
+						      	<select class="select" style="width: 80px" name="channelId" id="channelId" onchange="showCompany()">
+									<option value="">全部</option>
+									<#if channelList?? && channelList?size gt 0>
+									<#list channelList as dl >
+										<option value="${dl.id}" <#if dl.id==map.channelId>selected="selected"</#if>>${dl.channelName}</option>
+									</#list>
+									</#if>
+								</select>
+						      </div>
+						    </div>
+						    <div class="layui-col-xs4 chooseCompany">
+						      	<label>来源商户:</label>
+								<select class="select"  name="companyId" id="companyId">
+									<option value="">全部</option>
+									<#if companyList?? && companyList?size gt 0>
+									<#list companyList as dl >
+										<option value="${dl.id}" <#if dl.id==map.companyId>selected="selected"</#if>>${dl.companyName}</option>
+									</#list>
+									</#if>						
+								</select>
+						    </div>
+						    <div class="layui-col-xs4">						    	
+						    	<div>
+						    		<label>调用时间：</label>
+						    		<input placeholder="开始时间"
+										name="createTimeBegin" type="text"
+										value="${map.createTimeBegin!}"
+										onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 00:00:00',maxDate:'#F{$dp.$D(\'logmax\')}'})"
+										id="logmin" class="input-text Wdate" style="width:150px;">
+										~ 
+									<input type="text" placeholder="结束时间"
+										name="createTimeEnd" value="${map.createTimeEnd!}"
+										onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 23:59:59',minDate:'#F{$dp.$D(\'logmin\')}'})"
+										id="logmax" class="input-text Wdate" style="width:150px;">
+								</div>
+						    </div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default mt-20">
+			<div class="panel-header" style="height:25px;">
+				<div class="fl" style="font-size: 15px;">接口商户信息列表</div>
+			</div>
+			<div class="panel-body">
+				<div id="page" class="holder"></div>  
+				<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<thead>
+						<tr class="text-c">							
+							<th>商户名称</th>
+							<th>所属渠道</th>
+							<th>商户号</th>
+							<th>价格</th>
+							<th>调用次数</th>
+							<th>消费金额</th>
+						</tr>
+					</thead>
+					<tbody>						
+						<#if list.dataList?? && list.dataList?size gt 0> 
+							<#list list.dataList as dl >
+								<tr class="text-c">
+									<td>${dl.companyName!}</td>
+									<td>${dl.channelName!}</td>
+									<td>${dl.companyKey!}</td>
+									<td>${dl.serviceMoney!}元/次</td>
+									<td>${dl.callCount!}</td>
+									<td>${dl.serviceBalance!}</td>
+								</tr>
+							</#list> 
+						</#if>
+					</tbody>
+				</table>
+				</br>
+				<#if list.dataList?? && list.dataList?size gt 0>
+					<div id="page_list" class="text-c"></div>
+				</#if>
+				
+			</div>
+		</div>
+		
+		
+	</div>
+	<script type="text/javascript">
+
+		function data_form_submit(){
+			$("#comForm").attr("action","${basePath}/Payv2JK/JKInfoList.do").submit();
+		}
+	
+		layui.use(['laypage', 'layer'], function(){
+	  		var laypage = layui.laypage,layer = layui.layer;
+			laypage.render({
+			    elem: 'page_list',	//容器。值支持id名、原生dom对象，jquery对象
+			    count: ${list.totalData!'0'},	//数据总数。一般通过服务端得到
+			    //groups: 5,	//连续出现的页码个数
+			    limit: ${list.pageData!'10'},
+			    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+				curr: ${list.curPage!'1'}, //获取起始页
+			    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+			    jump: function(obj, first){
+			      if (!first) {
+			      	window.location.href="${appId}/Payv2JK/JKInfoList.do?curPage="+obj.curr +"&pageData="+obj.limit
+			      	      		 + "&channelId=" + $("#channelId").val()
+		 	    		 		 + "&companyId=" + $("#companyId").val()
+		 	    		 		 + "&createTimeBegin=" + $("#createTimeBegin").val()
+		 	    		 		 + "&createTimeEnd=" + $("#createTimeEnd").val();
+					}
+			    }
+			  });
+		});
+
+		var isChange = 0;
+		$(document).ready(function(){
+			$('select').searchableSelect();
+			isChange++;
+		})
+
+		// 查询渠道商的商户
+	  	function showCompany(){
+	      var channelId = $("#channelId").val();	      
+	      if(isChange == 0){
+	          return;
+	      }else{
+	        $("#companyId").empty();
+	        $("#companyId").append('<option value="">全部</option>');	        
+	        $.ajax({
+	          type:"get",
+	          url:"${basePath}/Payv2CompanyMoneyClear/showCompany.do?channelId="+channelId,
+	          async:true,
+	          success:function(data){           
+	            if(!!data&&data.resultCode==200){
+	              var list = data.Data,
+	                str="";
+	              for(var i=0;i<list.length;i++){
+	                str+='<option value="'+list[i].id+'">'+list[i].companyName+'</option>';
+	              }
+	              $("#companyId").append(str);
+	              $(".chooseCompany .searchable-select").remove();
+	              $('#companyId').searchableSelect();
+	            }else{
+	              alert(data.message);
+	            }
+	          }
+	        });        
+	      }     
+	    };
+	    $(document).keypress(function(e) {			
+		  // 回车键事件  
+	      if(e.which == 13) {  
+	  		jQuery(".confirmButton").click();
+	  		data_form_submit()
+	      }  
+		});
+	</script>
+</body>
+</html>

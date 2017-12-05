@@ -1,0 +1,700 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<#include "lib/lib.html" />
+<title>订单列表</title>
+</head>
+<body style="background-color: #F0F0F0">
+	<input type="hidden" id="totalPages" value="${list.totalPage!'0'}">
+	<input type="hidden" id="totalDatas" value="${list.totalData!'0'}">
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+		订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a
+			class="btn btn-success radius r mr-20" id="refresh"
+			style="line-height: 1.6em; margin-top: 3px"
+			href="javascript:location.replace(location.href);" title="刷新"> <i
+			class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<div class="pd-20">
+		<div>
+			<div class="panel panel-default">
+				<div class="panel-header" style="height: 25px">
+					<div style="float: left; font-size: 15px;">筛选汇总</div>
+				</div>
+				<div class="panel-body">
+					<table class="table table-hover table-bg table-sort">
+						<tbody>
+							<tr>
+								<td align="center" style="text-align:center;font-size: 15px;"><h4>
+										订单总数<br />
+										<span style="color: red;">${sumMap.countOrder!'0'}</span>
+									</h4></td>
+								<td align="center" style="text-align:center;font-size: 15px;"><h4>
+										订单总金额<br />￥<span style="color: red;">${sumMap.allPayMoney!'0'}</span>
+									</h4></td>
+								<td align="center" style="text-align:center;font-size: 15px;"><h4>
+										订单实付总金额<br />￥<span style="color: red;">${sumMap.allPayDiscountMoney!'0'}</span>
+									</h4></td>
+								<td align="center" style="text-align:center;font-size: 15px;"><h4>
+										通道费总金额<br />￥<span style="color: red;">${sumMap.payWayMoney!'0'}</span>
+									</h4></td>
+								<td align="center" style="text-align:center;font-size: 15px;"><h4>
+										商户通道费利润<br />￥<span style="color: red;">${sumMap.profitMoney!'0'}</span>
+									</h4></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<div class="panel panel-default mt-20">
+				
+				<div class="panel-header" style="height: 30px">
+					<div style="float: left; font-size: 15px;">条件筛选</div>
+					<div style="float: right;">
+						<button class="layui-btn layui-btn-small" onclick="data_form_submit()">
+							<i class="layui-icon" style="line-height:12px;">&#xe615;</i>搜索
+						</button>
+						<a class="layui-btn layui-btn-small" onclick="exportExcel()">
+							<i class="layui-icon" style="line-height:26px;">&#xe601;</i>导出
+						</a>
+					</div>
+				</div> 
+				<div class="panel-body">
+					<form action="" id="data_form">
+						<table class="table table-sort">
+							<tbody>
+								<!-- <tr>
+									<td align="center" style="text-align:center;"><h4>
+											订单总数<br />
+											<span style="color: red;">${sumMap.countOrder!'0'}</span>
+										</h4></td>
+									<td align="center" style="text-align:center;"><h4>
+											订单总金额<br />￥<span style="color: red;">${sumMap.allPayMoney!}</span>
+										</h4></td>
+									<td align="center" style="text-align:center;"><h4>
+											订单实付总金额<br />￥<span style="color: red;">${sumMap.allPayDiscountMoney!}</span>
+										</h4></td>
+									<td align="center" style="text-align:center;"><h4>
+											通道费总金额<br />￥<span style="color: red;">${sumMap.payWayMoney!}</span>
+										</h4></td>
+										<td>&nbsp;</td>
+								</tr> -->
+								<tr>
+									<td><strong>订单编号：</strong><input type="text" name="orderNum"
+										id="orderNum" placeholder="平台、商户、上游单号" style="width: 200px"
+										class="input-text" value="${map.orderNum!}"> <a href="javascript:;" id="tipsOne" style="text-decoration:none;font-size: 16px;"><i class="Hui-iconfont">&#xe633;</i></a></td>
+									
+									<td><strong>所属渠道：</strong> <select class="select"
+										id="channelId" name="channelId" datatype="*" nullmsg="请选择！"
+										style="width: 150px" onchange="comChannge();">
+											<option value="">全部</option> <#if channelList?? &&
+											channelList?size gt 0> <#list channelList as dl>
+											<option value="${dl.id!}"<#if dl.id == map.channelId>
+												selected="selected" </#if>>${dl.channelName!}</option> </#list> </#if>
+									</select></td>
+									<td class="companyTD"><strong>所属商户：</strong> <select class="select"
+										id="companyId" name="companyId" datatype="*" nullmsg="请选择！"
+										style="width: 150px"onchange="getAppsPayWays()">
+											<option value="">全部</option> <#if companyList?? &&
+											companyList?size gt 0> <#list companyList as dl>
+											<option value="${dl.id!}"<#if dl.id == map.companyId>
+												selected="selected" </#if>>${dl.companyName!}</option> </#list> </#if>
+									</select></td>
+									<td class="appTD"><strong>所属APP：</strong> <select class="select"
+										id="appId" name="appId" datatype="*" nullmsg="请选择！"
+										style="width: 150px">
+											<option value="">全部</option> <#if appList?? &&
+											appList?size gt 0> <#list appList as dl>
+											<option value="${dl.id!}"<#if dl.id == map.appId>
+												selected="selected" </#if>>${dl.appName!}</option> </#list> </#if>
+									</select></td>
+								</tr>
+								<tr>
+									<td><strong>金额范围：</strong><input type="text"
+										onblur="ValidateFloat($(this),value)"
+										value="${map.payMoneyMin!}" id="payMoneyMin" name="payMoneyMin"
+										placeholder="金额" style="width: 90px" class="input-text" /><strong>
+											至 </strong><input type="text" onblur="ValidateFloat($(this),value)"
+										value="${map.payMoneyMax!}" id="payMoneyMax" name="payMoneyMax"
+										placeholder="金额" style="width: 90px" class="input-text" /></td>
+									<td>
+										<strong>支付平台：</strong> 
+										<select class="select" id="payWayId" name="payWayId" onchange="rateChannge();" style="width: 150px">
+											<option value="">全部</option> 
+											<#if payList?? && payList?size gt 0> 
+												<#list payList as dl>
+													<option value="${dl.id!}"<#if dl.id == map.payWayId> selected="selected" </#if>>${dl.wayName!}</option> 
+												</#list> 
+											</#if>
+										</select>
+									</td>
+									<td class="payWayRateTD">
+										<strong>支付通道：</strong> 
+										<select class="select" id="rateId" name="rateId" style="width: 150px">
+											<option value="">全部</option> 
+											<#if rateList?? && rateList?size gt 0> 
+												<#list rateList as dl>
+												<option value="${dl.id!}"<#if dl.id == map.rateId> selected="selected" </#if>>${dl.rateName!}</option>
+												</#list> 
+											</#if>
+										</select>
+									</td>
+									<td><strong>支付状态：</strong> <select class="select"
+										id="payStatus" name="payStatus" datatype="*" nullmsg="请选择！"
+										style="width: 150px">
+											<option value="">全部</option>
+											<option value="1"<#if map.payStatus==1>
+												selected="selected" </#if>>支付成功</option>
+											<option value="2"<#if map.payStatus==2>
+												selected="selected" </#if>>支付失败</option>
+											<option value="3"<#if map.payStatus==3>
+												selected="selected" </#if>>未支付</option>
+											<!-- <option value="4"<#if map.payStatus==4>
+												selected="selected" </#if>>超时</option> -->
+											<option value="5"<#if map.payStatus==5>
+												selected="selected" </#if>>扣款成功回调失败</option>
+									</select></td>
+								</tr>
+								<tr>
+									<td colspan="2"><strong>交易时间：</strong><input placeholder="开始时间"
+										name="createTimeBegin" type="text"
+										value="${map.createTimeBegin!}"
+										onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 00:00:00',maxDate:'#F{$dp.$D(\'logmax\')}'})"
+										id="logmin" class="input-text Wdate" style="width:150px;">
+										<strong>至</strong> <input type="text" placeholder="结束时间"
+										name="createTimeEnd" value="${map.createTimeEnd!}"
+										onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 23:59:59',minDate:'#F{$dp.$D(\'logmin\')}'})"
+										id="logmax" class="input-text Wdate" style="width:150px;">
+										<input type="hidden" id="appId" value="${map.appId!}"
+										name="appId" /></td>
+								</tr>
+								<!-- <tr>
+									<td>&nbsp;</td>
+									<td>
+										<input id="resetButton" class="btn radius" type="button" value="清空"></input>
+									</td>
+									<td>&nbsp;</td>
+									<td>
+										<button name="" id="" class="btn btn-success radius"
+											type="submit">
+											<i class="Hui-iconfont">&#xe665;</i> 搜索
+										</button>
+									</td>
+									<td>&nbsp;</td>
+									<td style="text-align: right;">
+										<input type="button" class="btn radius" onclick="exportExcel()" value="导出Excel"></input>
+									</td>
+								</tr> -->
+							</tbody>
+						</table>					
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- <div style="float: left;">
+				<h5 style="text-align:left">
+				订单总数：<span style="color: red;">${sumMap.countOrder!}</span></br>
+				订单总金额：￥<span style="color: red;">${sumMap.allPayMoney!}</span></br>
+				订单实付总金额：￥<span style="color: red;">${sumMap.allPayDiscountMoney!}</span></br>
+				通道费总金额：￥<span style="color: red;">${sumMap.payWayMoney!}</span>
+				</h5>
+		</div>
+		<div class="right">
+			
+		</div> -->
+		<div class="panel panel-default mt-20">
+			<div class="panel-header" style="height: 25px;">
+				<div style="float: left;font-size: 15px;">订单列表</div>
+			</div>
+			<div class="panel-body">
+				<table
+					class="table table-border table-bordered table-sort" style="background-color: white">
+					<thead>
+						<tr class="text-c">
+							<!-- <th width="10">ID</th> -->
+							<th width="80">交易时间</th>
+							<th width="60">平台订单号 / 商户订单号 / 上游订单号
+							</th>
+							<th width="100">支付通道</th>
+							<th width="100">来源应用</th>
+							<th width="80">支付平台</th>
+							<!-- <th width="120"> 收款账号 </th>
+							<th width="120"> 支付账号 </th>
+							<th width="120"> 银行流水号 </th> -->
+							<th width="60">订单金额</th>
+							<th width="60">通道费</th>
+							<!-- <th width="80">实际支付金额 </th> -->
+							<!-- <th width="80">优惠金额 </th> -->
+							<th width="50">订单状态</th>
+							<!-- <th width="80">订单回调时间</th> -->
+							<th width="50">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<#if list.dataList?? && list.dataList?size gt 0> <#list
+						list.dataList as dl >
+						<tr class="text-c">
+							<!-- <td>${dl_index+1}</td> -->
+							<td>${dl.createTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+							<td>${dl.orderNum!}<br />${dl.merchantOrderNum!}<br />${dl.bankTransaction!'无(未支付)'}
+							</td>
+							<td>${dl.rateName!}</td>
+							<td>
+								<#if dl.orderType == 1>
+									${dl.appName!}
+								<#elseif dl.orderType == 2>
+									收款码
+								</#if>
+							</td>
+							<td>${dl.wayName!}</td>
+							<!-- <td>${dl.payWayUserName!}</td>
+								<td>${dl.payUserName!}</td>
+								<td>${dl.bankTransaction!}</td> -->
+							<td>${dl.payMoney!}</td>
+							<td>${dl.payWayMoney!}</td>
+							<!-- <td>${dl.payDiscountMoney!}</td> -->
+							<!-- <td>${dl.discountMoney!}</td> -->
+							<td><#if dl.payStatus ==1> <span
+								class="label label-success radius">支付成功</span> <#elseif
+								dl.payStatus ==2> <span class="label red radius">支付失败</span>
+								<#elseif dl.payStatus ==3> <span class="label red radius">未支付</span>
+								<#elseif dl.payStatus ==4> <span class="label red radius">超时</span>
+								<#elseif dl.payStatus ==5> <span class="label red radius">支付成功回调失败</span>
+								<#else> <span class="label red radius">其他</span> </#if>
+							</td>
+							<!-- <td>
+									<#if dl.callbackTime??>
+										${dl.callbackTime?string('yyyy-MM-dd')}
+									</#if>
+								</td> -->
+
+							<!-- <td class="td-manage">
+									<#if dl.payStatus ==5>
+										<a title="发起回调" href="javascript:;" onclick="callbackOrder(this,${dl.id!},'发起回调')" class="btn btn-secondary  size-MINI radius" style="text-decoration:none"><i class="Hui-iconfont">发起回调</i></a> 
+									</#if>
+								</td> -->
+							<td>
+								<a title="订单详情" href="javascript:;"
+									onclick="fund_info('订单详情','${basePath}/Payv2PayOrder/getOrderDetail.do?orderId='+${dl.id!},1200,600);"
+									class="ml-5" style="text-decoration:none">订单详情
+								</a>
+								<#if dl.payStatus ==5>
+									<a  onclick="callback_com('${dl.orderNum!}')" class="ml-5" style="text-decoration:none">
+										回调商户
+									</a>
+									<br>
+									<a  onclick="callback_info('${dl.orderNum!}')" class="ml-5" style="text-decoration:none">
+										回调信息
+									</a>									
+								</#if>
+							</td>
+						</tr>
+						</#list> </#if>
+					</tbody>
+				</table>
+				</br> <#if list.dataList?? && list.dataList?size gt 0>
+				<div id="page_list" class="page_list text-c"></div>
+				</#if>
+			</div>
+		</div>
+
+		
+	</div>
+	<script type="text/javascript">
+		/* $(function(){
+			$('select').searchableSelect();
+		}); */
+		
+		function data_form_submit(){
+			$("#data_form").attr('action','${basePath}/Payv2PayOrder/searchPayv2PayOrderList.do').submit();
+			// $("#orderform").submit();
+			// var ajax_data = $("#orderform").serialize();
+			// $.ajax({
+			// 	type:"get",
+			// 	data:ajax_data,
+			// 	url:"${basePath}/Payv2PayOrder/searchPayv2PayOrderList.do",				
+			// 	async:true,
+			// 	success:function(data){
+			// 		if(!!data&&data.resultCode==200){
+			// 			var allClear = data.Data.allClear;
+			// 			$("p[name='allClear']").eq(0).text(allClear.rateMoney);
+			// 			$("p[name='allClear']").eq(1).text(allClear.rateProfit);
+			// 			$("p[name='allClear']").eq(2).text(allClear.successMoney);
+			// 			$("p[name='allClear']").eq(3).text(allClear.refundMoney);
+			// 			$("p[name='allClear']").eq(4).text(allClear.cleanpayMoney);
+			// 			$("p[name='allClear']").eq(5).text(allClear.accountsMonry);
+			// 		}else{
+			// 			alert(data.message);
+			// 		}
+			// 	}
+			// });
+
+		}
+		$("#tipsOne").click(function(){
+			layer.tips('支持多个(小写逗号分割)三类订单号混合查询', '#tipsOne');
+		});
+		
+		layui.use(['laypage', 'layer'], function(){
+	  		var laypage = layui.laypage,layer = layui.layer;
+		  laypage.render({
+			    elem: 'page_list',	//容器。值支持id名、原生dom对象，jquery对象
+			    count: ${list.totalData!'0'},	//数据总数。一般通过服务端得到
+			    //groups: 5,	//连续出现的页码个数
+			    limit: ${list.pageData!'10'},
+			    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+				curr: ${list.curPage!'1'}, //获取起始页
+			    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+			    jump: function(obj, first){
+			      if (!first) {
+						window.location.href = "${basePath}/Payv2PayOrder/searchPayv2PayOrderList.do?curPage="
+								+ obj.curr
+								+ "&pageData="
+								+ obj.limit
+								+ "&channelId="
+								+ $("#channelId").val()
+								+ "&companyId="
+								+ $("#companyId").val()
+								+ "&appId="
+								+ $("#appId").val()
+								+ "&createTimeBegin="
+								+ $("#logmin").val()
+								+ "&createTimeEnd="
+								+ $("#logmax").val()
+								+ "&payWayId="
+								+ $("#payWayId").val()
+								+ "&rateId="
+								+ $("#rateId").val()
+								+ "&payMoneyMin="
+								+ $("#payMoneyMin").val()
+								+ "&payMoneyMax="
+								+ $("#payMoneyMax").val()
+								+ "&payStatus="
+								+ $("#payStatus").val();
+					}
+			    }
+			  });
+		});
+		var isChange=0;
+		$(document).ready(function(){
+			$('select').searchableSelect();
+			isChange++;
+		});
+		$(function(){
+		 	$("#resetButton").bind("click", function() {
+				$("#orderNum").val("");
+				$("#companyId").val("");
+				$("#appId").val("");
+				$("#payWayId").val("");
+				$("#payStatus").val("");
+				$("#logmin").val("");
+				$("#logmax").val("");
+				$("#rateId").val("");
+				$("#payMoneyMin").val("");
+				$("#payMoneyMax").val("");
+			});
+		});
+	
+		$(function() {
+			/* laypage({
+				cont : $('.page_list'), //容器。值支持id名、原生dom对象，jquery对象,
+				pages : ${list.endPage!'0' }, //总页数
+				//skip: true, //是否开启跳页
+				// 	    	skin: 'molv',
+				groups : 10, //连续显示分页数
+				first : '首页', //若不显示，设置false即可
+				last : '尾页', //若不显示，设置false即可
+				curr : ${list.curPage!'0'},
+				hash : true, //开启hash
+				skin : '#00AA91',
+				jump : function(obj, first) { //触发分页后的回调
+					if (!first) {
+						window.location.href = "${basePath}/Payv2PayOrder/searchPayv2PayOrderList.do?curPage="
+								+ obj.curr
+								+ "&pageData="
+								+ 10
+								+ "&companyId="
+								+ $("#companyId").val()
+								+ "&appId="
+								+ $("#appId").val()
+								+ "&createTimeBegin="
+								+ $("#logmin").val()
+								+ "&createTimeEnd="
+								+ $("#logmax").val()
+								+ "&payWayId="
+								+ $("#payWayId").val()
+								+ "&rateId="
+								+ $("#rateId").val()
+								+ "&payMoneyMin="
+								+ $("#payMoneyMin").val()
+								+ "&payMoneyMax="
+								+ $("#payMoneyMax").val()
+								+ "&payStatus="
+								+ $("#payStatus").val();
+					}
+				}
+			}); */
+		});
+
+		//添加优惠方案弹窗
+		function addPayv2AppDiscountTc(title, url, w, h) {
+			var url = '${basePath}/Payv2AppDiscount/addPayv2AppDiscountTc.do?appId='
+					+ $("#appId").val();
+			layer_show('添加优惠方案', url, w, h);
+		}
+		/*删除*/
+		function fund_del(obj, id) {
+			layer.confirm('确认要删除吗？', function(index) {
+				var data = {};
+				data.id = id;
+				data.isDelete = 1;
+				//后台请求保存数据
+				$.axse("${basePath}/Payv2AppDiscount/delPayv2AppDiscount.do",
+						data, function(d) {
+							if (d.resultCode == 200) {
+								$(obj).parents("tr").remove();
+								layer.msg('已删除!', {
+									icon : 1,
+									time : 1000
+								});
+							} else {
+								Huimodal_alert("删除失败,请重试!", 1500);
+							}
+						}, function(d) {
+							Huimodal_alert("删除失败,请重试!", 1500);
+						});
+			});
+		}
+		//下架、上线
+		function fund_update(obj, id, str, isShow) {
+			layer
+					.confirm(
+							"确定" + str + "？",
+							function(index) {
+								var data = {};
+								data.id = id;
+								data.isShow = isShow;
+								//后台请求保存数据
+								$
+										.axse(
+												"${basePath}/Payv2AppDiscount/updatePayv2AppDiscount.do",
+												data,
+												function(d) {
+													if (d.resultCode == 200) {
+														layer.msg('已' + str
+																+ '!', {
+															icon : 1,
+															time : 1000
+														});
+														window.location.href = "${basePath}/Payv2AppDiscount/getPayv2AppDiscountList.do?appId="
+																+ $("#appId")
+																		.val();
+													} else {
+														Huimodal_alert(str
+																+ "失败,请重试!",
+																1500);
+													}
+												}, function(d) {
+													Huimodal_alert(str
+															+ "失败,请重试!", 1500);
+												});
+							});
+		}
+
+		//详情
+		function fund_info(title, url, w, h) {
+			layer_show(title, url, w, h);
+		}
+
+		//编辑
+		function fund_edit(title, url, w, h) {
+			layer_show(title, url, w, h);
+		}
+
+		//发起回调
+		function callbackOrder(obj, id, str) {
+			layer.confirm("确定" + str + "？", function(index) {
+				var data = {};
+				data.id = id;
+				//后台请求保存数据
+				$.axse("${basePath}/Payv2PayOrder/callbackOrder.do", data,
+						function(d) {
+							if (d.resultCode == 200) {
+								layer.msg('已' + str + '!', {
+									icon : 1,
+									time : 1000
+								});
+							} else {
+								Huimodal_alert(str + "失败,请重试!", 1500);
+							}
+						}, function(d) {
+							Huimodal_alert(str + "失败,请重试!", 1500);
+						});
+			});
+		}
+
+		//导出Excel
+		function exportExcel() {
+			var exportNum = $("#totalDatas").val()
+			if (exportNum > 0 && exportNum <=300000) {
+				$("#data_form").attr('action', '/Payv2PayOrder/exportExcelOrder.do');
+				$("#data_form").submit();
+				$("#data_form").attr('action', '/Payv2PayOrder/companyList.do');
+			}else if(exportNum > 300000){
+				layer.msg('一次导出数据不可超过30万条', function(){});
+				return false;
+			} else {
+				layer.msg('没有数据可导出', function(){});
+				return false;
+			}
+		}
+
+		function rateChannge() {
+			if(isChange == 0)
+				return;
+			$("#rateId").children("option").remove();
+			$("#rateId").append("<option value=\"\">全部</option>");
+			var payWayId = $("#payWayId").val();
+			if(payWayId != "") {
+				var data = {};
+				data.payWayId = payWayId;
+				//后台请求保存数据
+				$.axse("${basePath}/Payv2PayOrder/getRateList.do", data,
+						function(d) {
+							if (d.resultCode == 200) {
+								var str = '';
+								for (var i = 0; i < d.Data.length; i++) {
+									str += "<option value="+d.Data[i].id+">" + d.Data[i].rateName + "</option>";
+								}
+								$("#rateId").append(str);
+								$(".payWayRateTD .searchable-select").remove();
+					            $("#rateId").searchableSelect();
+							} else {
+								layer.msg('失败,请联系技术!', function(){});
+							}
+						}, function(d) {
+							layer.msg('失败,请联系技术!', function(){});
+						});
+            } else {
+				$(".payWayRateTD .searchable-select").remove();
+	            $("#rateId").searchableSelect();
+            }
+		}
+		function comChannge(){
+			if(isChange == 0)
+				return;
+			$("#companyId").children("option").remove();
+			$("#companyId").append("<option value=\"\">全部</option>");
+			var channelId = $("#channelId").val();
+			if(payWayId != "") {
+				var data = {};
+				data.channelId = channelId;
+				//后台请求保存数据
+				$.axse("${basePath}/Payv2PayOrder/getCompanyList.do", data,
+						function(d) {
+							if (d.resultCode == 200) {
+								var str = '';
+								for (var i = 0; i < d.Data.length; i++) {
+									str += "<option value="+d.Data[i].id+">" + d.Data[i].companyName + "</option>";
+								}
+								$("#companyId").append(str);
+								$(".companyTD .searchable-select").remove();
+					            $("#companyId").searchableSelect();
+							} else {
+								layer.msg('失败,请联系技术!', function(){});
+							}
+						}, function(d) {
+							layer.msg('失败,请联系技术!', function(){});
+						});
+            } else {
+				$(".companyTD .searchable-select").remove();
+	            $("#companyId").searchableSelect();
+            }
+		}
+		//验证输入的数字合法性
+		function ValidateFloat(e, pnumber) {
+			if (!/^\d+[.]?\d*$/.test(pnumber)) {
+				$(e).val(/^\d+[.]?\d*/.exec($(e).val()));
+			}
+			return false;
+		}
+		function getAppsPayWays(){
+	      // 查询商户的APP
+	      var companyId = $("#companyId").val();
+	      
+	      if(isChange == 0){
+	        return;
+	      }else{
+	        $("#appId").empty();
+	        $("#appId").append('<option value="">全部</option>');
+	        $.ajax({
+	          type:"get",
+	          url:"${basePath}/Payv2BussiManagerAlldata/getApps.do?companyId="+companyId,
+	          async:true,
+	          success:function(data){
+	            if(!!data&&data.resultCode==200){
+	              var list = data.Data,
+	                str="";
+	                var length = list.length;
+	              for(var i=0;i<length;i++){
+	                str+='<option value="'+list[i].id+'">'+list[i].appName+'</option>';
+	              }
+	              $("#appId").append(str);
+	              $(".appTD .searchable-select").remove();
+	              $('#appId').searchableSelect();
+	            }else{
+	              alert(data.message);
+	            }
+	          }
+	        });
+	      }
+	    }
+	    function callback_com(orderNum){
+	    	var index = layer.load(2, {
+			  shade: [0.1,'#fff'] //0.1透明度的白色背景
+			});
+	    	$.ajax({
+	    		type:"get",
+	    		url:"${basePath}/Payv2PayOrder/callBackCom.do?orderNum="+orderNum,
+	    		async:true,
+	    		success:function(data){
+	    			layer.close(index);
+	    			if(!!data&&data.resultCode==200){			            
+			            layer.alert(data.message,{
+			            	skin: 'layui-layer-molv'
+			            },function(){
+			            	location.replace(location.href)
+			            })
+		            }else if(!!data&&data.resultCode==201){
+			            layer.msg(data.message,{
+			            	icon : 2,
+							time : 2000
+			            })
+		            }else{
+			            layer.msg(data.message,{
+			            	icon : 2,
+							time : 2000
+			            })
+		            }
+	    		}
+	    	})
+	    }
+	    function callback_info(orderNum){
+	    	window.location.href="${basePath}/Payv2PayOrder/callBackInfo.do?orderNum="+orderNum;
+	    }
+	    $(document).keypress(function(e) {			
+		   	// 回车键事件  
+		      if(e.which == 13) {  
+		  		jQuery(".confirmButton").click();
+		  		data_form_submit()
+		      }  
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>向商户付款</title>
+		<link rel="stylesheet" href="../../public/css/scanCss.css" />
+		<link rel="stylesheet" href="../../public/css/scanStyle.css" />
+	</head>
+
+	<body>
+		<body>
+			<input type='hidden' value="${obj.companyName!}" id="companyName" />
+			<input type='hidden' value="${obj.isRemark!}" id="isRemark" />
+			<div class="layout-flex">
+				<!-- content start -->
+				<div class="content">
+					<div class="mainCon">
+						<div class="hdCon">
+							<div class="company"><i></i><span></span></div>
+						</div>
+						<div class="setAmount">
+							<i class="i_money mm">¥</i>
+							<span class="input_simu mm" id="amount"></span>
+							<em class="line_simu mm" id="line"></em>
+							<span class='tips'>请输入金额</span>
+							<div class="deleteAmount"><i></i></div>
+						</div>
+						<div class="addWords">添加备注</div>
+						
+					</div>
+
+					<!--<p class="sico_pay_p"><span class="sico_pay"></span></p>
+            <div class="amount_title"><em>向</em><span>北京全民金服科技有限公司</span><em>付款</em></div>
+            <div class="set_amount">
+                <div class="amount_hd">消费总额</div>
+                <div class="amount_bd">
+                    <i class="i_money">¥</i>
+                    <span class="input_simu" id="amount"></span>
+                    <!-- 模拟input 
+                    <em class="line_simu" id="line"></em>
+                    <!-- 模拟闪烁的光标
+                    <div class="clearBtn none" id="clearBtn" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><b class="btn_clear"></b></div>
+                    <!-- 清除按钮 
+                </div>
+            </div>
+            <p class="remark"><span id="remarkBtn" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">付款备注</span></p>
+       		 -->
+				</div>
+				<!-- content end -->
+
+				<!-- 键盘 -->
+				<div class="keyboard">
+					<table class="key_table" id="keyboard" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+						<tbody>
+							<tr>
+								<td class="key border b_rgt_btm" data-type="num" data-value="1">1</td>
+								<td class="key border b_rgt_btm" data-type="num" data-value="2">2</td>
+								<td class="key border b_rgt_btm" data-type="num" data-value="3">3</td>
+								<td class="key border b_btm clear" data-value="delete"></td>
+							</tr>
+							<tr>
+								<td class="key border b_rgt_btm" data-type="num" data-value="4">4</td>
+								<td class="key border b_rgt_btm" data-type="num" data-value="5">5</td>
+								<td class="key border b_rgt_btm" data-type="num" data-value="6">6</td>
+								<td class="pay_btn disable" data-value="sure" rowspan="3" id="payBtn" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><em>付</em>款</td>
+							</tr>
+							<tr>
+								<td class="key border b_rgt_btm" data-type="num" data-value="7">7</td>
+								<td class="key border b_rgt_btm" data-type="num" data-value="8">8</td>
+								<td class="key border b_rgt_btm" data-type="num" data-value="9">9</td>
+							</tr>
+							<tr>
+								<td colspan="2" class="key border b_rgt" data-type="num" data-value="0">0</td>
+								<td class="key border b_rgt" data-type="num" data-value=".">.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- 添加备注弹窗 -->
+				<div class="pop-wrap none" id="remarkPop">
+					<div class="pop_remark">
+						<div class="pop_title">添加付款备注</div>
+						<div class="input_wrap border b_all2">
+							<input type="text" id="remarkInput" maxlength="60" placeholder="最多输入60个字符">
+						</div>
+						<div class="btn_wrap border b_top">
+							<span id="remarkCancel" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">取消</span>
+							<span class="border b_lft" id="remarkConfirm" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">确定</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="bg"></div>
+			<script type="text/javascript" src="../public/js/zepto.min.js" ></script>
+			<script>
+				$(function(){
+					var str = "";
+					var param = {};
+					var param2 = transmit();
+					var width2 = ($(".hdCon").width()-$(".setAmount").width())*0.5;
+					$(".addWords").css("padding-left",width2);
+					$(".company span").text($("#companyName").val())
+					var width = ($(".hdCon").width()-$(".company").width())*0.5;
+					$(".company").css("margin-left",width);
+					$(".addWords").on("touchstart", function(ev) {
+						$(".pop-wrap").show()
+						$("#remarkInput").focus();
+						ev.stopPropagation();
+			        	ev.preventDefault();
+					})
+					$("#remarkCancel").on("touchstart", function(ev) {
+						$(".pop-wrap").hide()
+						ev.stopPropagation();
+			        	ev.preventDefault();
+					})
+					$("body").on("touchstart",".deleteAmount",function(ev){
+						$(".input_simu").html("");
+						str = "";
+						$(this).hide();
+						$("#payBtn").addClass("disable")
+						$(".tips").show();
+						ev.stopPropagation();
+			        	ev.preventDefault();
+					})
+					$("table td").on("touchstart", function(ev) {
+						
+						var num = $(".input_simu").html();
+						
+						//$(".tt").hide();
+						//$(".mm").show();
+						if($(this).attr("data-type") == "num") {
+							if($(".input_simu").html().length<8){
+								$(".tips").hide();
+								console.log( +( num + $(this).attr("data-value")))
+								if(  +( num + $(this).attr("data-value")) <= 50000){
+									if(num.slice(num.indexOf("."),num.length).length<3){
+										str += $(this).attr("data-value");
+									}
+								}
+							}
+						} else if($(this).attr("data-value") == "delete") {
+							str = str.slice(0, str.length - 1)
+							
+						}
+						console.log(str)
+						//if(isNaN)
+						$(".input_simu").html(str);
+						if($(".input_simu").html()){
+							$("#payBtn").removeClass("disable")
+							$(".deleteAmount").show()
+						}else{
+							$(".tips").show();
+							$(".deleteAmount").hide();
+							$("#payBtn").addClass("disable")
+						}
+						ev.stopPropagation();
+			        	ev.preventDefault();
+					})
+					$("#remarkConfirm").on("touchstart",function(ev){
+						$("#remarkInput").blur();
+						$(".pop-wrap").hide();
+						if($("#remarkInput").val()){
+							$(".addWords").html($("#remarkInput").val())
+						}else{
+							$(".addWords").html("添加备注")
+						}
+						ev.stopPropagation();
+			        	ev.preventDefault();
+					})
+					$("#payBtn").on("touchstart",function(ev){
+						if(!$(this).hasClass("disable") && +$("#amount").text() != 0){
+							var remark = false;
+							var paymoney = false;
+							
+							if($("#isRemark").val() == 1 ){
+								if($("#remarkInput").val()){
+									remark = true;
+								}
+							}else{
+								remark = true;
+							}
+							if($("#amount").text()){
+								paymoney = true;
+							}
+							//param.remark = $("#remarkInput").val();
+							//param.companyKey = param2.companyKey;
+							//param.payMoney = $("#amount").text();
+							if(!remark && !paymoney){
+								$(".bg").html("请输入金额");
+								$(".bg").show();
+								setTimeout(function(){
+									$(".bg").hide()
+								},1000)
+							}else if(!remark && paymoney){
+								$(".bg").html("请输入备注");
+								$(".bg").show();
+								setTimeout(function(){
+									$(".bg").hide()
+								},1000)
+							}else if(!paymoney && remark){
+								$(".bg").html("请输入金额");
+								$(".bg").show();
+								setTimeout(function(){
+									$(".bg").hide()
+								},1000)
+							}
+							if( remark && paymoney){
+								location.href="toPay.do?payMoney="+$("#amount").text()+"&companyKey="+param2.companyKey+"&remark="+$("#remarkInput").val();						
+							}
+						}
+						
+						ev.stopPropagation();
+			        	ev.preventDefault();
+					})
+					
+					function transmit(){
+						var str = window.location.search;
+						str=str.slice(1,str.length);
+						str=str.split("&");
+						var obj={};
+						for(var i=0;i<str.length;i++){
+							strs=str[i];
+							strs=strs.split("=");
+							obj[strs[0]]=strs[1];			
+						}
+						return obj;
+					}
+				})
+				
+				
+			</script>
+		</body>
+	</body>
+
+</html>

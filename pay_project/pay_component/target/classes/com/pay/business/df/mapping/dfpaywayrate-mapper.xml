@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.pay.business.df.mapper.DfPayWayRateMapper">
+
+	<resultMap id="dfpaywayrate_result_map" type="com.pay.business.df.entity.DfPayWayRate" >
+		<id column="id" property="id" />
+		<result column="df_pay_way_name" property="dfPayWayName"/>
+		<result column="df_rate_name" property="dfRateName"/>
+		<result column="dic_id" property="dicId"/>
+		<result column="remark" property="remark"/>
+		<result column="company_name" property="companyName"/>
+		<result column="company_alias" property="companyAlias"/>
+		<result column="total_amount" property="totalAmount"/>
+		<result column="pay_way_rate" property="payWayRate"/>
+		<result column="rate_key1" property="rateKey1"/>
+		<result column="rate_key2" property="rateKey2"/>
+		<result column="rate_key3" property="rateKey3"/>
+		<result column="rate_key4" property="rateKey4"/>
+		<result column="rate_key5" property="rateKey5"/>
+		<result column="rate_key6" property="rateKey6"/>
+		<result column="key_remark" property="keyRemark"/>
+		<result column="is_delete" property="isDelete"/>
+		<result column="status" property="status"/>
+		<result column="create_user_by" property="createUserBy"/>
+		<result column="update_user_by" property="updateUserBy"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from df_pay_way_rate  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="dfPayWayName!=null and dfPayWayName!=''">
+				and df_pay_way_name like CONCAT('%',#{dfPayWayName},'%')
+			</if>
+			<if test="dfRateName!=null and dfRateName!=''">
+				and df_rate_name like CONCAT('%',#{dfRateName},'%')
+			</if>
+			<if test="dicId!=null and dicId!=''">
+				and dic_id = #{dicId}
+			</if>
+			<if test="remark!=null and remark!=''">
+				and remark like CONCAT('%',#{remark},'%')
+			</if>
+			<if test="companyName!=null and companyName!=''">
+				and company_name like CONCAT('%',#{companyName},'%')
+			</if>
+			<if test="companyAlias!=null and companyAlias!=''">
+				and company_alias like CONCAT('%',#{companyAlias},'%')
+			</if>
+			<if test="totalAmount!=null and totalAmount!=''">
+				and total_amount like CONCAT('%',#{totalAmount},'%')
+			</if>
+			<if test="payWayRate!=null and payWayRate!=''">
+				and pay_way_rate like CONCAT('%',#{payWayRate},'%')
+			</if>
+			<if test="rateKey1!=null and rateKey1!=''">
+				and rate_key1 like CONCAT('%',#{rateKey1},'%')
+			</if>
+			<if test="rateKey2!=null and rateKey2!=''">
+				and rate_key2 like CONCAT('%',#{rateKey2},'%')
+			</if>
+			<if test="rateKey3!=null and rateKey3!=''">
+				and rate_key3 like CONCAT('%',#{rateKey3},'%')
+			</if>
+			<if test="rateKey4!=null and rateKey4!=''">
+				and rate_key4 like CONCAT('%',#{rateKey4},'%')
+			</if>
+			<if test="rateKey5!=null and rateKey5!=''">
+				and rate_key5 like CONCAT('%',#{rateKey5},'%')
+			</if>
+			<if test="rateKey6!=null and rateKey6!=''">
+				and rate_key6 like CONCAT('%',#{rateKey6},'%')
+			</if>
+			<if test="keyRemark!=null and keyRemark!=''">
+				and key_remark like CONCAT('%',#{keyRemark},'%')
+			</if>
+			<if test="isDelete!=null and isDelete!=''">
+				and is_delete = #{isDelete}
+			</if>
+			<if test="status!=null and status!=''">
+				and status = #{status}
+			</if>
+			<if test="createUserBy!=null and createUserBy!=''">
+				and create_user_by = #{createUserBy}
+			</if>
+			<if test="updateUserBy!=null and updateUserBy!=''">
+				and update_user_by = #{updateUserBy}
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeBegin!=null and updateTimeBegin!=''">
+				and update_time <![CDATA[ >= ]]> str_to_date(#{updateTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeEnd!=null and updateTimeEnd!=''">
+				and update_time <![CDATA[ <= ]]> str_to_date(#{updateTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id"   -->
+	<insert id="insertByEntity" parameterType="com.pay.business.df.entity.DfPayWayRate" useGeneratedKeys="true" keyProperty="id">
+		insert into df_pay_way_rate
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="dfPayWayName!=null ">
+				df_pay_way_name,
+			</if>
+      		<if test="dfRateName!=null ">
+				df_rate_name,
+			</if>
+      		<if test="dicId!=null ">
+				dic_id,
+			</if>
+      		<if test="remark!=null ">
+				remark,
+			</if>
+      		<if test="companyName!=null ">
+				company_name,
+			</if>
+      		<if test="companyAlias!=null ">
+				company_alias,
+			</if>
+      		<if test="totalAmount!=null ">
+				total_amount,
+			</if>
+      		<if test="payWayRate!=null ">
+				pay_way_rate,
+			</if>
+      		<if test="rateKey1!=null ">
+				rate_key1,
+			</if>
+      		<if test="rateKey2!=null ">
+				rate_key2,
+			</if>
+      		<if test="rateKey3!=null ">
+				rate_key3,
+			</if>
+      		<if test="rateKey4!=null ">
+				rate_key4,
+			</if>
+      		<if test="rateKey5!=null ">
+				rate_key5,
+			</if>
+      		<if test="rateKey6!=null ">
+				rate_key6,
+			</if>
+      		<if test="keyRemark!=null ">
+				key_remark,
+			</if>
+      		<if test="isDelete!=null ">
+				is_delete,
+			</if>
+      		<if test="status!=null ">
+				status,
+			</if>
+      		<if test="createUserBy!=null ">
+				create_user_by,
+			</if>
+      		<if test="updateUserBy!=null ">
+				update_user_by,
+			</if>
+      		<if test="createTime!=null ">
+				create_time,
+			</if>
+      		<if test="updateTime!=null ">
+				update_time,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id},
+			</if>
+      		<if test="dfPayWayName!=null ">
+      			#{dfPayWayName},
+			</if>
+      		<if test="dfRateName!=null ">
+      			#{dfRateName},
+			</if>
+      		<if test="dicId!=null ">
+      			#{dicId},
+			</if>
+      		<if test="remark!=null ">
+      			#{remark},
+			</if>
+      		<if test="companyName!=null ">
+      			#{companyName},
+			</if>
+      		<if test="companyAlias!=null ">
+      			#{companyAlias},
+			</if>
+      		<if test="totalAmount!=null ">
+      			#{totalAmount},
+			</if>
+      		<if test="payWayRate!=null ">
+      			#{payWayRate},
+			</if>
+      		<if test="rateKey1!=null ">
+      			#{rateKey1},
+			</if>
+      		<if test="rateKey2!=null ">
+      			#{rateKey2},
+			</if>
+      		<if test="rateKey3!=null ">
+      			#{rateKey3},
+			</if>
+      		<if test="rateKey4!=null ">
+      			#{rateKey4},
+			</if>
+      		<if test="rateKey5!=null ">
+      			#{rateKey5},
+			</if>
+      		<if test="rateKey6!=null ">
+      			#{rateKey6},
+			</if>
+      		<if test="keyRemark!=null ">
+      			#{keyRemark},
+			</if>
+      		<if test="isDelete!=null ">
+      			#{isDelete},
+			</if>
+      		<if test="status!=null ">
+      			#{status},
+			</if>
+      		<if test="createUserBy!=null ">
+      			#{createUserBy},
+			</if>
+      		<if test="updateUserBy!=null ">
+      			#{updateUserBy},
+			</if>
+      		<if test="createTime!=null ">
+      			#{createTime},
+			</if>
+      		<if test="updateTime!=null ">
+      			#{updateTime},
+			</if>
+    	</trim>
+	</insert>
+	
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.df.entity.DfPayWayRate">
+		delete from df_pay_way_rate
+		<where>
+      		<if test="id!=null ">
+				and id=#{id}
+			</if>
+      		<if test="dfPayWayName!=null ">
+				and df_pay_way_name=#{dfPayWayName}
+			</if>
+      		<if test="dfRateName!=null ">
+				and df_rate_name=#{dfRateName}
+			</if>
+      		<if test="dicId!=null ">
+				and dic_id=#{dicId}
+			</if>
+      		<if test="remark!=null ">
+				and remark=#{remark}
+			</if>
+      		<if test="companyName!=null ">
+				and company_name=#{companyName}
+			</if>
+      		<if test="companyAlias!=null ">
+				and company_alias=#{companyAlias}
+			</if>
+      		<if test="totalAmount!=null ">
+				and total_amount=#{totalAmount}
+			</if>
+      		<if test="payWayRate!=null ">
+				and pay_way_rate=#{payWayRate}
+			</if>
+      		<if test="rateKey1!=null ">
+				and rate_key1=#{rateKey1}
+			</if>
+      		<if test="rateKey2!=null ">
+				and rate_key2=#{rateKey2}
+			</if>
+      		<if test="rateKey3!=null ">
+				and rate_key3=#{rateKey3}
+			</if>
+      		<if test="rateKey4!=null ">
+				and rate_key4=#{rateKey4}
+			</if>
+      		<if test="rateKey5!=null ">
+				and rate_key5=#{rateKey5}
+			</if>
+      		<if test="rateKey6!=null ">
+				and rate_key6=#{rateKey6}
+			</if>
+      		<if test="keyRemark!=null ">
+				and key_remark=#{keyRemark}
+			</if>
+      		<if test="isDelete!=null ">
+				and is_delete=#{isDelete}
+			</if>
+      		<if test="status!=null ">
+				and status=#{status}
+			</if>
+      		<if test="createUserBy!=null ">
+				and create_user_by=#{createUserBy}
+			</if>
+      		<if test="updateUserBy!=null ">
+				and update_user_by=#{updateUserBy}
+			</if>
+      		<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+      		<if test="updateTime!=null ">
+				and update_time=#{updateTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.df.entity.DfPayWayRate">
+		update df_pay_way_rate
+		<set>
+			<if test="dfPayWayName!=null ">
+				df_pay_way_name=#{dfPayWayName},
+			</if>
+			<if test="dfRateName!=null ">
+				df_rate_name=#{dfRateName},
+			</if>
+			<if test="dicId!=null ">
+				dic_id=#{dicId},
+			</if>
+			<if test="remark!=null ">
+				remark=#{remark},
+			</if>
+			<if test="companyName!=null ">
+				company_name=#{companyName},
+			</if>
+			<if test="companyAlias!=null ">
+				company_alias=#{companyAlias},
+			</if>
+			<if test="totalAmount!=null ">
+				total_amount=#{totalAmount},
+			</if>
+			<if test="payWayRate!=null ">
+				pay_way_rate=#{payWayRate},
+			</if>
+			<if test="rateKey1!=null ">
+				rate_key1=#{rateKey1},
+			</if>
+			<if test="rateKey2!=null ">
+				rate_key2=#{rateKey2},
+			</if>
+			<if test="rateKey3!=null ">
+				rate_key3=#{rateKey3},
+			</if>
+			<if test="rateKey4!=null ">
+				rate_key4=#{rateKey4},
+			</if>
+			<if test="rateKey5!=null ">
+				rate_key5=#{rateKey5},
+			</if>
+			<if test="rateKey6!=null ">
+				rate_key6=#{rateKey6},
+			</if>
+			<if test="keyRemark!=null ">
+				key_remark=#{keyRemark},
+			</if>
+			<if test="isDelete!=null ">
+				is_delete=#{isDelete},
+			</if>
+			<if test="status!=null ">
+				status=#{status},
+			</if>
+			<if test="createUserBy!=null ">
+				create_user_by=#{createUserBy},
+			</if>
+			<if test="updateUserBy!=null ">
+				update_user_by=#{updateUserBy},
+			</if>
+			<if test="createTime!=null ">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime!=null ">
+				update_time=#{updateTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.df.entity.DfPayWayRate" resultMap="dfpaywayrate_result_map">
+		select id,df_pay_way_name,df_rate_name,dic_id,remark,company_name,company_alias,total_amount,pay_way_rate,rate_key1,rate_key2,rate_key3,rate_key4,rate_key5,rate_key6,key_remark,is_delete,status,create_user_by,update_user_by,create_time,update_time from df_pay_way_rate
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="dfPayWayName!=null ">
+				and df_pay_way_name=#{dfPayWayName}
+			</if>
+			<if test="dfRateName!=null ">
+				and df_rate_name=#{dfRateName}
+			</if>
+			<if test="dicId!=null ">
+				and dic_id=#{dicId}
+			</if>
+			<if test="remark!=null ">
+				and remark=#{remark}
+			</if>
+			<if test="companyName!=null ">
+				and company_name=#{companyName}
+			</if>
+			<if test="companyAlias!=null ">
+				and company_alias=#{companyAlias}
+			</if>
+			<if test="totalAmount!=null ">
+				and total_amount=#{totalAmount}
+			</if>
+			<if test="payWayRate!=null ">
+				and pay_way_rate=#{payWayRate}
+			</if>
+			<if test="rateKey1!=null ">
+				and rate_key1=#{rateKey1}
+			</if>
+			<if test="rateKey2!=null ">
+				and rate_key2=#{rateKey2}
+			</if>
+			<if test="rateKey3!=null ">
+				and rate_key3=#{rateKey3}
+			</if>
+			<if test="rateKey4!=null ">
+				and rate_key4=#{rateKey4}
+			</if>
+			<if test="rateKey5!=null ">
+				and rate_key5=#{rateKey5}
+			</if>
+			<if test="rateKey6!=null ">
+				and rate_key6=#{rateKey6}
+			</if>
+			<if test="keyRemark!=null ">
+				and key_remark=#{keyRemark}
+			</if>
+			<if test="isDelete!=null ">
+				and is_delete=#{isDelete}
+			</if>
+			<if test="status!=null ">
+				and status=#{status}
+			</if>
+			<if test="createUserBy!=null ">
+				and create_user_by=#{createUserBy}
+			</if>
+			<if test="updateUserBy!=null ">
+				and update_user_by=#{updateUserBy}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+			<if test="updateTime!=null ">
+				and update_time=#{updateTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据对象查询列表-->
+	<select id="selectByObject" resultMap="dfpaywayrate_result_map" >
+		select id,df_pay_way_name,df_rate_name,dic_id,remark,company_name,company_alias,total_amount,pay_way_rate,rate_key1,rate_key2,rate_key3,rate_key4,rate_key5,rate_key6,key_remark,is_delete,status,create_user_by,update_user_by,create_time,update_time from df_pay_way_rate
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="dfPayWayName!=null ">
+				and df_pay_way_name=#{dfPayWayName}
+			</if>
+			<if test="dfRateName!=null ">
+				and df_rate_name=#{dfRateName}
+			</if>
+			<if test="dicId!=null ">
+				and dic_id=#{dicId}
+			</if>
+			<if test="remark!=null ">
+				and remark=#{remark}
+			</if>
+			<if test="companyName!=null ">
+				and company_name=#{companyName}
+			</if>
+			<if test="companyAlias!=null ">
+				and company_alias=#{companyAlias}
+			</if>
+			<if test="totalAmount!=null ">
+				and total_amount=#{totalAmount}
+			</if>
+			<if test="payWayRate!=null ">
+				and pay_way_rate=#{payWayRate}
+			</if>
+			<if test="rateKey1!=null ">
+				and rate_key1=#{rateKey1}
+			</if>
+			<if test="rateKey2!=null ">
+				and rate_key2=#{rateKey2}
+			</if>
+			<if test="rateKey3!=null ">
+				and rate_key3=#{rateKey3}
+			</if>
+			<if test="rateKey4!=null ">
+				and rate_key4=#{rateKey4}
+			</if>
+			<if test="rateKey5!=null ">
+				and rate_key5=#{rateKey5}
+			</if>
+			<if test="rateKey6!=null ">
+				and rate_key6=#{rateKey6}
+			</if>
+			<if test="keyRemark!=null ">
+				and key_remark=#{keyRemark}
+			</if>
+			<if test="isDelete!=null ">
+				and is_delete=#{isDelete}
+			</if>
+			<if test="status!=null ">
+				and status=#{status}
+			</if>
+			<if test="createUserBy!=null ">
+				and create_user_by=#{createUserBy}
+			</if>
+			<if test="updateUserBy!=null ">
+				and update_user_by=#{updateUserBy}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+			<if test="updateTime!=null ">
+				and update_time=#{updateTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="dfpaywayrate_result_map" >
+		
+		SELECT id,df_pay_way_name,df_rate_name,dic_id,remark,company_name,company_alias,total_amount,pay_way_rate,rate_key1,rate_key2,rate_key3,rate_key4,rate_key5,rate_key6,key_remark,is_delete,status,create_user_by,update_user_by,create_time,update_time FROM df_pay_way_rate 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="dfPayWayName!=null and dfPayWayName!=''">
+				and df_pay_way_name like  CONCAT('%',#{dfPayWayName},'%')
+			</if>
+			<if test="dfRateName!=null and dfRateName!=''">
+				and df_rate_name like  CONCAT('%',#{dfRateName},'%')
+			</if>
+			<if test="dicId!=null and dicId!=''">
+				and dic_id = #{dicId}
+			</if>
+			<if test="remark!=null and remark!=''">
+				and remark like  CONCAT('%',#{remark},'%')
+			</if>
+			<if test="companyName!=null and companyName!=''">
+				and company_name like  CONCAT('%',#{companyName},'%')
+			</if>
+			<if test="companyAlias!=null and companyAlias!=''">
+				and company_alias like  CONCAT('%',#{companyAlias},'%')
+			</if>
+			<if test="totalAmount!=null and totalAmount!=''">
+				and total_amount like  CONCAT('%',#{totalAmount},'%')
+			</if>
+			<if test="payWayRate!=null and payWayRate!=''">
+				and pay_way_rate like  CONCAT('%',#{payWayRate},'%')
+			</if>
+			<if test="rateKey1!=null and rateKey1!=''">
+				and rate_key1 like  CONCAT('%',#{rateKey1},'%')
+			</if>
+			<if test="rateKey2!=null and rateKey2!=''">
+				and rate_key2 like  CONCAT('%',#{rateKey2},'%')
+			</if>
+			<if test="rateKey3!=null and rateKey3!=''">
+				and rate_key3 like  CONCAT('%',#{rateKey3},'%')
+			</if>
+			<if test="rateKey4!=null and rateKey4!=''">
+				and rate_key4 like  CONCAT('%',#{rateKey4},'%')
+			</if>
+			<if test="rateKey5!=null and rateKey5!=''">
+				and rate_key5 like  CONCAT('%',#{rateKey5},'%')
+			</if>
+			<if test="rateKey6!=null and rateKey6!=''">
+				and rate_key6 like  CONCAT('%',#{rateKey6},'%')
+			</if>
+			<if test="keyRemark!=null and keyRemark!=''">
+				and key_remark like  CONCAT('%',#{keyRemark},'%')
+			</if>
+			<if test="isDelete!=null and isDelete!=''">
+				and is_delete = #{isDelete}
+			</if>
+			<if test="status!=null and status!=''">
+				and status = #{status}
+			</if>
+			<if test="createUserBy!=null and createUserBy!=''">
+				and create_user_by = #{createUserBy}
+			</if>
+			<if test="updateUserBy!=null and updateUserBy!=''">
+				and update_user_by = #{updateUserBy}
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeBegin!=null and updateTimeBegin!=''">
+				and update_time <![CDATA[ >= ]]> str_to_date(#{updateTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeEnd!=null and updateTimeEnd!=''">
+				and update_time <![CDATA[ <= ]]> str_to_date(#{updateTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	
+	
+	<!-- 根据对象修改 -->
+	<update id="updateDfWayRate" parameterType="com.pay.business.df.entity.DfPayWayRate">
+		update df_pay_way_rate
+		<set>
+			rate_key1=#{rateKey1},
+			rate_key2=#{rateKey2},
+			rate_key3=#{rateKey3},
+			rate_key4=#{rateKey4},
+			rate_key5=#{rateKey5},
+			rate_key6=#{rateKey6},
+			key_remark=#{keyRemark},
+			<if test="dfPayWayName!=null ">
+				df_pay_way_name=#{dfPayWayName},
+			</if>
+			<if test="dfRateName!=null ">
+				df_rate_name=#{dfRateName},
+			</if>
+			<if test="dicId!=null ">
+				dic_id=#{dicId},
+			</if>
+			<if test="remark!=null ">
+				remark=#{remark},
+			</if>
+			<if test="companyName!=null ">
+				company_name=#{companyName},
+			</if>
+			<if test="companyAlias!=null ">
+				company_alias=#{companyAlias},
+			</if>
+			<if test="totalAmount!=null ">
+				total_amount=#{totalAmount},
+			</if>
+			<if test="payWayRate!=null ">
+				pay_way_rate=#{payWayRate},
+			</if>
+			<if test="isDelete!=null ">
+				is_delete=#{isDelete},
+			</if>
+			<if test="status!=null ">
+				status=#{status},
+			</if>
+			<if test="createUserBy!=null ">
+				create_user_by=#{createUserBy},
+			</if>
+			<if test="updateUserBy!=null ">
+				update_user_by=#{updateUserBy},
+			</if>
+			<if test="createTime!=null ">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime!=null ">
+				update_time=#{updateTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+	
+	<!-- 批量关闭开启删除 -->
+	<update id="batchUpdate" parameterType="com.pay.business.df.entity.DfPayWayRate">
+		update df_pay_way_rate set ${optionName}=#{optionValue},update_user_by=#{updateUserBy},update_time=#{updateTime} where id in (${ids})
+	</update>
+	
+	<!-- 充值 -->
+	<update id="plasRateTotalAmount" parameterType="com.pay.business.df.entity.DfPayWayRate">
+		update df_pay_way_rate set total_amount=total_amount+#{money} where id=#{dfRateId}
+	</update>
+</mapper>

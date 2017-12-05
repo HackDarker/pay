@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.pay.business.payway.mapper.Payv2PayTypeMapper">
+
+	<resultMap id="payv2paytype_result_map" type="com.pay.business.payway.entity.Payv2PayType" >
+		<id column="id" property="id" />
+		<result column="pay_way_id" property="payWayId"/>
+		<result column="pay_type_name" property="payTypeName"/>
+		<result column="dict_name" property="dictName"/>
+		<result column="create_time" property="createTime"/>
+		
+		<result column="way_name" property="wayName"/>
+	</resultMap>
+	
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from payv2_pay_type  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="payWayId!=null and payWayId!=''">
+				and pay_way_id = #{payWayId}
+			</if>
+			<if test="payTypeName!=null and payTypeName!=''">
+				and pay_type_name like CONCAT('%',#{payTypeName},'%')
+			</if>
+			<if test="dictName!=null and dictName!=''">
+				and dict_name like CONCAT('%',#{dictName},'%')
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id"   -->
+	<insert id="insertByEntity" parameterType="com.pay.business.payway.entity.Payv2PayType" useGeneratedKeys="true" keyProperty="id">
+		insert into payv2_pay_type
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="payWayId!=null ">
+				pay_way_id,
+			</if>
+      		<if test="payTypeName!=null ">
+				pay_type_name,
+			</if>
+      		<if test="dictName!=null ">
+				dict_name,
+			</if>
+      		<if test="createTime!=null ">
+				create_time,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id},
+			</if>
+      		<if test="payWayId!=null ">
+      			#{payWayId},
+			</if>
+      		<if test="payTypeName!=null ">
+      			#{payTypeName},
+			</if>
+      		<if test="dictName!=null ">
+      			#{dictName},
+			</if>
+      		<if test="createTime!=null ">
+      			#{createTime},
+			</if>
+    	</trim>
+	</insert>
+	
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.payway.entity.Payv2PayType">
+		delete from payv2_pay_type
+		<where>
+      		<if test="id!=null ">
+				and id=#{id}
+			</if>
+      		<if test="payWayId!=null ">
+				and pay_way_id=#{payWayId}
+			</if>
+      		<if test="payTypeName!=null ">
+				and pay_type_name=#{payTypeName}
+			</if>
+      		<if test="dictName!=null ">
+				and dict_name=#{dictName}
+			</if>
+      		<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.payway.entity.Payv2PayType">
+		update payv2_pay_type
+		<set>
+			<if test="payWayId!=null ">
+				pay_way_id=#{payWayId},
+			</if>
+			<if test="payTypeName!=null ">
+				pay_type_name=#{payTypeName},
+			</if>
+			<if test="dictName!=null ">
+				dict_name=#{dictName},
+			</if>
+			<if test="createTime!=null ">
+				create_time=#{createTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.payway.entity.Payv2PayType" resultMap="payv2paytype_result_map">
+		select id,pay_way_id,pay_type_name,dict_name,create_time from payv2_pay_type
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="payWayId!=null ">
+				and pay_way_id=#{payWayId}
+			</if>
+			<if test="payTypeName!=null ">
+				and pay_type_name=#{payTypeName}
+			</if>
+			<if test="dictName!=null ">
+				and dict_name=#{dictName}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据对象查询列表-->
+	<select id="selectByObject" resultMap="payv2paytype_result_map" >
+		select id,pay_way_id,pay_type_name,dict_name,create_time from payv2_pay_type
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="payWayId!=null ">
+				and pay_way_id=#{payWayId}
+			</if>
+			<if test="payTypeName!=null ">
+				and pay_type_name=#{payTypeName}
+			</if>
+			<if test="dictName!=null ">
+				and dict_name=#{dictName}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="payv2paytype_result_map" >
+		
+		SELECT id,pay_way_id,pay_type_name,dict_name,create_time FROM payv2_pay_type 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="payWayId!=null and payWayId!=''">
+				and pay_way_id = #{payWayId}
+			</if>
+			<if test="payTypeName!=null and payTypeName!=''">
+				and pay_type_name like  CONCAT('%',#{payTypeName},'%')
+			</if>
+			<if test="dictName!=null and dictName!=''">
+				and dict_name like  CONCAT('%',#{dictName},'%')
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	<!-- 获取所有的支付方式 -->
+	<select id="payTypeList" resultMap="payv2paytype_result_map" >
+		select type.id,type.pay_way_id,type.pay_type_name,type.dict_name,type.create_time
+		,way.way_name
+		from payv2_pay_type type
+		LEFT JOIN payv2_pay_way way on way.id = type.pay_way_id
+	</select>
+</mapper>

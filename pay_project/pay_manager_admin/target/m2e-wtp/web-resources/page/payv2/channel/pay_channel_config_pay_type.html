@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>配置渠道商支付方式</title>
+	<#include "lib/lib.html" />
+</head>
+<body>
+	<div id="hiddenDic">
+		<#if typeList?? && typeList?size gt 0>
+        	<#list typeList as dl>
+        		<span id="tempSpan"><input type="hidden" id="hiddenDics" dicId="${dl.id!}" payWayId="${dl.payWayId!}" payTypeName="${dl.payTypeName!}""/></span>
+        	</#list>
+        </#if>
+	</div>
+	<div class="pop_main" style="padding-left:30px;width: 95%;">
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">添加新的支付方式</div>
+	    	<div class="panel-body pd-20 text-c">
+	    		<form action="" method="post" class="form form-horizontal" id="data-form">
+					<input type="hidden" id="channelId" name="id" value="${map.id}"/>
+		    		<table class="table table-bg table-sort">
+						<tbody>
+		    		    	<tr>
+		    		    		<td>
+		    		    			<strong>支付平台：</strong> 
+		    		    			<select class="select" id="payWayId" name="payWayId" datatype="*" nullmsg="请选择！" onchange="changePayType(this)" style="width: 150px;height: 32px;">
+		    		    				<option value="">请选择</option>
+										<#if wayList?? && wayList?size gt 0> 
+											<#list wayList as dl>
+												<option value="${dl.id!}">${dl.wayName!}</option> 
+											</#list> 
+										</#if>
+									</select>
+			    		    	</td>
+		    		    		<td>
+		    		    			<strong>支付方式：</strong> 
+		    		    			<select class="select" id="payTypeId" name="payTypeId" datatype="*" nullmsg="请选择！" style="width: 150px;height: 32px;">
+		    		    				<option value="">请选择</option> 
+									</select>
+			    		    	</td>
+			    		    	<td>
+			    		    		<strong>费率设置：</strong>
+			    		    		<input type="text" name="payWayRate" id="payWayRate" style="width: 50px" class="input-text" onchange="ValidateFloat($(this),value)">  ‰
+								</td>
+			    		    	<td>
+			    		    		<input type="button" class="layui-btn" onclick="submitData()" value="保存">
+								</td>
+		    		    	</tr>
+	    		    	</tbody>
+				    </table>
+			    </form>
+	    	</div>
+    	</div>
+    	
+    	<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">已支持的支付方式</div>
+	    	<div class="panel-body">
+			    <table class="table table-border table-bordered table-hover table-bg table-sort">
+			    	<thead>
+						<tr class="text-c">
+							<th width="150">支付平台</th>
+							<th width="150">支付方式</th>
+							<th width="80">费率</th>
+							<th width="200">操作</th>
+						</tr>
+			    	</thead>
+					<tbody>
+	    		    	<#if channelWayList?? && channelWayList?size gt 0>
+						<#list channelWayList as dl >
+							<tr class="text-c">
+								<td>${dl.wayName!}</td>
+								<td>${dl.payTypeName!}</td>
+								<td id="rate-td"><span id="rate-span">${dl.payWayRate!}‰</span><input type="text" name="updateRate" id="updateRate" value="${dl.payWayRate!}" style="width: 50px;display: none;" class="input-text" onchange="ValidateFloat($(this),value)" ></td>
+								<td>
+									<div id="update-and-delete" style="display: block;">
+										<button id="update" class="btn btn-success" onclick="toUpdate(this)">编辑费率</button>
+										<button id="delete" class="btn btn-danger" onclick="deleteType(${dl.payTypeId!})">删除</button>
+									</div>
+									<div id="save-and-cancel" style="display: none;">
+										<button id="save" class="btn btn-primary" onclick="confirmUpdate(${dl.id!},${dl.channelId!},${dl.payTypeId!},this)">保存</button>
+										<button id="cancel" class="btn" onclick="cancelUpdate(this)">取消</button>
+									</div>
+								</td>
+							</tr>
+						</#list>
+						</#if>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$("#data-form").Validform({
+				tiptype:3,
+				showAllError:true,   //表单提交时显示所有提示信息
+				ignoreHidden: true,  //隐藏的表单元素不校验
+				ajaxPost:true,
+				callback:function(data){
+					$.Hidemsg();
+					if(data.resultCode==200){
+						layer.msg('保存成功!', {
+							icon : 1,
+							time : 1000
+						});
+						location.replace(location.href);
+						//parent.location.replace("${basePath}/payv2PayWayRate/payv2PayWayRateListAll.do?payWayId="+$("#payViewType").val());
+						/* setTimeout(function () { 
+					        layer_close();
+					    }, 1000); */
+					}else{
+						layer.msg(data.message, {
+							icon : 2,
+							time : 1000
+						});
+					}
+				}
+			});
+		});
+		
+		function toUpdate(obj){
+			$(obj).parent().parent().find("#update-and-delete").hide();
+			$(obj).parent().parent().find("#save-and-cancel").show();
+			$(obj).parent().parent().parent().find("#rate-td").find("#rate-span").hide();
+			$(obj).parent().parent().parent().find("#rate-td").find("#updateRate").show();
+		}
+		
+		function cancelUpdate(obj){
+			$(obj).parent().parent().find("#update-and-delete").show();
+			$(obj).parent().parent().find("#save-and-cancel").hide();
+			$(obj).parent().parent().parent().find("#rate-td").find("#rate-span").show();
+			$(obj).parent().parent().parent().find("#rate-td").find("#updateRate").hide();
+		}
+		
+		function confirmUpdate(tid,channelId,payTypeId,obj){
+			var newRate = $(obj).parent().parent().parent().find("#rate-td").find("#updateRate").val();
+			ajaxFunction("/payv2Channel/updatePayWayRate.do",{id:tid,channelId:channelId,payTypeId:payTypeId,payWayRate:newRate},"JSON",true,function(result){
+				if(!!result && result.resultCode == 200){
+					layer.msg('保存成功!', {
+						icon : 1,
+						time : 1000
+					});
+					location.replace(location.href);
+				}else{
+					layer.msg(result.message, {icon: 2});
+				}
+			});
+		}
+		
+		function deleteType(payTypeId){
+			var channelId = $("#channelId").val();
+			ajaxFunction("/payv2Channel/deletePayWayRate.do",{payTypeId:payTypeId,channelId:channelId},"JSON",true,function(result){
+				if(!!result && result.resultCode == 200){
+					layer.msg('删除成功!', {
+						icon : 1,
+						time : 1000
+					});
+					location.replace(location.href);
+				}else{
+					layer.alert('删除失败，原因如下：<br/>'+result.message);
+				}
+			});
+		}
+	
+		function submitData(){
+			var payWayId = $("#payWayId").val();
+			var payTypeId = $("#payTypeId").val();
+			var payWayRate = $("#payWayRate").val();
+			if(payWayId == "" || payTypeId == "" || payWayRate == "") {
+				layer.msg('请配置正确的数据！', function(){});
+				return;
+			}
+			$("#data-form").attr(
+						"action",
+						"${basePath}/payv2Channel/addChannelPayType.do").submit(); 
+		}
+	
+		function changePayType(obj) {
+			var wayId = $(obj).val();
+			var appendOptions = "";
+			for(var i = 0, len = $("#hiddenDic").children().length;i<len;i++){
+				var dicId = $("#hiddenDic").children().eq(i).find("#hiddenDics").attr("dicId");
+				var payWayId = $("#hiddenDic").children().eq(i).find("#hiddenDics").attr("payWayId");
+				var payTypeName = $("#hiddenDic").children().eq(i).find("#hiddenDics").attr("payTypeName");
+				if(payWayId == wayId) {
+					appendOptions+='<option value="'+dicId+'">'+payTypeName+'</option>';
+				}
+			}
+			$("#payTypeId").html(appendOptions);
+		}
+	
+		function ValidateFloat(e, pnumber){ 
+			if (!/^\d+[.]?\d*$/.test(pnumber)){ 
+				$(e).val(/^\d+[.]?\d*/.exec($(e).val())); 
+				$(e).focus();
+				layer.msg('请输入整数！', function(){});
+			}
+			if(pnumber >= 1000) {
+				$(e).val(""); 
+				$(e).focus();
+				layer.msg('请输入1000以内的整数！', function(){});
+			}
+			if(pnumber == 0) {
+				$(e).val(""); 
+				$(e).focus();
+				layer.msg('请输入大于0的整数！', function(){});
+			}
+			return false; 
+		}
+		
+	</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"   
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:task="http://www.springframework.org/schema/task"
+   xmlns:context="http://www.springframework.org/schema/context"    
+   xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd         
+     http://www.springframework.org/schema/task 
+     http://www.springframework.org/schema/task/spring-task-3.2.xsd 
+     http://www.springframework.org/schema/context 
+	 http://www.springframework.org/schema/context/spring-context.xsd"
+     default-lazy-init="true"> 
+  
+    <bean id="alipayBillQueryJob" class="com.pay.manger.controller.job.AlipayBillQueryJob"></bean>  
+  	<bean id="payOrderByHourJob" class="com.pay.manger.controller.job.PayOrderByHourJob"></bean> 
+  	<bean id="txPayOrderClearJob" class="com.pay.manger.controller.job.TxPayOrderClearJob"></bean> 
+    <!-- 自动扫描的包名 -->    
+    <context:component-scan base-package="com.pay.manger.controller.job, com.pay.business.util" />
+    <!-- task:scheduled 配置默认是单线程串行的，如下配置可以配置多线程。增加定时任务请及时更改 pool-size数-->
+    <task:scheduler id="scheduler" pool-size="5" />
+    
+    <task:scheduled-tasks scheduler="scheduler">
+        <!--  
+            这里表示的是每隔N分钟执行一次  
+        -->  
+        <task:scheduled ref="alipayBillQueryJob" method="startUp" cron="0 20 10 * * ?" />
+        
+        <!-- <task:scheduled ref="payStatisticsDayJob" method="dataCount" cron="0 0/5 0 * * ?" /> -->
+        <!-- 每天23：30执行-->
+         <task:scheduled ref="payOrderByHourJob" method="startUp" cron="0 30 23 * * ?" />
+         
+        <task:scheduled ref="payv2DayCompanyClearService" method="insertCompanyToClear" cron="0 0 04 * * ?" />
+        
+         <task:scheduled ref="txPayOrderClearJob" method="startUp" cron="0 0 0 * * ?" />
+        <!-- <task:scheduled ref="payv2PayWayRateService" method="setAutoEnchashment" cron="0 30 08 * * ?" />
+        <task:scheduled ref="payv2PayWayRateService" method="setAutoEnchashment" cron="0 00 12 * * ?" />
+        <task:scheduled ref="payv2PayWayRateService" method="setAutoEnchashment" cron="0 00 16 * * ?" />
+        <task:scheduled ref="payv2PayWayRateService" method="setAutoEnchashment" cron="0 50 21 * * ?" /> -->
+    </task:scheduled-tasks>   
+</beans>

@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.pay.business.merchant.mapper.Payv2BussCompanyCodeMapper">
+
+	<resultMap id="payv2busscompanycode_result_map" type="com.pay.business.merchant.entity.Payv2BussCompanyCode" >
+		<id column="id" property="id" />
+		<result column="company_id" property="companyId"/>
+		<result column="channel_id" property="channelId"/>
+		<result column="token" property="token"/>
+		<result column="code_url" property="codeUrl"/>
+		<result column="notify_url" property="notifyUrl"/>
+		<result column="is_remark" property="isRemark"/>
+		<result column="create_time" property="createTime"/>
+		
+		<result column="channel_name" property="channelName"/>
+		<result column="company_name" property="companyName"/>
+	</resultMap>
+	
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from payv2_buss_company_code  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="channelId!=null and channelId!=''">
+				and channel_id = #{channelId}
+			</if>
+			<if test="token!=null and token!=''">
+				and token like CONCAT('%',#{token},'%')
+			</if>
+			<if test="codeUrl!=null and codeUrl!=''">
+				and code_url like CONCAT('%',#{codeUrl},'%')
+			</if>
+			<if test="notifyUrl!=null and notifyUrl!=''">
+				and notify_url like CONCAT('%',#{notifyUrl},'%')
+			</if>
+			<if test="isRemark!=null and isRemark!=''">
+				and is_remark = #{isRemark}
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id"   -->
+	<insert id="insertByEntity" parameterType="com.pay.business.merchant.entity.Payv2BussCompanyCode" useGeneratedKeys="true" keyProperty="id">
+		insert into payv2_buss_company_code
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="companyId!=null ">
+				company_id,
+			</if>
+      		<if test="channelId!=null ">
+				channel_id,
+			</if>
+      		<if test="token!=null ">
+				token,
+			</if>
+      		<if test="codeUrl!=null ">
+				code_url,
+			</if>
+      		<if test="notifyUrl!=null ">
+				notify_url,
+			</if>
+      		<if test="isRemark!=null ">
+				is_remark,
+			</if>
+      		<if test="createTime!=null ">
+				create_time,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id},
+			</if>
+      		<if test="companyId!=null ">
+      			#{companyId},
+			</if>
+      		<if test="channelId!=null ">
+      			#{channelId},
+			</if>
+      		<if test="token!=null ">
+      			#{token},
+			</if>
+      		<if test="codeUrl!=null ">
+      			#{codeUrl},
+			</if>
+      		<if test="notifyUrl!=null ">
+      			#{notifyUrl},
+			</if>
+      		<if test="isRemark!=null ">
+      			#{isRemark},
+			</if>
+      		<if test="createTime!=null ">
+      			#{createTime},
+			</if>
+    	</trim>
+	</insert>
+	
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.merchant.entity.Payv2BussCompanyCode">
+		delete from payv2_buss_company_code
+		<where>
+      		<if test="id!=null ">
+				and id=#{id}
+			</if>
+      		<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+      		<if test="channelId!=null ">
+				and channel_id=#{channelId}
+			</if>
+      		<if test="token!=null ">
+				and token=#{token}
+			</if>
+      		<if test="codeUrl!=null ">
+				and code_url=#{codeUrl}
+			</if>
+      		<if test="notifyUrl!=null ">
+				and notify_url=#{notifyUrl}
+			</if>
+      		<if test="isRemark!=null ">
+				and is_remark=#{isRemark}
+			</if>
+      		<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.merchant.entity.Payv2BussCompanyCode">
+		update payv2_buss_company_code
+		<set>
+			<if test="companyId!=null ">
+				company_id=#{companyId},
+			</if>
+			<if test="channelId!=null ">
+				channel_id=#{channelId},
+			</if>
+			<if test="token!=null ">
+				token=#{token},
+			</if>
+			<if test="codeUrl!=null ">
+				code_url=#{codeUrl},
+			</if>
+			<if test="notifyUrl!=null ">
+				notify_url=#{notifyUrl},
+			</if>
+			<if test="isRemark!=null ">
+				is_remark=#{isRemark},
+			</if>
+			<if test="createTime!=null ">
+				create_time=#{createTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.merchant.entity.Payv2BussCompanyCode" resultMap="payv2busscompanycode_result_map">
+		select id,company_id,channel_id,token,code_url,notify_url,is_remark,create_time from payv2_buss_company_code
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="channelId!=null ">
+				and channel_id=#{channelId}
+			</if>
+			<if test="token!=null ">
+				and token=#{token}
+			</if>
+			<if test="codeUrl!=null ">
+				and code_url=#{codeUrl}
+			</if>
+			<if test="notifyUrl!=null ">
+				and notify_url=#{notifyUrl}
+			</if>
+			<if test="isRemark!=null ">
+				and is_remark=#{isRemark}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据对象查询列表-->
+	<select id="selectByObject" resultMap="payv2busscompanycode_result_map" >
+		select id,company_id,channel_id,token,code_url,notify_url,is_remark,create_time from payv2_buss_company_code
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="channelId!=null ">
+				and channel_id=#{channelId}
+			</if>
+			<if test="token!=null ">
+				and token=#{token}
+			</if>
+			<if test="codeUrl!=null ">
+				and code_url=#{codeUrl}
+			</if>
+			<if test="notifyUrl!=null ">
+				and notify_url=#{notifyUrl}
+			</if>
+			<if test="isRemark!=null ">
+				and is_remark=#{isRemark}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="payv2busscompanycode_result_map" >
+		
+		SELECT id,company_id,channel_id,token,code_url,notify_url,is_remark,create_time FROM payv2_buss_company_code 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="channelId!=null and channelId!=''">
+				and channel_id = #{channelId}
+			</if>
+			<if test="token!=null and token!=''">
+				and token like  CONCAT('%',#{token},'%')
+			</if>
+			<if test="codeUrl!=null and codeUrl!=''">
+				and code_url like  CONCAT('%',#{codeUrl},'%')
+			</if>
+			<if test="notifyUrl!=null and notifyUrl!=''">
+				and notify_url like  CONCAT('%',#{notifyUrl},'%')
+			</if>
+			<if test="isRemark!=null and isRemark!=''">
+				and is_remark = #{isRemark}
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	<!-- 收款码分页列表 -->
+	<select id="pageCode" resultMap="payv2busscompanycode_result_map" resultType="com.pay.business.merchant.entity.Payv2BussCompanyCode">		
+		SELECT code.id,code.company_id,code.channel_id,code.code_url,code.create_time
+		,com.company_name,channel.channel_name
+		FROM payv2_buss_company_code code
+		LEFT JOIN payv2_buss_company com ON com.id = code.company_id
+		LEFT JOIN payv2_channel channel ON channel.id = code.channel_id
+		<where>
+			<if test="id!=null and id!=''">
+				and code.id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and code.company_id = #{companyId}
+			</if>
+			<if test="channelId!=null and channelId!=''">
+				and code.channel_id = #{channelId}
+			</if>
+			<if test="codeUrl!=null and codeUrl!=''">
+				and code.code_url like  CONCAT('%',#{codeUrl},'%')
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and code.create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and code.create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+</mapper>

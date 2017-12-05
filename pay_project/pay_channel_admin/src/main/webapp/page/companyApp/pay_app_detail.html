@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>编辑APP</title>
+	<#include "lib/lib.html" />
+</head>
+<body>
+	<div class="pop_main" style="padding-left:30px;width: 95%;">
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">基础信息</div>
+	    	<div class="panel-body">
+    		    <table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>所属公司：</strong></td>
+	    		    		<td>
+	    		    			<input disabled="disabled" style="width:300px;" type="text" dataType="*" nullmsg="所属公司" name="companyName" class="dd_input input-text size-M" value="${companyName!}">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>APP名称：</strong></td>
+	    		    		<td>
+	    		    			<input disabled="disabled" style="width:300px;" type="text" dataType="*" nullmsg="所属公司" name="companyName" class="dd_input input-text size-M" value="${obj.appName!}">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>应用官网：</strong></td>
+	    		    		<td>
+	    		    			<input disabled="disabled" style="width:300px;" type="text" dataType="*" nullmsg="所属公司" name="companyName" class="dd_input input-text size-M" value="${obj.webUrl!}">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>appKey：</strong></td>
+	    		    		<td>
+	    		    			<input disabled="disabled" style="width:300px;" type="text" dataType="*" nullmsg="所属公司" name="companyName" class="dd_input input-text size-M" value="${obj.appKey!}">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>应用图标：</strong></td>
+	    		    		<td>
+	    		    			<input disabled="disabled" style="width:300px;" readonly="readonly" type="text" class="width200 input-text size-M"  dataType="*" nullmsg="请上传营业执照" name="licensePic" id="licensePic" value="${obj.appIcon}"/>
+	    		    			<a href="${obj.appIcon}" target="_blank" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>查看</a>
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>应用行业：</strong></td>
+	    		    		<td>
+	    		    			<input disabled="disabled" style="width:300px;" type="text" dataType="*" nullmsg="所属公司" name="companyName" class="dd_input input-text size-M" value="${typeName!}">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>应用说明：</strong></td>
+	    		    		<td>
+	    		    			<input disabled="disabled" style="width:300px;" type="text" dataType="*" nullmsg="请填写组织机构代码" name="organizationCode" class="dd_input input-text size-M" value="${obj.appDesc!}">
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>应用截图：</strong></td>
+	    		    		<td>
+	    		    			<#if appImgs?? && appImgs?size gt 0>
+									<#list appImgs as dl >
+	    		    					<input disabled="disabled" style="width:300px;" type="text" dataType="*" nullmsg="请填写组织机构代码" name="organizationCode" class="dd_input input-text size-M" value="${dl}">
+	    		    					<a href="${dl}" target="_blank" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>查看</a>
+	    		    					<br><br>
+	    		    				</#list>
+								</#if>
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>应用说明文档：</strong></td>
+	    		    		<td>
+	    		    			<#if appDescFiles?? && appDescFiles?size gt 0>
+									<#list appDescFiles as dl >
+	    		    					<input disabled="disabled" style="width:300px;" type="text" dataType="*" nullmsg="请填写组织机构代码" name="organizationCode" class="dd_input input-text size-M" value="${dl}">
+	    		    					<a href="${dl}" target="_blank" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>查看</a>
+	    		    					<br><br>
+	    		    				</#list>
+								</#if>
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>著作权验证：</strong></td>
+	    		    		<td>
+	    		    			<#if appCopyrights?? && appCopyrights?size gt 0>
+									<#list appCopyrights as dl >
+	    		    					<input disabled="disabled" style="width:300px;" type="text" dataType="*" nullmsg="请填写组织机构代码" name="organizationCode" class="dd_input input-text size-M" value="${dl}">
+	    		    					<a href="${dl}" target="_blank" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>查看</a>
+	    		    					<br><br>
+	    		    				</#list>
+								</#if>
+	    		    		</td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>已有安装包：</strong></td>
+	    		    		<td>
+	    		    			<input disabled="disabled" style="width:300px;" type="text" dataType="*" nullmsg="请填写组织机构代码" name="organizationCode" class="dd_input input-text size-M" value="${obj.androidApkUrl}">
+	    		    			<#if obj.androidApkUrl!>
+	    		    				<a href="${obj.androidApkUrl}" target="_blank" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>下载</a>
+	    		    			</#if>
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">平台信息</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+						<#if obj.isAndroid!>
+		    		    	<tr>
+		    		    		<td style="width:120px;"><strong>android应用下载地址：</strong></td>
+		    		    		<td>
+		    		    			<input disabled="disabled" style="width:300px;" class="dd_input input-text size-M" dataType="*" nullmsg="公司法人名称" type="text" name="legalName"  value="${obj.androidAppUrl}">
+		    		    		</td>
+		    		    	</tr>
+		    		    	<tr>
+		    		    		<td style="width:120px;"><strong>android应用签名：</strong></td>
+		    		    		<td>
+		    		    			<input disabled="disabled" style="width:300px;" class="dd_input input-text size-M" dataType="*" nullmsg="法人身份证号码" type="text" name="legalIdCard" id="legalIdCard" value="${obj.androidAppMd5}" onchange="ValidatelegalIdCard($(this),value)">
+		    		    		</td>
+		    		    	</tr>
+		    		    	<tr>
+		    		    		<td style="width:120px;"><strong>android包名：</strong></td>
+		    		    		<td>
+		    		    			<input disabled="disabled" style="width:300px;" class="dd_input input-text size-M" dataType="*" nullmsg="输入联系人姓名" type="text" name="contactsName" value="${obj.androidAppPackage}">
+		    		    		</td>
+		    		    	</tr>
+	    		    	</#if>
+	    		    	<#if obj.isIos!>
+	    		    		<#if obj.iosIpaMd5!>
+			    		    	<tr>
+			    		    		<td style="width:120px;"><strong>ipad appStore下载地址：</strong></td>
+			    		    		<td>
+			    		    			<input disabled="disabled" style="width:300px;" class="dd_input input-text size-M" dataType="*" nullmsg="公司法人名称" type="text" name="legalName"  value="${obj.iosIpaUrl}">
+			    		    		</td>
+			    		    	</tr>
+			    		    	<tr>
+			    		    		<td style="width:120px;"><strong>ipad bundle ID：</strong></td>
+			    		    		<td>
+			    		    			<input disabled="disabled" style="width:300px;" class="dd_input input-text size-M" dataType="*" nullmsg="法人身份证号码" type="text" name="legalIdCard" id="legalIdCard" value="${obj.iosIpaMd5}" onchange="ValidatelegalIdCard($(this),value)">
+			    		    		</td>
+			    		    	</tr>
+			    		    	<tr>
+			    		    		<td style="width:120px;"><strong>ipad测试版本bundle ID：</strong></td>
+			    		    		<td>
+			    		    			<input disabled="disabled" style="width:300px;" class="dd_input input-text size-M" dataType="*" nullmsg="输入联系人姓名" type="text" name="contactsName" value="${obj.iosIpaTestId}">
+			    		    		</td>
+			    		    	</tr>
+		    		    	</#if>
+		    		    	<#if obj.iosIphoneId!>
+			    		    	<tr>
+			    		    		<td style="width:120px;"><strong>iphone AppStore下载地址：</strong></td>
+			    		    		<td>
+			    		    			<input disabled="disabled" style="width:300px;" class="dd_input input-text size-M" dataType="*" nullmsg="公司法人名称" type="text" name="legalName"  value="${obj.iosIphoneUrl}">
+			    		    		</td>
+			    		    	</tr>
+			    		    	<tr>
+			    		    		<td style="width:120px;"><strong>iphone Bundle ID：</strong></td>
+			    		    		<td>
+			    		    			<input disabled="disabled" style="width:300px;" class="dd_input input-text size-M" dataType="*" nullmsg="法人身份证号码" type="text" name="legalIdCard" id="legalIdCard" value="${obj.iosIphoneId}" onchange="ValidatelegalIdCard($(this),value)">
+			    		    		</td>
+			    		    	</tr>
+			    		    	<tr>
+			    		    		<td style="width:120px;"><strong>iphone测试版本Bundle ID：</strong></td>
+			    		    		<td>
+			    		    			<input disabled="disabled" style="width:300px;" class="dd_input input-text size-M" dataType="*" nullmsg="输入联系人姓名" type="text" name="contactsName" value="${obj.iosIphoneTestId}">
+			    		    		</td>
+			    		    	</tr>
+		    		    	</#if>
+	    		    	</#if>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+	<script type="text/javascript"src="${basePath}/public/js/mutilfile.js"></script>
+</body>
+</html>

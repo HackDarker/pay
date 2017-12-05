@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.pay.business.tx.mapper.TxPayOrderMapper">
+
+	<resultMap id="txpayorder_result_map" type="com.pay.business.tx.entity.TxPayOrder" >
+		<id column="id" property="id" />
+		<result column="order_num" property="orderNum"/>
+		<result column="company_id" property="companyId"/>
+		<result column="rate_id" property="rateId"/>
+		<result column="pay_platform" property="payPlatform"/>
+		<result column="account_bank" property="accountBank"/>
+		<result column="account_name" property="accountName"/>
+		<result column="account_card" property="accountCard"/>
+		<result column="status" property="status"/>
+		<result column="amount" property="amount"/>
+		<result column="service_amount" property="serviceAmount"/>
+		<result column="pay_service_amount" property="payServiceAmount"/>
+		<result column="arrival_amount" property="arrivalAmount"/>
+		<result column="tx_time" property="txTime"/>
+		
+		<result column="pay_way_name" property="payWayWame"/>
+		<result column="company_name" property="companyName"/>
+	</resultMap>
+	
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from tx_pay_order  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="orderNum!=null and orderNum!=''">
+				and order_num like CONCAT('%',#{orderNum},'%')
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="payPlatform!=null and payPlatform!=''">
+				and pay_platform = #{payPlatform}
+			</if>
+			<if test="accountBank!=null and accountBank!=''">
+				and account_bank like CONCAT('%',#{accountBank},'%')
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and account_name like CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="accountCard!=null and accountCard!=''">
+				and account_card like CONCAT('%',#{accountCard},'%')
+			</if>
+			<if test="status!=null and status!=''">
+				and status = #{status}
+			</if>
+			<if test="amount!=null and amount!=''">
+				and amount like CONCAT('%',#{amount},'%')
+			</if>
+			<if test="serviceAmount!=null and serviceAmount!=''">
+				and service_amount like CONCAT('%',#{serviceAmount},'%')
+			</if>
+			<if test="payServiceAmount!=null and payServiceAmount!=''">
+				and pay_service_amount like CONCAT('%',#{payServiceAmount},'%')
+			</if>
+			<if test="arrivalAmount!=null and arrivalAmount!=''">
+				and arrival_amount like CONCAT('%',#{arrivalAmount},'%')
+			</if>
+			<if test="txTimeBegin!=null and txTimeBegin!=''">
+				and tx_time <![CDATA[ >= ]]> str_to_date(#{txTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="txTimeEnd!=null and txTimeEnd!=''">
+				and tx_time <![CDATA[ <= ]]> str_to_date(#{txTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id"   -->
+	<insert id="insertByEntity" parameterType="com.pay.business.tx.entity.TxPayOrder" useGeneratedKeys="true" keyProperty="id">
+		insert into tx_pay_order
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="orderNum!=null ">
+				order_num,
+			</if>
+      		<if test="companyId!=null ">
+				company_id,
+			</if>
+      		<if test="rateId!=null ">
+				rate_id,
+			</if>
+      		<if test="payPlatform!=null ">
+				pay_platform,
+			</if>
+      		<if test="accountBank!=null ">
+				account_bank,
+			</if>
+      		<if test="accountName!=null ">
+				account_name,
+			</if>
+      		<if test="accountCard!=null ">
+				account_card,
+			</if>
+      		<if test="status!=null ">
+				status,
+			</if>
+      		<if test="amount!=null ">
+				amount,
+			</if>
+      		<if test="serviceAmount!=null ">
+				service_amount,
+			</if>
+      		<if test="payServiceAmount!=null ">
+				pay_service_amount,
+			</if>
+      		<if test="arrivalAmount!=null ">
+				arrival_amount,
+			</if>
+      		<if test="txTime!=null ">
+				tx_time,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id},
+			</if>
+      		<if test="orderNum!=null ">
+      			#{orderNum},
+			</if>
+      		<if test="companyId!=null ">
+      			#{companyId},
+			</if>
+      		<if test="rateId!=null ">
+      			#{rateId},
+			</if>
+      		<if test="payPlatform!=null ">
+      			#{payPlatform},
+			</if>
+      		<if test="accountBank!=null ">
+      			#{accountBank},
+			</if>
+      		<if test="accountName!=null ">
+      			#{accountName},
+			</if>
+      		<if test="accountCard!=null ">
+      			#{accountCard},
+			</if>
+      		<if test="status!=null ">
+      			#{status},
+			</if>
+      		<if test="amount!=null ">
+      			#{amount},
+			</if>
+      		<if test="serviceAmount!=null ">
+      			#{serviceAmount},
+			</if>
+      		<if test="payServiceAmount!=null ">
+      			#{payServiceAmount},
+			</if>
+      		<if test="arrivalAmount!=null ">
+      			#{arrivalAmount},
+			</if>
+      		<if test="txTime!=null ">
+      			#{txTime},
+			</if>
+    	</trim>
+	</insert>
+	
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.tx.entity.TxPayOrder">
+		delete from tx_pay_order
+		<where>
+      		<if test="id!=null ">
+				and id=#{id}
+			</if>
+      		<if test="orderNum!=null ">
+				and order_num=#{orderNum}
+			</if>
+      		<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+      		<if test="rateId!=null ">
+				and rate_id=#{rateId}
+			</if>
+      		<if test="payPlatform!=null ">
+				and pay_platform=#{payPlatform}
+			</if>
+      		<if test="accountBank!=null ">
+				and account_bank=#{accountBank}
+			</if>
+      		<if test="accountName!=null ">
+				and account_name=#{accountName}
+			</if>
+      		<if test="accountCard!=null ">
+				and account_card=#{accountCard}
+			</if>
+      		<if test="status!=null ">
+				and status=#{status}
+			</if>
+      		<if test="amount!=null ">
+				and amount=#{amount}
+			</if>
+      		<if test="serviceAmount!=null ">
+				and service_amount=#{serviceAmount}
+			</if>
+      		<if test="payServiceAmount!=null ">
+				and pay_service_amount=#{payServiceAmount}
+			</if>
+      		<if test="arrivalAmount!=null ">
+				and arrival_amount=#{arrivalAmount}
+			</if>
+      		<if test="txTime!=null ">
+				and tx_time=#{txTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.tx.entity.TxPayOrder">
+		update tx_pay_order
+		<set>
+			<if test="orderNum!=null ">
+				order_num=#{orderNum},
+			</if>
+			<if test="companyId!=null ">
+				company_id=#{companyId},
+			</if>
+			<if test="rateId!=null ">
+				rate_id=#{rateId},
+			</if>
+			<if test="payPlatform!=null ">
+				pay_platform=#{payPlatform},
+			</if>
+			<if test="accountBank!=null ">
+				account_bank=#{accountBank},
+			</if>
+			<if test="accountName!=null ">
+				account_name=#{accountName},
+			</if>
+			<if test="accountCard!=null ">
+				account_card=#{accountCard},
+			</if>
+			<if test="status!=null ">
+				status=#{status},
+			</if>
+			<if test="amount!=null ">
+				amount=#{amount},
+			</if>
+			<if test="serviceAmount!=null ">
+				service_amount=#{serviceAmount},
+			</if>
+			<if test="payServiceAmount!=null ">
+				pay_service_amount=#{payServiceAmount},
+			</if>
+			<if test="arrivalAmount!=null ">
+				arrival_amount=#{arrivalAmount},
+			</if>
+			<if test="txTime!=null ">
+				tx_time=#{txTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.tx.entity.TxPayOrder" resultMap="txpayorder_result_map">
+		select id,order_num,company_id,rate_id,pay_platform,account_bank,account_name,account_card,status,amount,service_amount,pay_service_amount,arrival_amount,tx_time from tx_pay_order
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="orderNum!=null ">
+				and order_num=#{orderNum}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="rateId!=null ">
+				and rate_id=#{rateId}
+			</if>
+			<if test="payPlatform!=null ">
+				and pay_platform=#{payPlatform}
+			</if>
+			<if test="accountBank!=null ">
+				and account_bank=#{accountBank}
+			</if>
+			<if test="accountName!=null ">
+				and account_name=#{accountName}
+			</if>
+			<if test="accountCard!=null ">
+				and account_card=#{accountCard}
+			</if>
+			<if test="status!=null ">
+				and status=#{status}
+			</if>
+			<if test="amount!=null ">
+				and amount=#{amount}
+			</if>
+			<if test="serviceAmount!=null ">
+				and service_amount=#{serviceAmount}
+			</if>
+			<if test="payServiceAmount!=null ">
+				and pay_service_amount=#{payServiceAmount}
+			</if>
+			<if test="arrivalAmount!=null ">
+				and arrival_amount=#{arrivalAmount}
+			</if>
+			<if test="txTime!=null ">
+				and tx_time=#{txTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据对象查询列表-->
+	<select id="selectByObject" resultMap="txpayorder_result_map" >
+		select id,order_num,company_id,rate_id,pay_platform,account_bank,account_name,account_card,status,amount,service_amount,pay_service_amount,arrival_amount,tx_time from tx_pay_order
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="orderNum!=null ">
+				and order_num=#{orderNum}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="rateId!=null ">
+				and rate_id=#{rateId}
+			</if>
+			<if test="payPlatform!=null ">
+				and pay_platform=#{payPlatform}
+			</if>
+			<if test="accountBank!=null ">
+				and account_bank=#{accountBank}
+			</if>
+			<if test="accountName!=null ">
+				and account_name=#{accountName}
+			</if>
+			<if test="accountCard!=null ">
+				and account_card=#{accountCard}
+			</if>
+			<if test="status!=null ">
+				and status=#{status}
+			</if>
+			<if test="amount!=null ">
+				and amount=#{amount}
+			</if>
+			<if test="serviceAmount!=null ">
+				and service_amount=#{serviceAmount}
+			</if>
+			<if test="payServiceAmount!=null ">
+				and pay_service_amount=#{payServiceAmount}
+			</if>
+			<if test="arrivalAmount!=null ">
+				and arrival_amount=#{arrivalAmount}
+			</if>
+			<if test="txTime!=null ">
+				and tx_time=#{txTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="txpayorder_result_map" >
+		
+		SELECT id,order_num,company_id,rate_id,pay_platform,account_bank,account_name,account_card,status,amount,service_amount,pay_service_amount,arrival_amount,tx_time FROM tx_pay_order 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="orderNum!=null and orderNum!=''">
+				and order_num like  CONCAT('%',#{orderNum},'%')
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="payPlatform!=null and payPlatform!=''">
+				and pay_platform = #{payPlatform}
+			</if>
+			<if test="accountBank!=null and accountBank!=''">
+				and account_bank like  CONCAT('%',#{accountBank},'%')
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and account_name like  CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="accountCard!=null and accountCard!=''">
+				and account_card like  CONCAT('%',#{accountCard},'%')
+			</if>
+			<if test="status!=null and status!=''">
+				and status = #{status}
+			</if>
+			<if test="amount!=null and amount!=''">
+				and amount like  CONCAT('%',#{amount},'%')
+			</if>
+			<if test="serviceAmount!=null and serviceAmount!=''">
+				and service_amount like  CONCAT('%',#{serviceAmount},'%')
+			</if>
+			<if test="payServiceAmount!=null and payServiceAmount!=''">
+				and pay_service_amount like  CONCAT('%',#{payServiceAmount},'%')
+			</if>
+			<if test="arrivalAmount!=null and arrivalAmount!=''">
+				and arrival_amount like  CONCAT('%',#{arrivalAmount},'%')
+			</if>
+			<if test="txTimeBegin!=null and txTimeBegin!=''">
+				and tx_time <![CDATA[ >= ]]> str_to_date(#{txTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="txTimeEnd!=null and txTimeEnd!=''">
+				and tx_time <![CDATA[ <= ]]> str_to_date(#{txTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	
+	<!-- 获取提现中金额 -->
+	<select id="getIngAmount" resultType="DOUBLE">
+		select SUM(amount) from tx_pay_order
+		<where>		
+			status=2
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="orderNum!=null and orderNum!=''">
+				and order_num like  CONCAT('%',#{orderNum},'%')
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="payPlatform!=null and payPlatform!=''">
+				and pay_platform = #{payPlatform}
+			</if>
+			<if test="accountBank!=null and accountBank!=''">
+				and account_bank like  CONCAT('%',#{accountBank},'%')
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and account_name like  CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="accountCard!=null and accountCard!=''">
+				and account_card like  CONCAT('%',#{accountCard},'%')
+			</if>
+			<if test="amount!=null and amount!=''">
+				and amount like  CONCAT('%',#{amount},'%')
+			</if>
+			<if test="serviceAmount!=null and serviceAmount!=''">
+				and service_amount like  CONCAT('%',#{serviceAmount},'%')
+			</if>
+			<if test="arrivalAmount!=null and arrivalAmount!=''">
+				and arrival_amount like  CONCAT('%',#{arrivalAmount},'%')
+			</if>
+			<if test="txTime!=null and txTime!=''">
+				and tx_time=#{txTime}
+			</if>
+		</where>
+	</select>
+	<!-- 获取今日提现成功金额 -->
+	<select id="getSucAmount" resultType="DOUBLE">
+		select SUM(amount) from tx_pay_order
+		<where>
+			status=1
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="orderNum!=null and orderNum!=''">
+				and order_num like  CONCAT('%',#{orderNum},'%')
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="payPlatform!=null and payPlatform!=''">
+				and pay_platform = #{payPlatform}
+			</if>
+			<if test="accountBank!=null and accountBank!=''">
+				and account_bank like  CONCAT('%',#{accountBank},'%')
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and account_name like  CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="accountCard!=null and accountCard!=''">
+				and account_card like  CONCAT('%',#{accountCard},'%')
+			</if>
+			<if test="amount!=null and amount!=''">
+				and amount like  CONCAT('%',#{amount},'%')
+			</if>
+			<if test="serviceAmount!=null and serviceAmount!=''">
+				and service_amount like  CONCAT('%',#{serviceAmount},'%')
+			</if>
+			<if test="arrivalAmount!=null and arrivalAmount!=''">
+				and arrival_amount like  CONCAT('%',#{arrivalAmount},'%')
+			</if>
+			<if test="txTime!=null ">
+				and str_to_date(tx_time,'%Y-%m-%d') = str_to_date(#{txTime},  '%Y-%m-%d')
+			</if>
+		</where>
+	</select>
+	<!-- 获取今日提现手续费、到账金额 -->
+	<select id="getNowAmount" resultType="com.pay.business.tx.entity.TxPayOrder" resultMap="txpayorder_result_map">
+		select 
+		IFNULL(SUM(service_amount),0.00)  as serviceAmount
+		,IFNULL(SUM(arrival_amount),0.00) as arrivalAmount 
+		from tx_pay_order
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="orderNum!=null and orderNum!=''">
+				and order_num like  CONCAT('%',#{orderNum},'%')
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="payPlatform!=null and payPlatform!=''">
+				and pay_platform = #{payPlatform}
+			</if>
+			<if test="accountBank!=null and accountBank!=''">
+				and account_bank like  CONCAT('%',#{accountBank},'%')
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and account_name like  CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="accountCard!=null and accountCard!=''">
+				and account_card like  CONCAT('%',#{accountCard},'%')
+			</if>			
+			<if test="status!=null and status!=''">
+				and status = #{status}
+			</if>
+			<if test="amount!=null and amount!=''">
+				and amount like  CONCAT('%',#{amount},'%')
+			</if>
+			<if test="serviceAmount!=null and serviceAmount!=''">
+				and service_amount like  CONCAT('%',#{serviceAmount},'%')
+			</if>
+			<if test="arrivalAmount!=null and arrivalAmount!=''">
+				and arrival_amount like  CONCAT('%',#{arrivalAmount},'%')
+			</if>
+			<if test="txTime!=null ">
+				and str_to_date(tx_time,'%Y-%m-%d') = str_to_date(#{txTime},  '%Y-%m-%d')
+			</if>
+		</where>
+	</select>
+	<!-- 获取总数 -->
+	<select id="getCount2" resultType="java.lang.Integer">
+		select count(id) from tx_pay_order  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="orderNum!=null and orderNum!=''">
+				and order_num like CONCAT('%',#{orderNum},'%')
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="payPlatform!=null and payPlatform!=''">
+				and pay_platform = #{payPlatform}
+			</if>
+			<if test="accountBank!=null and accountBank!=''">
+				and account_bank like CONCAT('%',#{accountBank},'%')
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and account_name like CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="accountCard!=null and accountCard!=''">
+				and account_card like CONCAT('%',#{accountCard},'%')
+			</if>
+			<if test="status!=null and status!=''">
+				and status = #{status}
+			</if>
+			<if test="amount!=null and amount!=''">
+				and amount like CONCAT('%',#{amount},'%')
+			</if>
+			<if test="serviceAmount!=null and serviceAmount!=''">
+				and service_amount like CONCAT('%',#{serviceAmount},'%')
+			</if>
+			<if test="arrivalAmount!=null and arrivalAmount!=''">
+				and arrival_amount like CONCAT('%',#{arrivalAmount},'%')
+			</if>
+			<if test="txTimeEnd!=null ">
+				and str_to_date(tx_time,'%Y-%m-%d %H:%i:%s')<![CDATA[ <= ]]> str_to_date(#{txTimeEnd},  '%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="txTimeBegin!=null ">
+				and str_to_date(tx_time,'%Y-%m-%d %H:%i:%s')<![CDATA[ >= ]]> str_to_date(#{txTimeBegin},  '%Y-%m-%d %H:%i:%s')
+			</if>			
+		</where>
+	</select>
+	<!-- 根据对象查询列表-->
+	<select id="getPageObject2" resultMap="txpayorder_result_map" >
+		select rate.pay_way_name,  tx.id,tx.order_num,tx.company_id,tx.rate_id,tx.pay_platform,tx.account_bank,tx.account_name,tx.account_card,
+		tx.status,tx.amount,tx.service_amount,tx.pay_service_amount,tx.arrival_amount,tx.tx_time from tx_pay_order tx
+		LEFT JOIN payv2_pay_way_rate rate on rate.id = tx.rate_id
+		<where>
+			<if test="id!=null and id!=''">
+				and tx.id = #{id}
+			</if>
+			<if test="orderNum!=null and orderNum!=''">
+				and tx.order_num like CONCAT('%',#{orderNum},'%')
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and tx.company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and tx.rate_id = #{rateId}
+			</if>
+			<if test="payPlatform!=null and payPlatform!=''">
+				and tx.pay_platform = #{payPlatform}
+			</if>
+			<if test="accountBank!=null and accountBank!=''">
+				and tx.account_bank like CONCAT('%',#{accountBank},'%')
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and tx.account_name like CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="accountCard!=null and accountCard!=''">
+				and tx.account_card like CONCAT('%',#{accountCard},'%')
+			</if>
+			<if test="status!=null and status!=''">
+				and tx.status = #{status}
+			</if>
+			<if test="amount!=null and amount!=''">
+				and tx.amount like  CONCAT('%',#{amount},'%')
+			</if>
+			<if test="serviceAmount!=null and serviceAmount!=''">
+				and tx.service_amount like  CONCAT('%',#{serviceAmount},'%')
+			</if>
+			<if test="arrivalAmount!=null and arrivalAmount!=''">
+				and tx.arrival_amount like  CONCAT('%',#{arrivalAmount},'%')
+			</if>
+			<if test="txTimeEnd!=null ">
+				and str_to_date(tx.tx_time,'%Y-%m-%d %H:%i:%s')<![CDATA[ <= ]]> str_to_date(#{txTimeEnd},  '%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="txTimeBegin!=null ">
+				and str_to_date(tx.tx_time,'%Y-%m-%d %H:%i:%s')<![CDATA[ >= ]]> str_to_date(#{txTimeBegin},  '%Y-%m-%d %H:%i:%s')
+			</if>
+			ORDER BY tx.tx_time DESC
+			<include refid="base_page_query_end"/>		
+		</where>
+	</select>
+	<select id="getEnchashmentRateByCom" resultType="Map">
+		select balance.id as id, balance.tx_balance as balance, rate.id as rateId, rate.rate_key5 as key1, rate.rate_key6 as key2, sys.dict_name as name
+				, rate.account_bank as accountBank, rate.account_name as accountName, rate.account_card as accountCard
+			from tx_pay_rate_balance balance
+			LEFT JOIN payv2_pay_way_rate rate ON balance.rate_id = rate.id
+			LEFT JOIN sys_config_dictionary sys on rate.dic_id = sys.id
+			WHERE balance.company_id = #{id}
+	</select>
+	
+	<select id="selectOrderKey" resultType="java.util.Map">
+		select tx.id as id,rate.rate_key1 as key1,rate.rate_key2 as key2 from tx_pay_order tx left join payv2_pay_way_rate rate on tx.rate_id=rate.id
+			where tx.order_num = #{orderNum}
+	</select>
+	
+	<!-- 查询今日提现成功数据-->
+	<select id="queryToday" parameterType="Map" resultType="java.util.Map">
+		select SUM(amount) todaySucc,SUM(service_amount) todayRate,SUM(arrival_amount) todayDz from tx_pay_order 
+		<where>
+			str_to_date(tx_time,'%Y-%m-%d') = str_to_date(now(), '%Y-%m-%d')
+			and status=1
+			<if test="companyId!=null and companyId!=''">
+				and company_id=#{companyId}
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and account_name like CONCAT('%',#{accountName},'%')
+			</if>
+		</where>
+	</select>
+	
+	<!-- 官方后台列表获取总数 -->
+	<select id="searchTxOrderListCount" resultType="java.lang.Integer">
+		select count(*) from tx_pay_order  
+		<where>
+			<if test="orderNum!=null and orderNum!=''">
+				and order_num like CONCAT('%',#{orderNum},'%')
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and account_name like CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="status!=null and status!=''">
+				and status = #{status}
+			</if>
+			<if test="txTimeBegin!=null and txTimeBegin!=''">
+				and tx_time <![CDATA[ >= ]]> #{txTimeBegin}
+			</if>
+			<if test="txTimeEnd!=null and txTimeEnd!=''">
+				and tx_time <![CDATA[ <= ]]> #{txTimeEnd}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="searchTxOrderList" resultMap="txpayorder_result_map" >
+		
+		SELECT tx.*,rate.rate_name pay_way_name ,company.company_name
+		FROM 
+			tx_pay_order tx ,
+			payv2_pay_way_rate rate ,
+			payv2_buss_company company 
+		<where>
+			rate.id = tx.rate_id
+			and company.id = tx.company_id
+			<if test="orderNum!=null and orderNum!=''">
+				and tx.order_num like CONCAT('%',#{orderNum},'%')
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and tx.company_id = #{companyId}
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and tx.account_name like CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="status!=null and status!=''">
+				and tx.status = #{status}
+			</if>
+			<if test="txTimeBegin!=null and txTimeBegin!=''">
+				and tx.tx_time <![CDATA[ >= ]]> #{txTimeBegin}
+			</if>
+			<if test="txTimeEnd!=null and txTimeEnd!=''">
+				and tx.tx_time <![CDATA[ <= ]]> #{txTimeEnd}
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+</mapper>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>配置渠道代付费</title>
+	<#include "lib/lib.html" />
+</head>
+<body>
+	<form action="" method="post" class="form form-horizontal" id="form-company-df-rate">
+	<input type="hidden" id="id" name="id" value="${map.id}"/>
+	<div class="pop_main" style="padding-left:30px;width: 95%;">
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">代付费配置</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>代付手续费：</strong></td>
+	    		    		<td>
+	    		    			<input value="${configObj.payWayRate!''}" style="width:100px;" class="dd_input input-text size-M" type="text"  placeholder="如:1.55" id="payWayRate" name="payWayRate" style=" width:60%" onblur="ValidateFloat($(this),value)" datatype="*"  nullmsg="请输入代付成本费" > 元/笔
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+		<div class="submit_btn">
+			<button type="button" name="" value="提    交" onclick="submitAddInfo();" class="btn btn-success radius"><i class="Hui-iconfont">&#xe676;</i> 提    交</button>
+		</div>
+	</div>
+	</form>
+	<script type="text/javascript">
+		$(function(){
+			$("#form-company-df-rate").Validform({
+				tiptype:3,
+				showAllError:true,   //表单提交时显示所有提示信息
+				ignoreHidden: true,  //隐藏的表单元素不校验
+				ajaxPost:true,
+				callback:function(data){
+					$.Hidemsg();
+					if(data.resultCode==200){
+						layer.msg('操作成功!', {
+							icon : 1,
+							time : 1000
+						});
+						
+						//parent.location.replace("${basePath}/payv2PayWayRate/payv2PayWayRateListAll.do?payWayId="+$("#payViewType").val());
+						setTimeout(function () { 
+					        //layer_close();
+					        //window.parent.location.reload();
+					        /*刷新layer子页面*/
+					        location.replace(location.href);
+					        /*刷新layer父页面 , 并关闭子页面*/
+					        /* window.parent.location.reload();
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index); */
+					    }, 1000);
+					    //layer_show('代付设置','${basePath}/dfWayRate/configDfWayRateTc.do?companyId='+${dl.id!},800,600);
+					}else if(data.resultCode==201){
+						layer.msg('金额不能大于下级商户代付费最小值【'+data.rate+'】!', {
+							icon : 1,
+							time : 1000
+						});
+					}else if(data.resultCode==203){
+						layer.msg('金额必须大于0!', {
+							icon : 1,
+							time : 1000
+						});
+					}else{
+						layer.msg('保存失败，请你检查数据!', {
+							icon : 1,
+							time : 1000
+						});
+					}
+				}
+			});
+		});
+		
+		function submitAddInfo(){
+			$("#form-company-df-rate").attr(
+					"action",
+					"${basePath}/payv2Channel/addDfPayWayRate.do").submit(); 
+		}
+		
+		//验证输入的数字合法性
+		function ValidateFloat(e, pnumber){ 
+			if (!/^\d+[.]?\d*$/.test(pnumber)){ 
+				$(e).val(/^\d+[.]?\d*/.exec($(e).val())); 
+				layer.msg('请输入整数金额！', function(){});
+			}
+			return false; 
+		}
+	</script>
+</body>
+</html>

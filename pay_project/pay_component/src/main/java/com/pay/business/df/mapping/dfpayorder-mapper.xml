@@ -1,0 +1,902 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.pay.business.df.mapper.DfPayOrderMapper">
+
+	<resultMap id="dfpayorder_result_map" type="com.pay.business.df.entity.DfPayOrder" >
+		<id column="id" property="id" />
+		<result column="df_order_num" property="dfOrderNum"/>
+		<result column="batch_num" property="batchNum"/>
+		<result column="channel_id" property="channelId"/>
+		<result column="df_abstract" property="dfAbstract"/>
+		<result column="remark" property="remark"/>
+		<result column="merchant_batch_num" property="merchantBatchNum"/>
+		<result column="batch_remark" property="batchRemark"/>
+		<result column="df_merchant_order_num" property="dfMerchantOrderNum"/>
+		<result column="company_id" property="companyId"/>
+		<result column="df_type" property="dfType"/>
+		<result column="df_rate_id" property="dfRateId"/>
+		<result column="account_type" property="accountType"/>
+		<result column="account_num" property="accountNum"/>
+		<result column="account_name" property="accountName"/>
+		<result column="mobile" property="mobile"/>
+		<result column="bank_name" property="bankName"/>
+		<result column="bank_branch_name" property="bankBranchName"/>
+		<result column="bank_branch_num" property="bankBranchNum"/>
+		<result column="bank_transaction" property="bankTransaction"/>
+		<result column="df_pay_money" property="dfPayMoney"/>
+		<result column="df_pay_way_money" property="dfPayWayMoney"/>
+		<result column="df_cost_rate_money" property="dfCostRateMoney"/>
+		<result column="df_status" property="dfStatus"/>
+		<result column="req_time" property="reqTime"/>
+		<result column="pay_time" property="payTime"/>
+		<result column="notify_url" property="notifyUrl"/>
+		<result column="callback_time" property="callbackTime"/>
+		<result column="update_time" property="updateTime"/>
+		
+		<result column="channel_name" property="channelName"/>
+		<result column="company_name" property="companyName"/>
+		<result column="df_rate_name" property="dfRateName"/>
+		<result column="df_pay_way_name" property="dfPayWayName"/>
+	</resultMap>
+	
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from df_pay_order  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="dfOrderNum!=null and dfOrderNum!=''">
+				and df_order_num like CONCAT('%',#{dfOrderNum},'%')
+			</if>
+			<if test="batchNum!=null and batchNum!=''">
+				and batch_num like CONCAT('%',#{batchNum},'%')
+			</if>
+			<if test="channelId!=null and channelId!=''">
+				and channel_id = #{channelId}
+			</if>
+			<if test="dfAbstract!=null and dfAbstract!=''">
+				and df_abstract like CONCAT('%',#{dfAbstract},'%')
+			</if>
+			<if test="remark!=null and remark!=''">
+				and remark like CONCAT('%',#{remark},'%')
+			</if>
+			<if test="merchantBatchNum!=null and merchantBatchNum!=''">
+				and merchant_batch_num like CONCAT('%',#{merchantBatchNum},'%')
+			</if>
+			<if test="batchRemark!=null and batchRemark!=''">
+				and batch_remark like CONCAT('%',#{batchRemark},'%')
+			</if>
+			<if test="dfMerchantOrderNum!=null and dfMerchantOrderNum!=''">
+				and df_merchant_order_num like CONCAT('%',#{dfMerchantOrderNum},'%')
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="dfType!=null and dfType!=''">
+				and df_type = #{dfType}
+			</if>
+			<if test="dfRateId!=null and dfRateId!=''">
+				and df_rate_id = #{dfRateId}
+			</if>
+			<if test="accountType!=null and accountType!=''">
+				and account_type = #{accountType}
+			</if>
+			<if test="accountNum!=null and accountNum!=''">
+				and account_num like CONCAT('%',#{accountNum},'%')
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and account_name like CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="mobile!=null and mobile!=''">
+				and mobile like CONCAT('%',#{mobile},'%')
+			</if>
+			<if test="bankName!=null and bankName!=''">
+				and bank_name like CONCAT('%',#{bankName},'%')
+			</if>
+			<if test="bankBranchName!=null and bankBranchName!=''">
+				and bank_branch_name like CONCAT('%',#{bankBranchName},'%')
+			</if>
+			<if test="bankBranchNum!=null and bankBranchNum!=''">
+				and bank_branch_num like CONCAT('%',#{bankBranchNum},'%')
+			</if>
+			<if test="bankTransaction!=null and bankTransaction!=''">
+				and bank_transaction like CONCAT('%',#{bankTransaction},'%')
+			</if>
+			<if test="dfPayMoney!=null and dfPayMoney!=''">
+				and df_pay_money like CONCAT('%',#{dfPayMoney},'%')
+			</if>
+			<if test="dfPayWayMoney!=null and dfPayWayMoney!=''">
+				and df_pay_way_money like CONCAT('%',#{dfPayWayMoney},'%')
+			</if>
+			<if test="dfCostRateMoney!=null and dfCostRateMoney!=''">
+				and df_cost_rate_money like CONCAT('%',#{dfCostRateMoney},'%')
+			</if>
+			<if test="dfStatus!=null and dfStatus!=''">
+				and df_status = #{dfStatus}
+			</if>
+			<if test="reqTimeBegin!=null and reqTimeBegin!=''">
+				and req_time <![CDATA[ >= ]]> str_to_date(#{reqTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="reqTimeEnd!=null and reqTimeEnd!=''">
+				and req_time <![CDATA[ <= ]]> str_to_date(#{reqTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="payTimeBegin!=null and payTimeBegin!=''">
+				and pay_time <![CDATA[ >= ]]> str_to_date(#{payTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="payTimeEnd!=null and payTimeEnd!=''">
+				and pay_time <![CDATA[ <= ]]> str_to_date(#{payTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="notifyUrl!=null and notifyUrl!=''">
+				and notify_url like CONCAT('%',#{notifyUrl},'%')
+			</if>
+			<if test="callbackTimeBegin!=null and callbackTimeBegin!=''">
+				and callback_time <![CDATA[ >= ]]> str_to_date(#{callbackTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="callbackTimeEnd!=null and callbackTimeEnd!=''">
+				and callback_time <![CDATA[ <= ]]> str_to_date(#{callbackTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeBegin!=null and updateTimeBegin!=''">
+				and update_time <![CDATA[ >= ]]> str_to_date(#{updateTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeEnd!=null and updateTimeEnd!=''">
+				and update_time <![CDATA[ <= ]]> str_to_date(#{updateTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id"   -->
+	<insert id="insertByEntity" parameterType="com.pay.business.df.entity.DfPayOrder" useGeneratedKeys="true" keyProperty="id">
+		insert into df_pay_order
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="dfOrderNum!=null ">
+				df_order_num,
+			</if>
+      		<if test="batchNum!=null ">
+				batch_num,
+			</if>
+      		<if test="channelId!=null ">
+				channel_id,
+			</if>
+      		<if test="dfAbstract!=null ">
+				df_abstract,
+			</if>
+      		<if test="remark!=null ">
+				remark,
+			</if>
+      		<if test="merchantBatchNum!=null ">
+				merchant_batch_num,
+			</if>
+      		<if test="batchRemark!=null ">
+				batch_remark,
+			</if>
+      		<if test="dfMerchantOrderNum!=null ">
+				df_merchant_order_num,
+			</if>
+      		<if test="companyId!=null ">
+				company_id,
+			</if>
+      		<if test="dfType!=null ">
+				df_type,
+			</if>
+      		<if test="dfRateId!=null ">
+				df_rate_id,
+			</if>
+      		<if test="accountType!=null ">
+				account_type,
+			</if>
+      		<if test="accountNum!=null ">
+				account_num,
+			</if>
+      		<if test="accountName!=null ">
+				account_name,
+			</if>
+      		<if test="mobile!=null ">
+				mobile,
+			</if>
+      		<if test="bankName!=null ">
+				bank_name,
+			</if>
+      		<if test="bankBranchName!=null ">
+				bank_branch_name,
+			</if>
+      		<if test="bankBranchNum!=null ">
+				bank_branch_num,
+			</if>
+      		<if test="bankTransaction!=null ">
+				bank_transaction,
+			</if>
+      		<if test="dfPayMoney!=null ">
+				df_pay_money,
+			</if>
+      		<if test="dfPayWayMoney!=null ">
+				df_pay_way_money,
+			</if>
+      		<if test="dfCostRateMoney!=null ">
+				df_cost_rate_money,
+			</if>
+      		<if test="dfStatus!=null ">
+				df_status,
+			</if>
+      		<if test="reqTime!=null ">
+				req_time,
+			</if>
+      		<if test="payTime!=null ">
+				pay_time,
+			</if>
+      		<if test="notifyUrl!=null ">
+				notify_url,
+			</if>
+      		<if test="callbackTime!=null ">
+				callback_time,
+			</if>
+      		<if test="updateTime!=null ">
+				update_time,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id},
+			</if>
+      		<if test="dfOrderNum!=null ">
+      			#{dfOrderNum},
+			</if>
+      		<if test="batchNum!=null ">
+      			#{batchNum},
+			</if>
+      		<if test="channelId!=null ">
+      			#{channelId},
+			</if>
+      		<if test="dfAbstract!=null ">
+      			#{dfAbstract},
+			</if>
+      		<if test="remark!=null ">
+      			#{remark},
+			</if>
+      		<if test="merchantBatchNum!=null ">
+      			#{merchantBatchNum},
+			</if>
+      		<if test="batchRemark!=null ">
+      			#{batchRemark},
+			</if>
+      		<if test="dfMerchantOrderNum!=null ">
+      			#{dfMerchantOrderNum},
+			</if>
+      		<if test="companyId!=null ">
+      			#{companyId},
+			</if>
+      		<if test="dfType!=null ">
+      			#{dfType},
+			</if>
+      		<if test="dfRateId!=null ">
+      			#{dfRateId},
+			</if>
+      		<if test="accountType!=null ">
+      			#{accountType},
+			</if>
+      		<if test="accountNum!=null ">
+      			#{accountNum},
+			</if>
+      		<if test="accountName!=null ">
+      			#{accountName},
+			</if>
+      		<if test="mobile!=null ">
+      			#{mobile},
+			</if>
+      		<if test="bankName!=null ">
+      			#{bankName},
+			</if>
+      		<if test="bankBranchName!=null ">
+      			#{bankBranchName},
+			</if>
+      		<if test="bankBranchNum!=null ">
+      			#{bankBranchNum},
+			</if>
+      		<if test="bankTransaction!=null ">
+      			#{bankTransaction},
+			</if>
+      		<if test="dfPayMoney!=null ">
+      			#{dfPayMoney},
+			</if>
+      		<if test="dfPayWayMoney!=null ">
+      			#{dfPayWayMoney},
+			</if>
+      		<if test="dfCostRateMoney!=null ">
+      			#{dfCostRateMoney},
+			</if>
+      		<if test="dfStatus!=null ">
+      			#{dfStatus},
+			</if>
+      		<if test="reqTime!=null ">
+      			#{reqTime},
+			</if>
+      		<if test="payTime!=null ">
+      			#{payTime},
+			</if>
+      		<if test="notifyUrl!=null ">
+      			#{notifyUrl},
+			</if>
+      		<if test="callbackTime!=null ">
+      			#{callbackTime},
+			</if>
+      		<if test="updateTime!=null ">
+      			#{updateTime},
+			</if>
+    	</trim>
+	</insert>
+	
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.df.entity.DfPayOrder">
+		delete from df_pay_order
+		<where>
+      		<if test="id!=null ">
+				and id=#{id}
+			</if>
+      		<if test="dfOrderNum!=null ">
+				and df_order_num=#{dfOrderNum}
+			</if>
+      		<if test="batchNum!=null ">
+				and batch_num=#{batchNum}
+			</if>
+      		<if test="channelId!=null ">
+				and channel_id=#{channelId}
+			</if>
+      		<if test="dfAbstract!=null ">
+				and df_abstract=#{dfAbstract}
+			</if>
+      		<if test="remark!=null ">
+				and remark=#{remark}
+			</if>
+      		<if test="merchantBatchNum!=null ">
+				and merchant_batch_num=#{merchantBatchNum}
+			</if>
+      		<if test="batchRemark!=null ">
+				and batch_remark=#{batchRemark}
+			</if>
+      		<if test="dfMerchantOrderNum!=null ">
+				and df_merchant_order_num=#{dfMerchantOrderNum}
+			</if>
+      		<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+      		<if test="dfType!=null ">
+				and df_type=#{dfType}
+			</if>
+      		<if test="dfRateId!=null ">
+				and df_rate_id=#{dfRateId}
+			</if>
+      		<if test="accountType!=null ">
+				and account_type=#{accountType}
+			</if>
+      		<if test="accountNum!=null ">
+				and account_num=#{accountNum}
+			</if>
+      		<if test="accountName!=null ">
+				and account_name=#{accountName}
+			</if>
+      		<if test="mobile!=null ">
+				and mobile=#{mobile}
+			</if>
+      		<if test="bankName!=null ">
+				and bank_name=#{bankName}
+			</if>
+      		<if test="bankBranchName!=null ">
+				and bank_branch_name=#{bankBranchName}
+			</if>
+      		<if test="bankBranchNum!=null ">
+				and bank_branch_num=#{bankBranchNum}
+			</if>
+      		<if test="bankTransaction!=null ">
+				and bank_transaction=#{bankTransaction}
+			</if>
+      		<if test="dfPayMoney!=null ">
+				and df_pay_money=#{dfPayMoney}
+			</if>
+      		<if test="dfPayWayMoney!=null ">
+				and df_pay_way_money=#{dfPayWayMoney}
+			</if>
+      		<if test="dfCostRateMoney!=null ">
+				and df_cost_rate_money=#{dfCostRateMoney}
+			</if>
+      		<if test="dfStatus!=null ">
+				and df_status=#{dfStatus}
+			</if>
+      		<if test="reqTime!=null ">
+				and req_time=#{reqTime}
+			</if>
+      		<if test="payTime!=null ">
+				and pay_time=#{payTime}
+			</if>
+      		<if test="notifyUrl!=null ">
+				and notify_url=#{notifyUrl}
+			</if>
+      		<if test="callbackTime!=null ">
+				and callback_time=#{callbackTime}
+			</if>
+      		<if test="updateTime!=null ">
+				and update_time=#{updateTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.df.entity.DfPayOrder">
+		update df_pay_order
+		<set>
+			<if test="dfOrderNum!=null ">
+				df_order_num=#{dfOrderNum},
+			</if>
+			<if test="batchNum!=null ">
+				batch_num=#{batchNum},
+			</if>
+			<if test="channelId!=null ">
+				channel_id=#{channelId},
+			</if>
+			<if test="dfAbstract!=null ">
+				df_abstract=#{dfAbstract},
+			</if>
+			<if test="remark!=null ">
+				remark=#{remark},
+			</if>
+			<if test="merchantBatchNum!=null ">
+				merchant_batch_num=#{merchantBatchNum},
+			</if>
+			<if test="batchRemark!=null ">
+				batch_remark=#{batchRemark},
+			</if>
+			<if test="dfMerchantOrderNum!=null ">
+				df_merchant_order_num=#{dfMerchantOrderNum},
+			</if>
+			<if test="companyId!=null ">
+				company_id=#{companyId},
+			</if>
+			<if test="dfType!=null ">
+				df_type=#{dfType},
+			</if>
+			<if test="dfRateId!=null ">
+				df_rate_id=#{dfRateId},
+			</if>
+			<if test="accountType!=null ">
+				account_type=#{accountType},
+			</if>
+			<if test="accountNum!=null ">
+				account_num=#{accountNum},
+			</if>
+			<if test="accountName!=null ">
+				account_name=#{accountName},
+			</if>
+			<if test="mobile!=null ">
+				mobile=#{mobile},
+			</if>
+			<if test="bankName!=null ">
+				bank_name=#{bankName},
+			</if>
+			<if test="bankBranchName!=null ">
+				bank_branch_name=#{bankBranchName},
+			</if>
+			<if test="bankBranchNum!=null ">
+				bank_branch_num=#{bankBranchNum},
+			</if>
+			<if test="bankTransaction!=null ">
+				bank_transaction=#{bankTransaction},
+			</if>
+			<if test="dfPayMoney!=null ">
+				df_pay_money=#{dfPayMoney},
+			</if>
+			<if test="dfPayWayMoney!=null ">
+				df_pay_way_money=#{dfPayWayMoney},
+			</if>
+			<if test="dfCostRateMoney!=null ">
+				df_cost_rate_money=#{dfCostRateMoney},
+			</if>
+			<if test="dfStatus!=null ">
+				df_status=#{dfStatus},
+			</if>
+			<if test="reqTime!=null ">
+				req_time=#{reqTime},
+			</if>
+			<if test="payTime!=null ">
+				pay_time=#{payTime},
+			</if>
+			<if test="notifyUrl!=null ">
+				notify_url=#{notifyUrl},
+			</if>
+			<if test="callbackTime!=null ">
+				callback_time=#{callbackTime},
+			</if>
+			<if test="updateTime!=null ">
+				update_time=#{updateTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.df.entity.DfPayOrder" resultMap="dfpayorder_result_map">
+		select id,df_order_num,batch_num,channel_id,df_abstract,remark,merchant_batch_num,batch_remark,df_merchant_order_num,company_id,df_type,df_rate_id,account_type,account_num,account_name,mobile,bank_name,bank_branch_name,bank_branch_num,bank_transaction,df_pay_money,df_pay_way_money,df_cost_rate_money,df_status,req_time,pay_time,notify_url,callback_time,update_time from df_pay_order
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="dfOrderNum!=null ">
+				and df_order_num=#{dfOrderNum}
+			</if>
+			<if test="batchNum!=null ">
+				and batch_num=#{batchNum}
+			</if>
+			<if test="channelId!=null ">
+				and channel_id=#{channelId}
+			</if>
+			<if test="dfAbstract!=null ">
+				and df_abstract=#{dfAbstract}
+			</if>
+			<if test="remark!=null ">
+				and remark=#{remark}
+			</if>
+			<if test="merchantBatchNum!=null ">
+				and merchant_batch_num=#{merchantBatchNum}
+			</if>
+			<if test="batchRemark!=null ">
+				and batch_remark=#{batchRemark}
+			</if>
+			<if test="dfMerchantOrderNum!=null ">
+				and df_merchant_order_num=#{dfMerchantOrderNum}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="dfType!=null ">
+				and df_type=#{dfType}
+			</if>
+			<if test="dfRateId!=null ">
+				and df_rate_id=#{dfRateId}
+			</if>
+			<if test="accountType!=null ">
+				and account_type=#{accountType}
+			</if>
+			<if test="accountNum!=null ">
+				and account_num=#{accountNum}
+			</if>
+			<if test="accountName!=null ">
+				and account_name=#{accountName}
+			</if>
+			<if test="mobile!=null ">
+				and mobile=#{mobile}
+			</if>
+			<if test="bankName!=null ">
+				and bank_name=#{bankName}
+			</if>
+			<if test="bankBranchName!=null ">
+				and bank_branch_name=#{bankBranchName}
+			</if>
+			<if test="bankBranchNum!=null ">
+				and bank_branch_num=#{bankBranchNum}
+			</if>
+			<if test="bankTransaction!=null ">
+				and bank_transaction=#{bankTransaction}
+			</if>
+			<if test="dfPayMoney!=null ">
+				and df_pay_money=#{dfPayMoney}
+			</if>
+			<if test="dfPayWayMoney!=null ">
+				and df_pay_way_money=#{dfPayWayMoney}
+			</if>
+			<if test="dfCostRateMoney!=null ">
+				and df_cost_rate_money=#{dfCostRateMoney}
+			</if>
+			<if test="dfStatus!=null ">
+				and df_status=#{dfStatus}
+			</if>
+			<if test="reqTime!=null ">
+				and req_time=#{reqTime}
+			</if>
+			<if test="payTime!=null ">
+				and pay_time=#{payTime}
+			</if>
+			<if test="notifyUrl!=null ">
+				and notify_url=#{notifyUrl}
+			</if>
+			<if test="callbackTime!=null ">
+				and callback_time=#{callbackTime}
+			</if>
+			<if test="updateTime!=null ">
+				and update_time=#{updateTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据对象查询列表-->
+	<select id="selectByObject" resultMap="dfpayorder_result_map" >
+		select id,df_order_num,batch_num,channel_id,df_abstract,remark,merchant_batch_num,batch_remark,df_merchant_order_num,company_id,df_type,df_rate_id,account_type,account_num,account_name,mobile,bank_name,bank_branch_name,bank_branch_num,bank_transaction,df_pay_money,df_pay_way_money,df_cost_rate_money,df_status,req_time,pay_time,notify_url,callback_time,update_time from df_pay_order
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="dfOrderNum!=null ">
+				and df_order_num=#{dfOrderNum}
+			</if>
+			<if test="batchNum!=null ">
+				and batch_num=#{batchNum}
+			</if>
+			<if test="channelId!=null ">
+				and channel_id=#{channelId}
+			</if>
+			<if test="dfAbstract!=null ">
+				and df_abstract=#{dfAbstract}
+			</if>
+			<if test="remark!=null ">
+				and remark=#{remark}
+			</if>
+			<if test="merchantBatchNum!=null ">
+				and merchant_batch_num=#{merchantBatchNum}
+			</if>
+			<if test="batchRemark!=null ">
+				and batch_remark=#{batchRemark}
+			</if>
+			<if test="dfMerchantOrderNum!=null ">
+				and df_merchant_order_num=#{dfMerchantOrderNum}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="dfType!=null ">
+				and df_type=#{dfType}
+			</if>
+			<if test="dfRateId!=null ">
+				and df_rate_id=#{dfRateId}
+			</if>
+			<if test="accountType!=null ">
+				and account_type=#{accountType}
+			</if>
+			<if test="accountNum!=null ">
+				and account_num=#{accountNum}
+			</if>
+			<if test="accountName!=null ">
+				and account_name=#{accountName}
+			</if>
+			<if test="mobile!=null ">
+				and mobile=#{mobile}
+			</if>
+			<if test="bankName!=null ">
+				and bank_name=#{bankName}
+			</if>
+			<if test="bankBranchName!=null ">
+				and bank_branch_name=#{bankBranchName}
+			</if>
+			<if test="bankBranchNum!=null ">
+				and bank_branch_num=#{bankBranchNum}
+			</if>
+			<if test="bankTransaction!=null ">
+				and bank_transaction=#{bankTransaction}
+			</if>
+			<if test="dfPayMoney!=null ">
+				and df_pay_money=#{dfPayMoney}
+			</if>
+			<if test="dfPayWayMoney!=null ">
+				and df_pay_way_money=#{dfPayWayMoney}
+			</if>
+			<if test="dfCostRateMoney!=null ">
+				and df_cost_rate_money=#{dfCostRateMoney}
+			</if>
+			<if test="dfStatus!=null ">
+				and df_status=#{dfStatus}
+			</if>
+			<if test="reqTime!=null ">
+				and req_time=#{reqTime}
+			</if>
+			<if test="payTime!=null ">
+				and pay_time=#{payTime}
+			</if>
+			<if test="notifyUrl!=null ">
+				and notify_url=#{notifyUrl}
+			</if>
+			<if test="callbackTime!=null ">
+				and callback_time=#{callbackTime}
+			</if>
+			<if test="updateTime!=null ">
+				and update_time=#{updateTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="dfpayorder_result_map" >
+		
+		SELECT id,df_order_num,batch_num,channel_id,df_abstract,remark,merchant_batch_num,batch_remark,df_merchant_order_num,company_id,df_type,df_rate_id,account_type,account_num,account_name,mobile,bank_name,bank_branch_name,bank_branch_num,bank_transaction,df_pay_money,df_pay_way_money,df_cost_rate_money,df_status,req_time,pay_time,notify_url,callback_time,update_time FROM df_pay_order 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="dfOrderNum!=null and dfOrderNum!=''">
+				and df_order_num like  CONCAT('%',#{dfOrderNum},'%')
+			</if>
+			<if test="batchNum!=null and batchNum!=''">
+				and batch_num like  CONCAT('%',#{batchNum},'%')
+			</if>
+			<if test="channelId!=null and channelId!=''">
+				and channel_id = #{channelId}
+			</if>
+			<if test="dfAbstract!=null and dfAbstract!=''">
+				and df_abstract like  CONCAT('%',#{dfAbstract},'%')
+			</if>
+			<if test="remark!=null and remark!=''">
+				and remark like  CONCAT('%',#{remark},'%')
+			</if>
+			<if test="merchantBatchNum!=null and merchantBatchNum!=''">
+				and merchant_batch_num like  CONCAT('%',#{merchantBatchNum},'%')
+			</if>
+			<if test="batchRemark!=null and batchRemark!=''">
+				and batch_remark like  CONCAT('%',#{batchRemark},'%')
+			</if>
+			<if test="dfMerchantOrderNum!=null and dfMerchantOrderNum!=''">
+				and df_merchant_order_num like  CONCAT('%',#{dfMerchantOrderNum},'%')
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="dfType!=null and dfType!=''">
+				and df_type = #{dfType}
+			</if>
+			<if test="dfRateId!=null and dfRateId!=''">
+				and df_rate_id = #{dfRateId}
+			</if>
+			<if test="accountType!=null and accountType!=''">
+				and account_type = #{accountType}
+			</if>
+			<if test="accountNum!=null and accountNum!=''">
+				and account_num like  CONCAT('%',#{accountNum},'%')
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and account_name like  CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="mobile!=null and mobile!=''">
+				and mobile like  CONCAT('%',#{mobile},'%')
+			</if>
+			<if test="bankName!=null and bankName!=''">
+				and bank_name like  CONCAT('%',#{bankName},'%')
+			</if>
+			<if test="bankBranchName!=null and bankBranchName!=''">
+				and bank_branch_name like  CONCAT('%',#{bankBranchName},'%')
+			</if>
+			<if test="bankBranchNum!=null and bankBranchNum!=''">
+				and bank_branch_num like  CONCAT('%',#{bankBranchNum},'%')
+			</if>
+			<if test="bankTransaction!=null and bankTransaction!=''">
+				and bank_transaction like  CONCAT('%',#{bankTransaction},'%')
+			</if>
+			<if test="dfPayMoney!=null and dfPayMoney!=''">
+				and df_pay_money like  CONCAT('%',#{dfPayMoney},'%')
+			</if>
+			<if test="dfPayWayMoney!=null and dfPayWayMoney!=''">
+				and df_pay_way_money like  CONCAT('%',#{dfPayWayMoney},'%')
+			</if>
+			<if test="dfCostRateMoney!=null and dfCostRateMoney!=''">
+				and df_cost_rate_money like  CONCAT('%',#{dfCostRateMoney},'%')
+			</if>
+			<if test="dfStatus!=null and dfStatus!=''">
+				and df_status = #{dfStatus}
+			</if>
+			<if test="reqTimeBegin!=null and reqTimeBegin!=''">
+				and req_time <![CDATA[ >= ]]> str_to_date(#{reqTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="reqTimeEnd!=null and reqTimeEnd!=''">
+				and req_time <![CDATA[ <= ]]> str_to_date(#{reqTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="payTimeBegin!=null and payTimeBegin!=''">
+				and pay_time <![CDATA[ >= ]]> str_to_date(#{payTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="payTimeEnd!=null and payTimeEnd!=''">
+				and pay_time <![CDATA[ <= ]]> str_to_date(#{payTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="notifyUrl!=null and notifyUrl!=''">
+				and notify_url like  CONCAT('%',#{notifyUrl},'%')
+			</if>
+			<if test="callbackTimeBegin!=null and callbackTimeBegin!=''">
+				and callback_time <![CDATA[ >= ]]> str_to_date(#{callbackTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="callbackTimeEnd!=null and callbackTimeEnd!=''">
+				and callback_time <![CDATA[ <= ]]> str_to_date(#{callbackTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeBegin!=null and updateTimeBegin!=''">
+				and update_time <![CDATA[ >= ]]> str_to_date(#{updateTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="updateTimeEnd!=null and updateTimeEnd!=''">
+				and update_time <![CDATA[ <= ]]> str_to_date(#{updateTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	
+	<select id="getCount2" resultType="java.lang.Integer">
+		select count(*) from df_pay_order  
+		<where>
+			<if test="orderNum!=null and orderNum!=''">
+				and (df_order_num=#{orderNum} or df_merchant_order_num=#{orderNum} or bank_transaction=#{orderNum})
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and pay_time <![CDATA[ >= ]]> #{createTimeBegin}
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and pay_time <![CDATA[ <= ]]> #{createTimeEnd}
+			</if>
+			<if test="channelId!=null and channelId!=''">
+				and channel_id = #{channelId}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="dfRateId!=null and dfRateId!=''">
+				and df_rate_id = #{dfRateId}
+			</if>
+			<if test="dfStatus!=null and dfStatus!=''">
+				and df_status = #{dfStatus}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject2" resultMap="dfpayorder_result_map" >
+		SELECT 
+			orders.*,channel.channel_name,company.company_name,dpwr.df_rate_name,dpwr.df_pay_way_name
+		FROM 
+			df_pay_order orders
+			left join payv2_channel channel on orders.channel_id = channel.id
+			left join payv2_buss_company company on company.id=orders.company_id
+			left join df_pay_way_rate dpwr on dpwr.id = orders.df_rate_id
+		<where>
+			<if test="orderNum!=null and orderNum!=''">
+				and (df_order_num=#{orderNum} or df_merchant_order_num=#{orderNum} or bank_transaction=#{orderNum})
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and orders.pay_time <![CDATA[ >= ]]> #{createTimeBegin}
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and orders.pay_time <![CDATA[ <= ]]> #{createTimeEnd}
+			</if>
+			<if test="channelId!=null and channelId!=''">
+				and orders.channel_id = #{channelId}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and orders.company_id = #{companyId}
+			</if>
+			<if test="dfRateId!=null and dfRateId!=''">
+				and orders.df_rate_id = #{dfRateId}
+			</if>
+			<if test="dfStatus!=null and dfStatus!=''">
+				and df_status = #{dfStatus}
+			</if>
+		</where>
+			ORDER BY orders.pay_time desc
+		<include refid="base_page_query_end"/>
+	</select>
+	
+	<!-- 根据对象查询单个 -->
+	<select id="selectOrderDetail" resultType="com.pay.business.df.entity.DfPayOrder" resultMap="dfpayorder_result_map">
+		SELECT 
+			orders.*,channel.channel_name,company.company_name,dpwr.df_rate_name,dpwr.df_pay_way_name
+		FROM 
+			df_pay_order orders
+			left join payv2_channel channel on orders.channel_id = channel.id
+			left join payv2_buss_company company on company.id=orders.company_id
+			left join df_pay_way_rate dpwr on dpwr.id = orders.df_rate_id
+		where
+			orders.id=#{id}
+	</select>
+</mapper>

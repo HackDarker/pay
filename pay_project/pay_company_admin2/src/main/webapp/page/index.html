@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>接口商户后台</title>
+		<meta name="renderer" content="webkit|ie-stand">
+		<meta name="force-rendering" content="webkit">
+		<meta http-equiv="x-ua-compatible" content="IE=11,10,9">
+		<link rel="stylesheet" href="../public/css/css.css" />
+		<link rel="shortcut icon" href="../favico.ico" />
+	</head>
+
+	<body>
+		<header>
+			<div class="logo fl">
+				<img src="../public/img/logo.png" style="margin: 20px 0 0 30px;" />
+			</div>
+			<div class="users fr user">
+				<span></span>
+				<i></i>
+				<div class="change changeuser">
+					<div class="change1 changepwd">修改登录密码</div>
+					<div class="change2 exitlogin">退出登录</div>
+				</div>
+			</div>
+		</header>
+		<nav>
+			<ul>
+				<li class="stair datali" style="cursor: pointer;"><img src="../public/img/info.png"><span class="c_33">接口信息</span></li>
+			</ul>
+		</nav>
+		<div class="main">
+			<div class="title">当前位置：接口信息</div>
+			<!--关键指标-->
+			<div class="index">
+				<div class="index-title">
+					<i></i>
+					<span>账户余额</span>
+				</div>
+				<div class="index-content">
+					<div class="index-1">
+						<div class="index-1-title">当前余额(元)</div>
+						<div class="index-1-data"></div>
+					</div>
+					<div class="index-2">
+						<div class="index-1-title">总充值金额(元)</div>
+						<div class="index-1-data"></div>
+					</div>
+					<div class="index-3">
+						<div class="index-1-title">已消费金额(元)</div>
+						<div class="index-1-data"></div>
+					</div>
+				</div>
+			</div>
+			<div class="index-detail">
+				<div class="index-title">
+					<i></i>
+					<span>接口信息</span>
+				</div>
+				<div class="table">
+					<table cellpadding="0" cellspacing="0">
+
+						<tbody style='width:100%;'>
+							<tr class="first">
+								<td class='first' width='13%'>商户号</td>
+								<td class='first' width='13%'>价格(元/笔)</td>
+								<td class='first' width='13%'>总计调用次数</td>
+								<td class='first' width='13%'>最后使用时间</td>
+								<td class='first' width='13%'>最后调用IP</td>
+								<td class='first' width='13%'>状态</td>
+								<td class='first' width='13%'>操作</td>
+							</tr>
+							<tr class="jkCompanyInfo">
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>
+									<a href="#" class="show">查看密钥</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- <div class="set-footer">
+					<div class="set fl">
+						共<span></span>条记录，每页显示<input autocomplete="off" type="text" value="10" />条
+					</div>
+					<div class="jump fr">
+						<div class="firstPage">首页</div>
+						<div class="left">
+							<i></i>
+						</div>
+						<input autocomplete="off" type="text" value="1" />
+						<div class="right">
+							<i></i>
+						</div>
+						<div class="lastPage">尾页</div>
+					</div>
+				</div> -->
+
+				</div>
+			</div>
+		</div>
+		<div class="bg">
+			<div class="window2">
+				<div class="top2">
+					重置秘钥
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;cursor:pointer;'>
+						<i></i>
+					</div>
+
+				</div>
+				<div class="bottom2">
+					<div class=phoneNumber></div>
+					<div class="sureNumber">
+						<label>验证码:</label>
+						<input type="text" placeholder="输入收到的验证码" />
+						<div class="send fr" style="cursor:pointer;">发送验证码</div>
+					</div>
+					<div class=" surebtn surebtn3">确定</div>
+				</div>
+				<div class="bottom3">
+					<div class="keyTips">新的秘钥</div>
+					<div class="newKey"></div>
+				</div>
+			</div>
+			<div class="window3">
+				<div class="top2">
+					修改密码
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;cursor:pointer;'>
+						<i></i>
+					</div>
+				</div>
+				<div class="bottom3">
+					<div class="oldpwd">
+						<label>原密码:</label>
+						<input type="password" placeholder="请输入原密码" />
+						<span style="color:red;font-size:14px;display:none">请输入原密码</span>
+					</div>
+					<div class="newpwd">
+						<label>新密码:</label>
+						<input type="password" placeholder="6-16位密码(数字、字母组成)" />
+						<span style="color:red;font-size:14px;display:none">请输入新密码</span>
+					</div>
+					<div class="newpwda">
+						<label>确认密码:</label>
+						<input type="password" placeholder="请再次输入新密码" />
+						<span style="color:red;font-size:14px;display:none">请再次输入新密码</span>
+					</div>
+					<div class="surebtn surebtn4">确定</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../public/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../public/js/md5.js"></script>
+		<script>
+			$(function() {
+				var companyName = localStorage.companyname
+				$(".user span").text(companyName);
+				$(".user i").on("click", function() {
+					$(".changeuser").show();
+				})
+				$(".user").on("mouseleave", function() {
+					$(".changeuser").hide();
+				})
+				$(".user i").on("mouseenter", function() {
+					$(this).css("background-image", "url(../public/img/down2.png)");
+				})
+				$(".user i").on("mouseleave", function() {
+					$(this).css("background-image", "url(../public/img/down1.png)");
+				})
+				$("body").on("mouseenter", ".top2 div", function() {
+					$(this).css("background-color", "#fb6054")
+					$(this).find("i").css("background0image", "url(../img/closeh.png)")
+				})
+				$("body").on("mouseleave", ".top2 div", function() {
+					$(this).css("background-color", "rgba(0,0,0,0)")
+					$(this).find("i").css("background0image", "url(../img/close.png)")
+				})
+				$(".exitlogin").on("click", function() {
+					$.ajax({
+						type: "post",
+						url: "/sys/loginOut.do",
+						async: false,
+						success: function(data) {
+							if(!!data && data.resultCode == 200) {
+								localStorage.clear();
+								location.href = "/";
+							} else {
+								alert(data.message);
+							}
+						}
+					})
+				})
+				$("body").on("click", ".changepwd", function() {
+					$(".bg").show();
+					$(".window3").show();
+					$(".window2").hide();
+					$(".bottom3").show();
+					$("body,html").css({
+						"height": "100%",
+						"width": "100%",
+						"overflow": "hidden"
+					});
+				})
+				$("body").on("click", ".top2 div", function() {
+					$(".bg").hide();
+					$(".window3").hide();
+					$(".window2").hide();
+					$(".oldpwd span").hide();
+					$(".newpwd span").hide();
+					$(".newpwda span").hide();
+					$(".oldpwd input").val("");
+					$(".newpwd input").val("");
+					$(".newpwda input").val("");
+					$("body,html").css({
+						"height": "",
+						"width": "",
+						"overflow": ""
+					});
+				})
+				$("body").on("click", ".show", function() {
+					$(".sureNumber input").val("")
+					//console.log(str)
+					$(".bottom2 .phoneNumber").html("确认向" + localStorage.mail + "的邮箱发送验证码？");
+
+					$(".send").removeClass("gray");
+					$(".send").html("发送验证码");
+					$(".bg").show();
+					$(".window2").show();
+					$(".bottom2").show();
+					$(".bottom3").hide();
+				})
+				$("body").on("click", ".send", function() {
+					var _this = $(this);
+					var time = 60;
+					var keyparam = {};
+					if($(this).hasClass("gray")) {
+
+					} else {
+						_this.addClass("gray");
+						retime()
+						//keyparam.useType=1;
+						//keyparam.userName="";
+						$.ajax({
+							type: "post",
+							url: "/Payv2JK/sendEmail.do",
+							async: true,
+							success: function(data) {
+								//console.log(data)
+								if(!!data && data.resultCode == 200) {
+									//timeout();
+								} else {
+									if(!!data.message) {
+										alert(data.message);
+									} else {
+
+										$("body").html(data);
+									}
+								}
+							}
+						})
+					}
+
+					function retime() {
+						time--;
+						if(time > 0 && _this.hasClass("gray")) {
+							$(".send").html(time + "秒重发")
+							setTimeout(retime, 1000);
+						} else if(time == 0) {
+							$(".send").html("发送验证码");
+							_this.removeClass("gray");
+						}
+					}
+				})
+				$("body").on("click", ".surebtn3", function() {
+					var paramtwo = {};
+					if($(".sureNumber input").val()) {
+						paramtwo.code = $(".sureNumber input").val();
+						//paramtwo.useType=1;
+						//paramtwo.userName=localStorage.username;
+						//console.log(paramtwo)
+						$.ajax({
+							type: "get",
+							url: "/Payv2JK/checkEmailCode.do",
+							data: paramtwo,
+							async: false,
+							success: function(data) {
+								//console.log(data);
+								if(!!data && data.resultCode == 200) {
+									$(".newKey").html(data.Data.newcompanySecret);
+									$(".bottom2").hide();
+									$(".bottom3").show();
+								} else {
+									if(!!data.message) {
+										alert(data.message);
+									} else {
+
+										$("body").html(data);
+									}
+								}
+							}
+						})
+					} else {
+						alert("请先输入验证码！");
+					}
+
+				})
+				$("body").on("click", ".window3 .surebtn", function() {
+					var pwdparam = {};
+					pwdparam.nowPassword = $(".newpwd  input").val();
+					pwdparam.nowPasswordCry = md5(md5($(".newpwd  input").val()));
+					pwdparam.oldPassword = md5(md5($(".oldpwd  input").val()));
+					$(".oldpwd span").hide();
+					$(".newpwd span").hide();
+					$(".newpwda span").hide();
+					if(!$(".oldpwd  input").val()) {
+						$(".oldpwd span").show();
+					} else if(!$(".newpwd  input").val()) {
+						$(".newpwd span").show();
+					} else if(!$(".newpwda  input").val()) {
+						$(".newpwda span").show();
+					} else if($(".newpwd  input").val().length < 6 || $(".newpwd  input").val().length > 16) {
+						$(".newpwd span").html("请输入6-16位密码");
+						$(".newpwd span").show();
+					} else if(!$(".newpwd  input").val().match(/^[A-Za-z0-9]{6,16}$/)) {
+						alert("密码格式不正确")
+					} else if($(".newpwd  input").val() != $(".newpwda  input").val()) {
+						$(".newpwda span").html("两次密码输入不一致");
+						$(".newpwda span").show();
+					} else if($(".oldpwd  input").val() == $(".newpwd  input").val()) {
+						$(".newpwda span").html("新密码与老密码不能一致!");
+						$(".newpwda span").show();
+						return false;
+					} else {
+						//console.log("111")
+						$.ajax({
+							type: "get",
+							url: "/offline/bussCompanyAccount/editBussCompanyPassword.do",
+							data: pwdparam,
+							async: false,
+							success: function(data) {
+								//console.log(data);
+								if(!!data && data.resultCode == 200) {
+									alert("修改成功")
+									$(".oldpwd input").val("");
+									$(".newpwd input").val("");
+									$(".newpwda input").val("");
+									$(".bg").hide();
+									$(".window3").hide();
+									$(".window").hide();
+								} else {
+									alert(data.message)
+								}
+							}
+						})
+					}
+				});
+				$.ajax({
+					type: "get",
+					url: "/Payv2JK/acountBalance.do",
+					async: false,
+					success: function(data) {
+						//console.log(data)
+						if(!!data && data.resultCode == 200) {
+							localStorage.mail = data.Data.company.contactsMail;
+							data = data.Data.jkCompanyInfo;
+							//console.log(data)
+							$(".index-1 .index-1-data").html(data.balance.toFixed(4));
+							$(".index-2 .index-1-data").html(data.addBalace.toFixed(4));
+							$(".index-3 .index-1-data").html(data.serviceBalance);
+							$(".jkCompanyInfo").find("td").eq(0).html(data.companyKey);
+							$(".jkCompanyInfo").find("td").eq(1).html(data.serviceMoney);
+							$(".jkCompanyInfo").find("td").eq(2).html(data.callCount);
+							if(!!data.lastCallTime){
+								$(".jkCompanyInfo").find("td").eq(3).html(gettime(data.lastCallTime));
+							}else{
+								$(".jkCompanyInfo").find("td").eq(3).html("");
+							}
+							
+							$(".jkCompanyInfo").find("td").eq(4).html(data.lastCallIp);
+							if(data.status==1){
+								$(".jkCompanyInfo").find("td").eq(5).html("开启");
+							}else{
+								$(".jkCompanyInfo").find("td").eq(5).html("");
+							}
+							
+						} else {
+							if(!!data.message) {
+								alert(data.message);
+							} else {
+								$("body").html(data);
+							}
+						}
+					}
+				})
+			})
+
+			function gettime(time) {
+				time = new Date(time);
+				var timeStr = '';
+				timeStr += time.getFullYear();
+				timeStr = time.getMonth() < 9 ? timeStr + '-0' + (time.getMonth() + 1) : timeStr + '-' + (time.getMonth() + 1);
+				timeStr = time.getDate() < 10 ? timeStr + '-0' + time.getDate() : timeStr + '-' + time.getDate();
+				timeStr = time.getHours() < 10 ? timeStr + ' 0' + time.getHours() : timeStr + ' ' + time.getHours();;
+				timeStr = time.getMinutes() < 10 ? timeStr + ':0' + time.getMinutes() : timeStr + ':' + time.getMinutes();
+				timeStr = time.getSeconds() < 10 ? timeStr + ':0' + time.getSeconds() : timeStr + ':' + time.getSeconds();
+				return timeStr;
+			}
+		</script>
+	</body>
+
+</html>

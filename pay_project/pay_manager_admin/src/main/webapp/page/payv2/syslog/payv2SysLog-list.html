@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<#include "lib/lib.html" />
+<title>日志列表</title>
+</head>
+<body>
+	<input type="hidden" id="totalPages" value="${list.totalPage!'0'}">
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+		系统日志 <span class="c-gray en">&gt;</span> 日志列表 <a
+			class="btn btn-success radius r mr-20" id="refresh"
+			style="line-height: 1.6em; margin-top: 3px"
+			href="javascript:location.replace(location.href);" title="刷新"> <i
+			class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<div class="pd-20 text-c">
+		<div class="text-c">
+			<form action="${basePath}/payv2SysLog/getSysLogList.do">
+				<table class="table table-hover table-bg table-sort">
+					<tbody>
+						<tr>
+							<td>
+								<strong>系统类型：</strong> 
+								<select class="select" id="sysType" name="sysType" style="width: 150px">
+									<!-- <option value="${dl.id!}"<#if dl.id == map.executor> selected="selected" </#if>>${dl.admDisplayName!}
+									</option> -->
+									<option value="1" <#if 1 == map.sysType> selected="selected" </#if>>官方后台</option>
+									<option value="2" <#if 2 == map.sysType> selected="selected" </#if>>渠道商后台</option>
+									<option value="3" <#if 3 == map.sysType> selected="selected" </#if>>商户后台</option>
+								</select>
+							</td>
+							<td>
+								<strong>操作者：</strong> 
+								<select class="select" id="executor" name="executor" style="width: 150px">
+										<option value="">全部</option>
+										<#if adminList?? && adminList?size gt 0> 
+											<#list adminList as dl>
+												<option value="${dl.id!}"<#if dl.id == map.executor> selected="selected" </#if>>${dl.admDisplayName!}</option> 
+											</#list> 
+										</#if>
+								</select>
+							</td>
+							<td>
+								<strong>操作类型：</strong> 
+								<select class="select" id="executeType" name="executeType" style="width: 150px">
+										<option value="">全部</option> 
+										<#if executeTypeList?? && executeTypeList?size gt 0> 
+											<#list executeTypeList as dl>
+												<option value="${dl.id!}"<#if dl.id == map.executeType> selected="selected" </#if>>${dl.name!}</option> 
+											</#list> 
+										</#if>
+								</select>
+							</td>
+							<td>
+								<strong>操作时间：</strong> 
+								<input placeholder="开始时间" name="createTimeBegin" type="text" value="${map.createTimeBegin!}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 00:00:00',maxDate:'#F{$dp.$D(\'logmax\')}'})" id="logmin" class="input-text Wdate" style="width:150px;">
+								<strong>至</strong> 
+								<input type="text" placeholder="结束时间" name="createTimeEnd" value="${map.createTimeEnd!}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'%y-%M-%d 23:59:59',minDate:'#F{$dp.$D(\'logmin\')}'})" id="logmax" class="input-text Wdate" style="width:150px;">
+							</td>
+							<td>
+								<button name="" id="" class="btn btn-success radius"
+									type="submit">
+									<i class="Hui-iconfont">&#xe665;</i> 搜索
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<div class="mt-20">
+			<table
+				class="table table-border table-bordered table-hover table-bg table-sort">
+				<thead>
+					<tr class="text-c">
+						<th width="80">操作者</th>
+						<th width="150">事件</th>
+						<th width="100">IP</th>
+						<th width="200">时间</th>
+						<th>备注(想看懂,找技术)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<#if list.dataList?? && list.dataList?size gt 0> 
+						<#list list.dataList as dl >
+							<tr class="text-c">
+								<td>${dl.executorName!}</td>
+								<td>${dl.executeName!}</td>
+								<td>${dl.ip!}</td>
+								<td>${dl.createTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+								<#if dl.param ? length gt 100>
+									<td>
+										<a style="text-decoration: none;" href="javascript:;" onclick="showAllParam(this)">${dl.param?substring(0,100)} ...</a>
+										<input id="allParam" type="hidden" value="${dl.param!}">
+									</td>
+								<#else>
+									<td>${dl.param!}</td>
+								</#if>
+							</tr>
+						</#list> 
+					</#if>
+				</tbody>
+			</table>
+			</br> 
+			<#if list.dataList?? && list.dataList?size gt 0>
+				<div id="page_list"></div>
+			</#if>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			// laypage({
+			// 	cont : $('.page_list'), //容器。值支持id名、原生dom对象，jquery对象,
+			// 	pages : ${list.endPage!'0' }, //总页数
+			// 	//skip: true, //是否开启跳页
+			// 	// 	    	skin: 'molv',
+			// 	groups : 10, //连续显示分页数
+			// 	first : '首页', //若不显示，设置false即可
+			// 	last : '尾页', //若不显示，设置false即可
+			// 	curr : ${list.curPage!'0'},
+			// 	hash : true, //开启hash
+			// 	skin : '#00AA91',
+			// 	jump : function(obj, first) { //触发分页后的回调
+			// 		if (!first) {
+			// 			window.location.href = "${basePath}/payv2SysLog/getSysLogList.do?curPage="
+			// 					+ obj.curr
+			// 					+ "&pageData="
+			// 					+ 10
+			// 					+ "&executor="
+			// 					+ $("#executor").val()
+			// 					+ "&executeType="
+			// 					+ $("#executeType").val()
+			// 					+ "&createTimeBegin="
+			// 					+ $("#logmin").val()
+			// 					+ "&createTimeEnd="
+			// 					+ $("#logmax").val();
+			// 		}
+			// 	}
+			// });
+
+			layui.use(['laypage', 'layer'], function(){
+	  			var laypage = layui.laypage,layer = layui.layer;
+			 	laypage.render({
+				    elem: 'page_list',	//容器。值支持id名、原生dom对象，jquery对象
+				    count: ${list.totalData!'0'},	//数据总数。一般通过服务端得到
+				    //groups: 5,	//连续出现的页码个数
+				    limit: ${list.pageData!'10'},
+				    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+					curr: ${list.curPage!'1'}, //获取起始页
+				    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+				    jump: function(obj, first){
+				      if (!first) {
+				      	window.location.href = "${basePath}/payv2SysLog/getSysLogList.do?curPage="
+								+ obj.curr
+								+ "&pageData="
+								+ obj.limit
+								+ "&executor="
+								+ $("#executor").val()
+								+ "&executeType="
+								+ $("#executeType").val()
+								+ "&createTimeBegin="
+								+ $("#logmin").val()
+								+ "&createTimeEnd="
+								+ $("#logmax").val()
+								+ "&sysType="
+								+ $("#sysType").val();
+				      }
+				    }
+				  });
+			});
+		});
+		function showAllParam(obj){
+			var param = $(obj).parent().find("#allParam").val();
+			layer.confirm(param, function(index) {
+				layer.close(index);
+			});
+		}
+	</script>
+</body>
+</html>

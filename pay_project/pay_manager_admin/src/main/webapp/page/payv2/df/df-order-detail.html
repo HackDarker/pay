@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>代付订单详情</title>
+	<#include "lib/lib.html" />
+</head>
+<body>
+<form action="" method="post" class="form form-horizontal" id="form-APP-add">
+	<div class="pop_main" style="padding-left:30px;width: 95%;">
+		<div class="panel panel-primary mt-20">
+			<div class="panel-header">订单详情</div>
+			<div class="panel-body mt-20">
+				<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+						<tr>
+							<td style="width:30px;"><strong>订单状态：</strong></td>
+							<td style="width:100px;">
+								<#if order.dfStatus==1>
+									<span class='label label-success radius'>代付成功</span>
+								</#if>
+								<#if order.dfStatus==2>
+									<span class='label radius'>代付中</span>
+								</#if>
+								<#if order.dfStatus==3>
+									<span class='label label-danger radius'>代付失败</span>
+								</#if>
+							</td>
+							<td style="width:30px;"><strong>平台订单号：</strong></td><td style="width:100px;">${order.dfOrderNum!"&nbsp;"}</td>
+							<td style="width:30px;"><strong>商户订单号：</strong></td><td style="width:100px;">${order.dfMerchantOrderNum!"&nbsp;"}</td>
+						</tr>
+						<tr>
+							<td style="width:30px;"><strong>上游订单号：</strong></td><td style="width:100px;">${order.bankTransaction!"&nbsp;"}</td>
+							<td style="width:30px;"><strong>所属渠道商：</strong></td><td style="width:100px;">${order.channelName!"&nbsp;"}</td>
+							<td style="width:30px;"><strong>所属商户：</strong></td><td style="width:100px;">${order.companyName!"&nbsp;"}</td>
+						</tr>
+						<tr>
+							<td style="width:30px;"><strong>代付通道：</strong></td><td style="width:100px;">${order.dfRateName!}</td>
+							<td style="width:30px;"><strong>代付类型：</strong></td>
+							<td style="width:100px;">
+								<#if order.dfType==1>余额代付</#if>
+								<#if order.dfType==2>垫资代付</#if>
+							</td>
+							<td style="width:30px;"><strong>摘要：</strong></td><td style="width:100px;">${order.dfAbstract!}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="panel panel-primary mt-20">
+			<div class="panel-header">收款人详情</div>
+			<div class="panel-body mt-20">
+				<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+						<tr>
+							<td style="width:30px;"><strong>开户行全称：</strong></td><td style="width:100px;">${order.bankName!}</td>
+							<td style="width:30px;"><strong>收款人户名：</strong></td><td style="width:100px;">${order.accountName!}</td>
+							<td style="width:30px;"><strong>收款人帐号：</strong></td><td style="width:100px;">${order.accountNum!}</td>
+						</tr>
+						<tr>
+							<td style="width:30px;"><strong>账号类型：</strong></td>
+							<td style="width:100px;">
+								<#if order.accountType==1>借记卡</#if>
+								<#if order.accountType==2>贷记卡</#if>
+								<#if order.accountType==3>对公户</#if>
+							</td>
+							<td style="width:30px;"><strong>支行联行号：</strong></td><td style="width:100px;">${order.bankBranchNum!}</td>
+							<td style="width:30px;">&nbsp;</td><td style="width:100px;">&nbsp;</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<div class="panel panel-primary mt-20">
+			<div class="panel-header">交易详情</div>
+			<div class="panel-body mt-20">
+				<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+						<tr>
+							<td style="width:30px;"><strong>代付时间：</strong></td><td style="width:100px;">${order.payTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+							<td style="width:30px;"><strong>代付金额：</strong></td><td style="width:100px;">${order.dfPayMoney!} 元</td>
+							<td style="width:30px;"><strong>商户手续费：</strong></td><td style="width:100px;">${order.dfPayWayMoney!} 元</td>
+							<td style="width:30px;"><strong>平台成本费：</strong></td><td style="width:100px;">${order.dfCostRateMoney!} 元</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.pay.business.jk.mapper.JkOrderMapper">
+
+	<resultMap id="jkorder_result_map" type="com.pay.business.jk.entity.JkOrder" >
+		<id column="id" property="id" />
+		<result column="info_id" property="infoId"/>
+		<result column="company_id" property="companyId"/>
+		<result column="url" property="url"/>
+		<result column="con_url" property="conUrl"/>
+		<result column="ip" property="ip"/>
+		<result column="service_balance" property="serviceBalance"/>
+		<result column="create_time" property="createTime"/>
+	</resultMap>
+	
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from jk_order  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="infoId!=null and infoId!=''">
+				and info_id = #{infoId}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="url!=null and url!=''">
+				and url like CONCAT('%',#{url},'%')
+			</if>
+			<if test="conUrl!=null and conUrl!=''">
+				and con_url like CONCAT('%',#{conUrl},'%')
+			</if>
+			<if test="ip!=null and ip!=''">
+				and ip like CONCAT('%',#{ip},'%')
+			</if>
+			<if test="serviceBalance!=null and serviceBalance!=''">
+				and service_balance like CONCAT('%',#{serviceBalance},'%')
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id"   -->
+	<insert id="insertByEntity" parameterType="com.pay.business.jk.entity.JkOrder" useGeneratedKeys="true" keyProperty="id">
+		insert into jk_order
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="infoId!=null ">
+				info_id,
+			</if>
+      		<if test="companyId!=null ">
+				company_id,
+			</if>
+      		<if test="url!=null ">
+				url,
+			</if>
+      		<if test="conUrl!=null ">
+				con_url,
+			</if>
+      		<if test="ip!=null ">
+				ip,
+			</if>
+      		<if test="serviceBalance!=null ">
+				service_balance,
+			</if>
+      		<if test="createTime!=null ">
+				create_time,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id},
+			</if>
+      		<if test="infoId!=null ">
+      			#{infoId},
+			</if>
+      		<if test="companyId!=null ">
+      			#{companyId},
+			</if>
+      		<if test="url!=null ">
+      			#{url},
+			</if>
+      		<if test="conUrl!=null ">
+      			#{conUrl},
+			</if>
+      		<if test="ip!=null ">
+      			#{ip},
+			</if>
+      		<if test="serviceBalance!=null ">
+      			#{serviceBalance},
+			</if>
+      		<if test="createTime!=null ">
+      			#{createTime},
+			</if>
+    	</trim>
+	</insert>
+	
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.jk.entity.JkOrder">
+		delete from jk_order
+		<where>
+      		<if test="id!=null ">
+				and id=#{id}
+			</if>
+      		<if test="infoId!=null ">
+				and info_id=#{infoId}
+			</if>
+      		<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+      		<if test="url!=null ">
+				and url=#{url}
+			</if>
+      		<if test="conUrl!=null ">
+				and con_url=#{conUrl}
+			</if>
+      		<if test="ip!=null ">
+				and ip=#{ip}
+			</if>
+      		<if test="serviceBalance!=null ">
+				and service_balance=#{serviceBalance}
+			</if>
+      		<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.jk.entity.JkOrder">
+		update jk_order
+		<set>
+			<if test="infoId!=null ">
+				info_id=#{infoId},
+			</if>
+			<if test="companyId!=null ">
+				company_id=#{companyId},
+			</if>
+			<if test="url!=null ">
+				url=#{url},
+			</if>
+			<if test="conUrl!=null ">
+				con_url=#{conUrl},
+			</if>
+			<if test="ip!=null ">
+				ip=#{ip},
+			</if>
+			<if test="serviceBalance!=null ">
+				service_balance=#{serviceBalance},
+			</if>
+			<if test="createTime!=null ">
+				create_time=#{createTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.jk.entity.JkOrder" resultMap="jkorder_result_map">
+		select id,info_id,company_id,url,con_url,ip,service_balance,create_time from jk_order
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="infoId!=null ">
+				and info_id=#{infoId}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="url!=null ">
+				and url=#{url}
+			</if>
+			<if test="conUrl!=null ">
+				and con_url=#{conUrl}
+			</if>
+			<if test="ip!=null ">
+				and ip=#{ip}
+			</if>
+			<if test="serviceBalance!=null ">
+				and service_balance=#{serviceBalance}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据对象查询列表-->
+	<select id="selectByObject" resultMap="jkorder_result_map" >
+		select id,info_id,company_id,url,con_url,ip,service_balance,create_time from jk_order
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="infoId!=null ">
+				and info_id=#{infoId}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="url!=null ">
+				and url=#{url}
+			</if>
+			<if test="conUrl!=null ">
+				and con_url=#{conUrl}
+			</if>
+			<if test="ip!=null ">
+				and ip=#{ip}
+			</if>
+			<if test="serviceBalance!=null ">
+				and service_balance=#{serviceBalance}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="jkorder_result_map" >
+		
+		SELECT id,info_id,company_id,url,con_url,ip,service_balance,create_time FROM jk_order 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="infoId!=null and infoId!=''">
+				and info_id = #{infoId}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="url!=null and url!=''">
+				and url like  CONCAT('%',#{url},'%')
+			</if>
+			<if test="conUrl!=null and conUrl!=''">
+				and con_url like  CONCAT('%',#{conUrl},'%')
+			</if>
+			<if test="ip!=null and ip!=''">
+				and ip like  CONCAT('%',#{ip},'%')
+			</if>
+			<if test="serviceBalance!=null and serviceBalance!=''">
+				and service_balance like  CONCAT('%',#{serviceBalance},'%')
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	
+</mapper>

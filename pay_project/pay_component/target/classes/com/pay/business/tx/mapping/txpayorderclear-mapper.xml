@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.pay.business.tx.mapper.TxPayOrderClearMapper">
+
+	<resultMap id="txpayorderclear_result_map" type="com.pay.business.tx.entity.TxPayOrderClear" >
+		<id column="id" property="id" />
+		<result column="company_id" property="companyId"/>
+		<result column="rate_id" property="rateId"/>
+		<result column="balance" property="balance"/>
+		<result column="t1_balance" property="t1Balance"/>
+		<result column="tx_balance" property="txBalance"/>
+		<result column="tx_service_amount" property="txServiceAmount"/>
+		<result column="pay_service_amount" property="payServiceAmount"/>
+		<result column="tx_count" property="txCount"/>
+		<result column="arrival_amount" property="arrivalAmount"/>
+		<result column="clear_time" property="clearTime"/>
+		<result column="create_time" property="createTime"/>
+		
+		<result column="company_name" property="companyName"/>
+		<result column="pay_way_name" property="payWayName"/>
+	</resultMap>
+	
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from tx_pay_order_clear  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="balance!=null and balance!=''">
+				and balance like CONCAT('%',#{balance},'%')
+			</if>
+			<if test="t1Balance!=null and t1Balance!=''">
+				and t1_balance like CONCAT('%',#{t1Balance},'%')
+			</if>
+			<if test="txBalance!=null and txBalance!=''">
+				and tx_balance like CONCAT('%',#{txBalance},'%')
+			</if>
+			<if test="txServiceAmount!=null and txServiceAmount!=''">
+				and tx_service_amount like CONCAT('%',#{txServiceAmount},'%')
+			</if>
+			<if test="payServiceAmount!=null and payServiceAmount!=''">
+				and pay_service_amount like CONCAT('%',#{payServiceAmount},'%')
+			</if>
+			<if test="txCount!=null and txCount!=''">
+				and tx_count = #{txCount}
+			</if>
+			<if test="arrivalAmount!=null and arrivalAmount!=''">
+				and arrival_amount like CONCAT('%',#{arrivalAmount},'%')
+			</if>
+			<if test="clearTimeBegin!=null and clearTimeBegin!=''">
+				and clear_time <![CDATA[ >= ]]> str_to_date(#{clearTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="clearTimeEnd!=null and clearTimeEnd!=''">
+				and clear_time <![CDATA[ <= ]]> str_to_date(#{clearTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id"   -->
+	<insert id="insertByEntity" parameterType="com.pay.business.tx.entity.TxPayOrderClear" useGeneratedKeys="true" keyProperty="id">
+		insert into tx_pay_order_clear
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="companyId!=null ">
+				company_id,
+			</if>
+      		<if test="rateId!=null ">
+				rate_id,
+			</if>
+      		<if test="balance!=null ">
+				balance,
+			</if>
+      		<if test="t1Balance!=null ">
+				t1_balance,
+			</if>
+      		<if test="txBalance!=null ">
+				tx_balance,
+			</if>
+      		<if test="txServiceAmount!=null ">
+				tx_service_amount,
+			</if>
+      		<if test="payServiceAmount!=null ">
+				pay_service_amount,
+			</if>
+      		<if test="txCount!=null ">
+				tx_count,
+			</if>
+      		<if test="arrivalAmount!=null ">
+				arrival_amount,
+			</if>
+      		<if test="clearTime!=null ">
+				clear_time,
+			</if>
+      		<if test="createTime!=null ">
+				create_time,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id},
+			</if>
+      		<if test="companyId!=null ">
+      			#{companyId},
+			</if>
+      		<if test="rateId!=null ">
+      			#{rateId},
+			</if>
+      		<if test="balance!=null ">
+      			#{balance},
+			</if>
+      		<if test="t1Balance!=null ">
+      			#{t1Balance},
+			</if>
+      		<if test="txBalance!=null ">
+      			#{txBalance},
+			</if>
+      		<if test="txServiceAmount!=null ">
+      			#{txServiceAmount},
+			</if>
+      		<if test="payServiceAmount!=null ">
+      			#{payServiceAmount},
+			</if>
+      		<if test="txCount!=null ">
+      			#{txCount},
+			</if>
+      		<if test="arrivalAmount!=null ">
+      			#{arrivalAmount},
+			</if>
+      		<if test="clearTime!=null ">
+      			#{clearTime},
+			</if>
+      		<if test="createTime!=null ">
+      			#{createTime},
+			</if>
+    	</trim>
+	</insert>
+	
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.tx.entity.TxPayOrderClear">
+		delete from tx_pay_order_clear
+		<where>
+      		<if test="id!=null ">
+				and id=#{id}
+			</if>
+      		<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+      		<if test="rateId!=null ">
+				and rate_id=#{rateId}
+			</if>
+      		<if test="balance!=null ">
+				and balance=#{balance}
+			</if>
+      		<if test="t1Balance!=null ">
+				and t1_balance=#{t1Balance}
+			</if>
+      		<if test="txBalance!=null ">
+				and tx_balance=#{txBalance}
+			</if>
+      		<if test="txServiceAmount!=null ">
+				and tx_service_amount=#{txServiceAmount}
+			</if>
+      		<if test="payServiceAmount!=null ">
+				and pay_service_amount=#{payServiceAmount}
+			</if>
+      		<if test="txCount!=null ">
+				and tx_count=#{txCount}
+			</if>
+      		<if test="arrivalAmount!=null ">
+				and arrival_amount=#{arrivalAmount}
+			</if>
+      		<if test="clearTime!=null ">
+				and clear_time=#{clearTime}
+			</if>
+      		<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.tx.entity.TxPayOrderClear">
+		update tx_pay_order_clear
+		<set>
+			<if test="companyId!=null ">
+				company_id=#{companyId},
+			</if>
+			<if test="rateId!=null ">
+				rate_id=#{rateId},
+			</if>
+			<if test="balance!=null ">
+				balance=#{balance},
+			</if>
+			<if test="t1Balance!=null ">
+				t1_balance=#{t1Balance},
+			</if>
+			<if test="txBalance!=null ">
+				tx_balance=#{txBalance},
+			</if>
+			<if test="txServiceAmount!=null ">
+				tx_service_amount=#{txServiceAmount},
+			</if>
+			<if test="payServiceAmount!=null ">
+				pay_service_amount=#{payServiceAmount},
+			</if>
+			<if test="txCount!=null ">
+				tx_count=#{txCount},
+			</if>
+			<if test="arrivalAmount!=null ">
+				arrival_amount=#{arrivalAmount},
+			</if>
+			<if test="clearTime!=null ">
+				clear_time=#{clearTime},
+			</if>
+			<if test="createTime!=null ">
+				create_time=#{createTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.tx.entity.TxPayOrderClear" resultMap="txpayorderclear_result_map">
+		select id,company_id,rate_id,balance,t1_balance,tx_balance,tx_service_amount,pay_service_amount,tx_count,arrival_amount,clear_time,create_time from tx_pay_order_clear
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="rateId!=null ">
+				and rate_id=#{rateId}
+			</if>
+			<if test="balance!=null ">
+				and balance=#{balance}
+			</if>
+			<if test="t1Balance!=null ">
+				and t1_balance=#{t1Balance}
+			</if>
+			<if test="txBalance!=null ">
+				and tx_balance=#{txBalance}
+			</if>
+			<if test="txServiceAmount!=null ">
+				and tx_service_amount=#{txServiceAmount}
+			</if>
+			<if test="payServiceAmount!=null ">
+				and pay_service_amount=#{payServiceAmount}
+			</if>
+			<if test="txCount!=null ">
+				and tx_count=#{txCount}
+			</if>
+			<if test="arrivalAmount!=null ">
+				and arrival_amount=#{arrivalAmount}
+			</if>
+			<if test="clearTime!=null ">
+				and clear_time=#{clearTime}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据对象查询列表-->
+	<select id="selectByObject" resultMap="txpayorderclear_result_map" >
+		select id,company_id,rate_id,balance,t1_balance,tx_balance,tx_service_amount,pay_service_amount,tx_count,arrival_amount,clear_time,create_time from tx_pay_order_clear
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="rateId!=null ">
+				and rate_id=#{rateId}
+			</if>
+			<if test="balance!=null ">
+				and balance=#{balance}
+			</if>
+			<if test="t1Balance!=null ">
+				and t1_balance=#{t1Balance}
+			</if>
+			<if test="txBalance!=null ">
+				and tx_balance=#{txBalance}
+			</if>
+			<if test="txServiceAmount!=null ">
+				and tx_service_amount=#{txServiceAmount}
+			</if>
+			<if test="payServiceAmount!=null ">
+				and pay_service_amount=#{payServiceAmount}
+			</if>
+			<if test="txCount!=null ">
+				and tx_count=#{txCount}
+			</if>
+			<if test="arrivalAmount!=null ">
+				and arrival_amount=#{arrivalAmount}
+			</if>
+			<if test="clearTime!=null ">
+				and clear_time=#{clearTime}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="txpayorderclear_result_map" >
+		
+		SELECT id,company_id,rate_id,balance,t1_balance,tx_balance,tx_service_amount,pay_service_amount,tx_count,arrival_amount,clear_time,create_time FROM tx_pay_order_clear 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="balance!=null and balance!=''">
+				and balance like  CONCAT('%',#{balance},'%')
+			</if>
+			<if test="t1Balance!=null and t1Balance!=''">
+				and t1_balance like  CONCAT('%',#{t1Balance},'%')
+			</if>
+			<if test="txBalance!=null and txBalance!=''">
+				and tx_balance like  CONCAT('%',#{txBalance},'%')
+			</if>
+			<if test="txServiceAmount!=null and txServiceAmount!=''">
+				and tx_service_amount like  CONCAT('%',#{txServiceAmount},'%')
+			</if>
+			<if test="payServiceAmount!=null and payServiceAmount!=''">
+				and pay_service_amount like  CONCAT('%',#{payServiceAmount},'%')
+			</if>
+			<if test="txCount!=null and txCount!=''">
+				and tx_count = #{txCount}
+			</if>
+			<if test="arrivalAmount!=null and arrivalAmount!=''">
+				and arrival_amount like  CONCAT('%',#{arrivalAmount},'%')
+			</if>
+			<if test="clearTimeBegin!=null and clearTimeBegin!=''">
+				and clear_time <![CDATA[ >= ]]> str_to_date(#{clearTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="clearTimeEnd!=null and clearTimeEnd!=''">
+				and clear_time <![CDATA[ <= ]]> str_to_date(#{clearTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="insertClear">
+		INSERT into tx_pay_order_clear
+			(
+			company_id,
+			rate_id,
+			balance,
+			t1_balance,
+			tx_balance,	
+			tx_service_amount,
+			pay_service_amount,
+			tx_count,
+			arrival_amount,
+			clear_time,
+			create_time
+			) 
+		select 
+			tprb.company_id,
+			tprb.rate_id,
+			tprb.balance,
+			tprb.t1_balance+tprb.tx_balance as t1_balance,
+			IFNULL(a.tx_balance,0) as tx_balance,
+			IFNULL(a.tx_service_amount,0) as tx_service_amount,
+			IFNULL(a.pay_service_amount,0) as pay_service_amount,
+			IFNULL(a.txCount,0) as txCount,
+			IFNULL(a.arrival_amount,0) as arrival_amount,
+			str_to_date(#{txTime},'%Y-%m-%d'),
+			NOW()
+		from tx_pay_rate_balance as tprb
+		LEFT JOIN (select 
+			company_id,rate_id,
+			IFNULL(sum(tpo.amount),0) as tx_balance,
+			IFNULL(sum(tpo.service_amount),0)  as tx_service_amount,
+			IFNULL(sum(tpo.pay_service_amount),0)  as pay_service_amount,
+			count(tpo.rate_id)  as txCount,
+			IFNULL(sum(tpo.arrival_amount),0)  as arrival_amount
+			from tx_pay_order as tpo 
+			where str_to_date(tpo.tx_time,'%Y-%m-%d')=str_to_date(#{txTime},'%Y-%m-%d') 
+			GROUP BY tpo.rate_id) as a
+		on tprb.company_id = a.company_id and tprb.rate_id=a.rate_id
+		
+	</select>
+	
+	
+	<!-- 获取总数 -->
+	<select id="getCompanyClearListCount" resultType="java.lang.Integer">
+		select count(*) from (select id from tx_pay_order_clear  
+		<where>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="clearTimeBegin!=null and clearTimeBegin!=''">
+				and str_to_date(clear_time,  '%Y-%m-%d')  <![CDATA[ >= ]]> str_to_date(#{clearTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="clearTimeEnd!=null and clearTimeEnd!=''">
+				and str_to_date(clear_time,  '%Y-%m-%d')  <![CDATA[ <= ]]> str_to_date(#{clearTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+		group by company_id,str_to_date(clear_time,'%Y-%m-%d')) a
+	</select>
+	
+	<!-- 分页 -->
+	<select id="getCompanyClearList" resultMap="txpayorderclear_result_map" >
+		
+		SELECT 
+			tpoc.company_id,
+			tpoc.rate_id,
+			SUM(tpoc.balance) balance,
+			SUM(tpoc.t1_balance) t1_balance,
+			SUM(tpoc.tx_balance) tx_balance,
+			SUM(tpoc.tx_service_amount) tx_service_amount,
+			SUM(tpoc.pay_service_amount) pay_service_amount,
+			SUM(tpoc.tx_count) tx_count,
+			SUM(tpoc.arrival_amount) arrival_amount,
+			tpoc.clear_time,
+			tpoc.create_time,
+			pbc.company_name,
+			ppwr.rate_name pay_way_name 
+		FROM 
+			tx_pay_order_clear tpoc, 
+			payv2_buss_company pbc, 
+			payv2_pay_way_rate ppwr
+		<where>
+			tpoc.company_id=pbc.id
+			and tpoc.rate_id=ppwr.id
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="clearTimeBegin!=null and clearTimeBegin!=''">
+				and str_to_date(clear_time,  '%Y-%m-%d')  <![CDATA[ >= ]]> str_to_date(#{clearTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="clearTimeEnd!=null and clearTimeEnd!=''">
+				and str_to_date(clear_time,  '%Y-%m-%d')  <![CDATA[ <= ]]> str_to_date(#{clearTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			group by tpoc.company_id,str_to_date(tpoc.clear_time,'%Y-%m-%d')
+			ORDER BY ${sortName} ${sortOrder}
+		<include refid="base_page_query_end"/>
+	</select>
+	
+	<!-- 获取总数 -->
+	<select id="getRateClearListCount" resultType="java.lang.Integer">
+		select count(*) from tx_pay_order_clear  
+		<where>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="clearTimeBegin!=null and clearTimeBegin!=''">
+				and str_to_date(clear_time,  '%Y-%m-%d')  <![CDATA[ >= ]]> str_to_date(#{clearTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="clearTimeEnd!=null and clearTimeEnd!=''">
+				and str_to_date(clear_time,  '%Y-%m-%d')  <![CDATA[ <= ]]> str_to_date(#{clearTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="getRateClearList" resultMap="txpayorderclear_result_map" >
+		
+		SELECT 
+			tpoc.*,
+			pbc.company_name,
+			ppwr.rate_name pay_way_name  
+		FROM 
+			tx_pay_order_clear tpoc, 
+			payv2_buss_company pbc, 
+			payv2_pay_way_rate ppwr
+		<where>
+			tpoc.company_id=pbc.id
+			and tpoc.rate_id=ppwr.id
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="clearTimeBegin!=null and clearTimeBegin!=''">
+				and str_to_date(clear_time,  '%Y-%m-%d')  <![CDATA[ >= ]]> str_to_date(#{clearTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="clearTimeEnd!=null and clearTimeEnd!=''">
+				and str_to_date(clear_time,  '%Y-%m-%d')  <![CDATA[ <= ]]> str_to_date(#{clearTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	<!-- 获取总数 -->
+	<select id="getCount2" resultType="java.lang.Integer">
+		select count(*) from (select count(id) from tx_pay_order_clear  
+		<where>			
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="clearTimeBegin!=null and clearTimeBegin!=''">
+				and clear_time <![CDATA[ >= ]]> str_to_date(#{clearTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="clearTimeEnd!=null and clearTimeEnd!=''">
+				and clear_time <![CDATA[ <= ]]> str_to_date(#{clearTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+		GROUP BY str_to_date(clear_time,'%Y-%m-%d')) a
+	</select>
+	<!-- 分页 -->
+	<select id="pageQueryByObject2" resultMap="txpayorderclear_result_map" >		
+		SELECT 
+		IFNULL(SUM(balance),0) as balance
+		,IFNULL(SUM(t1_balance),0) as t1_balance
+		,IFNULL(SUM(tx_balance),0) as tx_balance
+		,IFNULL(SUM(tx_service_amount),0) as tx_service_amount
+		,IFNULL(SUM(pay_service_amount),0) as pay_service_amount
+		,IFNULL(SUM(tx_count),0) as tx_count
+		,IFNULL(SUM(arrival_amount),0) as arrival_amount
+		,clear_time,create_time 
+		FROM tx_pay_order_clear 
+		<where>			
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and rate_id = #{rateId}
+			</if>
+			<if test="clearTimeBegin!=null and clearTimeBegin!=''">
+				and clear_time <![CDATA[ >= ]]> str_to_date(#{clearTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="clearTimeEnd!=null and clearTimeEnd!=''">
+				and clear_time <![CDATA[ <= ]]> str_to_date(#{clearTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>			
+			GROUP BY str_to_date(clear_time,'%Y-%m-%d') , company_id
+			ORDER BY clear_time DESC 
+		<include refid="base_page_query_end"/>
+	</select>
+	<!-- 获取支付通道维度的D0账单列表 -->
+	<select id="getRatesList" resultMap="txpayorderclear_result_map" >		
+		SELECT  clear.balance, clear.t1_balance	, clear.tx_balance, clear.tx_service_amount
+		, clear.pay_service_amount, clear.tx_count, clear.arrival_amount,clear.clear_time,clear.create_time 
+		,rate.pay_way_name
+		FROM tx_pay_order_clear clear
+		LEFT JOIN payv2_pay_way_rate rate on rate.id = clear.rate_id
+		<where>			
+			<if test="companyId!=null and companyId!=''">
+				and clear.company_id = #{companyId}
+			</if>
+			<if test="rateId!=null and rateId!=''">
+				and clear.rate_id = #{rateId}
+			</if>
+			<if test="clearTimeBegin!=null and clearTimeBegin!=''">
+				and clear.clear_time <![CDATA[ >= ]]> str_to_date(#{clearTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="clearTimeEnd!=null and clearTimeEnd!=''">
+				and clear.clear_time <![CDATA[ <= ]]> str_to_date(#{clearTimeEnd},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and clear.create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and clear.create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+		ORDER BY clear_time DESC
+	</select>
+</mapper>

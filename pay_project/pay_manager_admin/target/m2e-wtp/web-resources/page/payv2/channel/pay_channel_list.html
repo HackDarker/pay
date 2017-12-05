@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<#include "lib/lib.html" />
+<title>合作渠道商</title>
+</head>
+<body style="background-color: #F0F0F0">
+	<nav class="breadcrumb">
+	 	 <i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 合作渠道商管理 <span class="c-gray en">&gt;</span> 渠道商管理
+		 <a  class="btn btn-success radius r mr-20"  style="line-height: 1.6em; margin-top: 3px" href="javascript:location.replace(location.href);" title="刷新">
+		 <i class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<div class="pd-20 text-c">
+
+		<div class="panel panel-default">
+			<div class="panel-header" style="height: 30px;">
+				<div class="fl" style="font-size: 15px;">条件筛选</div>
+				<div class="r">
+					<!-- <input id="resetButton" class="btn" type="button" value="清空"></input> -->
+					<button class="layui-btn layui-btn-small" onclick="data_form_submit()">
+						<i class="layui-icon" style="line-height:12px;">&#xe615;</i>搜索
+					</button>
+					<button class="layui-btn layui-btn-small" onclick="exportExcel()">
+						<i class="layui-icon" style="line-height: 12px;">&#xe601;</i>导出
+					</button>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="text-c">
+				    <form id="data_from" action="" method="post">
+			        	<table class="table table-hover table-bg table-sort">
+							<tbody>
+								<tr>
+									<td>
+										搜关键字：
+										<input type="text" name="keyWord" id="keyWord" placeholder="请输入渠道商名称或账户" style="width: 250px" class="input-text" value="${map.keyWord!}">
+									</td>									
+									<td>
+										当前状态：<select class="select" id="channelStatus" name="channelStatus" datatype="*" nullmsg="请选择！" style="width: 150px">
+								           		<option value="">全部</option>
+								           		<option value="1" <#if map.channelStatus == 1> selected="selected" </#if>>合作中</option>
+								           		<option value="2" <#if map.channelStatus == 2> selected="selected" </#if>>终止合作</option>
+						      			</select>
+									</td>
+									<td width="300"></td>
+									<td width="300"></td>
+								</tr>
+							</tbody>
+						</table>
+					</form>	
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-default mt-20">
+			<div class="panel-header" style="height: 30px;">
+				<div class="fl" style="font-size: 15px;">渠道商列表</div>
+				<div style="float: right;">
+					<button class="layui-btn layui-btn-small" onclick="channel_add()">
+						<i class="layui-icon" style="line-height: 12px;">&#xe61f;</i>新增渠道商
+					</button>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div id="page" class="holder"></div>  
+				<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<thead>
+						<tr class="text-c">
+							<!-- <th width="10">ID</th> -->
+							<th width="100">渠道商账号</th>
+							<th width="100">渠道商名称</th>
+							<th width="100">佣金比例</th>
+							<th width="100">联系人</th>
+							<th width="100">联系方式</th>
+							<th width="100">当前状态</th>
+							<th width="100">创建时间</th>
+							<th width="200">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<#if list.dataList?? && list.dataList?size gt 0>
+						<#list list.dataList as dl >
+							<tr class="text-c">
+								<!-- <td>${dl_index+1}</td> -->
+								<td>${dl.channelLoginName}</td>
+								<td>${dl.channelName}</td>
+								<td>${dl.channelRebate}</td>
+								<td>${dl.channelContactName!}</td>
+								<td>${dl.channelContactPhone!}</td>
+								<td>
+								<#if dl.channelStatus==1><span class="label-success">合作中</span></#if>
+								<#if dl.channelStatus==2>终止合作</#if>
+								<td>
+									<#if dl.createTime??>
+										${dl.createTime?string("yyyy-MM-dd")}
+									</#if>
+								</td>
+								<td class="td-manage">
+								<#if dl.channelStatus==1>
+									<a title="编辑" href="javascript:;"  onclick="channel_edit('编辑渠道商 —— ${dl.channelName}','${basePath}/payv2Channel/toEditPayv2Channel.do?id='+${dl.id!},1000,600);"  class="ml-5" style="text-decoration:none">编辑</a>
+									<a title="配置支付方式" href="javascript:;"  onclick="channel_edit('配置支付方式 —— ${dl.channelName}','${basePath}/payv2Channel/toConfigChannelPayType.do?id='+${dl.id!},1000,600);"  class="ml-5" style="text-decoration:none">配置支付方式</a>
+									<a title="配置代付费" href="javascript:;"  onclick="channel_edit('配置代付费 —— ${dl.channelName}','${basePath}/payv2Channel/toConfigChannelDf.do?id='+${dl.id!},1000,400);"  class="ml-5" style="text-decoration:none">配置代付费</a>
+									<a title="终止" href="javascript:;" onclick="channel_update(this,${dl.id!},'终止','2')"  class="ml-5" style="text-decoration:none">终止</a> 
+									<a title="管理店铺" href="${basePath}/payv2BussCompany/companyList.do?channelId=${dl.id!}"   class="ml-5" style="text-decoration:none">管理商户</a>
+									<!-- <a title="修改密码" href="javascript:;"  onclick="channel_updatePwd('修改密码','${basePath}/payv2Channel/toUpdatePayv2ChannelPwd.do?id='+${dl.id!}+'&loginName='+${dl.channelLoginName},600,500);"  class="ml-5" style="text-decoration:none">修改密码</a> -->
+								</#if>
+								<#if dl.channelStatus==2>
+									<a title="编辑" href="javascript:;"  onclick="channel_edit('编辑渠道商 —— ${dl.channelName}','${basePath}/payv2Channel/toEditPayv2Channel.do?id='+${dl.id!},1000,600);"  class="ml-5" style="text-decoration:none">编辑</a>
+									<a title="恢复" href="javascript:;" onclick="channel_update(this,${dl.id!},'恢复','1')" class="ml-5" style="text-decoration:none">恢复</a>
+									<a title="删除" onClick="channel_del('${dl.id!}')" href="javascript:;" class="ml-5" style="text-decoration:none">删除</a>
+									<a title="管理店铺" href="${basePath}/payv2BussCompany/companyList.do?channelId=${dl.id!}"   class="ml-5" style="text-decoration:none">管理商户</a>
+									<a title="初始化密码" href="javascript:;"  onclick="initPassword('${dl.id!}','${dl.channelLoginName!}','${dl.channelContactPhone!}');"  class="ml-5" style="text-decoration:none">初始化密码</a> 
+								</#if>
+								</td>
+							</tr>
+						</#list>
+						</#if>
+					</tbody>
+				</table>
+				</br>
+				<div id="page_list"></div>
+			</div>
+		</div>
+
+
+		
+	</div>
+	<script type="text/javascript">
+		function data_form_submit(){
+			$("#data_from").attr("action","${basePath}/payv2Channel/payv2ChannelList.do").submit();
+		}
+
+		layui.use(['laypage', 'layer'], function(){
+	  		var laypage = layui.laypage,layer = layui.layer;
+			laypage.render({
+			    elem: 'page_list',	//容器。值支持id名、原生dom对象，jquery对象
+			    count: ${list.totalData!'0'},	//数据总数。一般通过服务端得到
+			    //groups: 5,	//连续出现的页码个数
+			    limit: ${list.pageData!'10'},
+			    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+				curr: ${list.curPage!'1'}, //获取起始页
+			    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+			    jump: function(obj, first){
+			      if (!first) {
+			      	window.location.href="${basePath}/payv2Channel/payv2ChannelList.do?curPage="+obj.curr 
+			      		+"&pageData="+obj.limit
+			      		+"&keyWord="+$("#keyWord").val()
+			      		+"&channelStatus="+$("#channelStatus").val();
+					}
+			    }
+			  });
+		});
+		var isChange=0;
+		$(document).ready(function(){
+			$('select').searchableSelect();
+			isChange++;
+		})
+		/* 启用停用 */
+		function channel_update(obj,id,tips,channelStatus){
+			layer.confirm("确认要"+ tips +"吗？", function(index) {
+				var data = {};
+				data.id = id;
+				data.channelStatus = channelStatus;
+				//后台请求保存数据
+				$.axse("${basePath}/payv2Channel/updatePayv2Channel.do",  data, function(d){
+					if(d.resultCode == 200){
+						layer.msg('已'+tips+'!', {
+							icon : 1,
+							time : 1000
+						});
+						window.location.href="${basePath}/payv2Channel/payv2ChannelList.do";
+					}else{
+						Huimodal_alert(tips+"失败,请重试!",1500);
+					}
+				},
+				function(d){
+					Huimodal_alert(tips+"失败,请重试!",1500);
+				});
+			});
+		}
+		
+		/* 删除 */
+		function channel_del(id){
+			layer.confirm("确认要删除吗？", function(index) {
+				var data = {};
+				data.id = id;
+				data.isDelete = 1;
+				//后台请求保存数据
+				$.axse("${basePath}/payv2Channel/updatePayv2Channel.do",  data, function(d){
+					if(d.resultCode == 200){
+						layer.msg('已删除!', {
+							icon : 1,
+							time : 1000
+						});
+						window.location.href="${basePath}/payv2Channel/payv2ChannelList.do";
+					}else{
+						Huimodal_alert("删除失败,请重试!",1500);
+					}
+				},
+				function(d){
+					Huimodal_alert("删除失败,请重试!",1500);
+				});
+			});
+		}
+		
+		function initPassword(id,loginName,phone){
+			layer.confirm("推广商账号："+loginName + "<br> 推广商手机号："+phone + "<br> 初始化密码为：123456", function(index) {
+				var data = {};
+				data.id = id;
+				data.channelLoginPwd = 123456;
+				//后台请求保存数据
+				$.axse("${basePath}/payv2Channel/updatePayv2Channel.do",  data, function(d){
+					if(d.resultCode == 200){
+						layer.msg('已删除!', {
+							icon : 1,
+							time : 1000
+						});
+						window.location.href="${basePath}/payv2Channel/payv2ChannelList.do";
+					}else{
+						Huimodal_alert("删除失败,请重试!",1500);
+					}
+				},
+				function(d){
+					Huimodal_alert("删除失败,请重试!",1500);
+				});
+			});
+		}
+		
+		//新增
+		function channel_add(title,url,w,h){
+			var urls='${basePath}/payv2Channel/toAddPayv2Channel.do'
+			//layer_show(title, url, w, h);
+			//layer_show('新增渠道商',urls,1000,800);
+			var windowWidth=document.body.clientWidth||document.documentElement.clientWidth
+			if(windowWidth<1367){
+				//console.log(windowWidth)
+				console.log(windowWidth+"**")
+				layer_show('新增渠道商', urls, 800,600);
+			}else{
+				layer_show('新增渠道商', urls, 1200,600);
+			}
+		}
+		
+		//编辑
+		function channel_edit(title,url,w,h){
+			layer_show(title, url, w, h);
+		}
+		
+		//编辑
+		function channel_updatePwd(title,url,w,h){
+			layer_show(title, url, w, h);
+		}
+		
+		//管理商户
+		function companyList(title,url,w,h){
+				layer_show(title, url, w, h);
+		}
+		function exportExcel(){
+			$("#data_from").attr('action', '${basePath}/payv2Channel/exportExcel.do');
+			$("#data_from").submit();
+		}
+		$(document).keypress(function(e) {			
+		   	// 回车键事件  
+		      if(e.which == 13) {  
+		  		jQuery(".confirmButton").click();
+		  		data_form_submit()
+		      }  
+		});
+	</script>
+</body>
+</html>

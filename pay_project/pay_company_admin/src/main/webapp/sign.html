@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>签名校验</title>
+		<meta name="renderer" content="webkit|ie-stand">
+		<meta name="force-rendering" content="webkit">
+		<meta http-equiv="x-ua-compatible" content="IE=11,10,9">
+		<!--<link rel="stylesheet" href="css/css.css" />
+		<link rel="stylesheet" href="css/highlight.css" />
+		<link rel="shortcut icon" href="icon.ico">-->
+		<style type="text/css">
+			* {
+					margin: 0;
+					padding: 0;
+				}
+
+				html,
+				body {
+					font-family: "微软雅黑", "microsoft yahei";
+					background-color: #f2f2f2;
+				}
+
+				li {
+					list-style: none;
+				}
+
+				a {
+					text-decoration: none;
+				}
+
+				i {
+					font-style: normal;
+				}
+
+				.fl {
+					float: left;
+				}
+
+				.fr {
+					float: right;
+				}
+
+				.hide {
+					display: none;
+				}
+
+				a.c00aaef {
+					color: #00AAEF;
+				}
+
+				header {
+					width: 100%;
+					background-color: #fff;
+					height: 68px;
+					border-bottom: 2px solid #ccc;
+					position: relative;
+				}
+
+				.nav1 {
+					width: 100%;
+					height: 68px;
+					line-height: 68px;
+					position: absolute;
+					top: 0;
+					z-index: 1111111;
+				}
+
+				.zfj a {
+					color: #333;
+				}
+
+				.lines {
+					height: 2px;
+					background-color: #00aaef;
+					position: absolute;
+					top: 69px;
+					left: 0;
+					display: none;
+					margin-left: 20px;
+				}
+
+				.navCon {
+					width: 1200px;
+					height: 68px;
+					margin: 0 auto;
+				}
+
+				.logo {
+					width: 258px;
+					height: 39px;
+					margin-top: 15px;
+					background-size: 100% 100%;
+				}
+
+				.nav {
+					margin-right: 100px;
+				}
+
+				.nav li {
+					float: left;
+					color: #333;
+					text-align: center;
+					height: 68px;
+					line-height: 68px;
+					font-size: 16px;
+					font-weight: 400;
+					position: relative;
+					padding: 0 20px;
+				}
+
+				.nav li a {
+					display: block;
+					height: 68px;
+					line-height: 68px;
+					font-size: 16px;
+					color: #00AAEF;
+				}
+
+				.nav li a:active {
+					color: #1681d3;
+				}
+
+				.bd {
+					content: "";
+					width: 80px;
+					height: 2px;
+					background-color: #686868;
+					position: absolute;
+					top: 68px;
+					left: 10px;
+					display: none;
+				}
+
+				.af:hover .bd {
+					display: block
+				}
+
+				.nav li li:hover {
+					background-color: rgba(0, 0, 0, 0.2);
+				}
+
+				.sh {
+					width: 300px;
+				}
+
+				.shu,
+				.zfuj {
+					position: relative;
+				}
+
+				.sh,
+				.zfj {
+					position: absolute;
+					left: 0;
+					top: 68px;
+				}
+
+				.zfj {
+					width: 200px;
+				}
+
+				.shu li,
+				.zfuj li {
+					float: left;
+					height: 40px;
+					line-height: 40px;
+				}
+
+				.main {
+					width: 100%;
+					margin-top: 20px;
+				}
+
+				.mCon {
+					width: 1200px;
+					margin: 0 auto;
+				}
+
+				.nav2 {
+					width: 190px;
+					border-right: 1px solid #ccc;
+					background-color: #fff;
+				}
+
+				a {
+					color: #666;
+				}
+
+				.intro a {
+					color: #333;
+				}
+
+				.nav2 li {
+					width: 190px;
+					font-size: 16px;
+				}
+
+				.intro {
+					height: 55px;
+					border-bottom: 1px solid #dedede;
+				}
+
+				.intro1:hover,
+				.intro2:hover {
+					background-color: #eaf2fc;
+				}
+
+				.intro a {
+					display: block;
+					height: 55px;
+					line-height: 55px;
+					width: 144px;
+					margin-left: 24px;
+					font-weight: bold;
+					float: left;
+				}
+
+				.intro i {
+					float: left;
+					display: block;
+					width: 12px;
+					height: 12px;
+					background-image: url(../img/x.png);
+					background-size: 100% 100%;
+					margin-top: 21px;
+				}
+
+				.intro1 {
+					height: 54px;
+					line-height: 54px;
+					width: 190px;
+					text-indent: 24px;
+					font-size: 14px;
+					color: #808080;
+				}
+
+				.intro2 {
+					height: 54px;
+					line-height: 54px;
+					width: 190px;
+					text-indent: 24px;
+					font-size: 14px;
+					color: #808080;
+				}
+
+				.bottomde {
+					border-bottom: 1px solid #dedede;
+					;
+				}
+
+				.content {
+					width: 954px;
+					padding-left: 34px;
+					padding-right: 20px;
+					background-color: #fff;
+					margin-bottom: 100px;
+				}
+
+				.title {
+					height: 26px;
+					line-height: 26px;
+					margin-top: 40px;
+					font-size: 26px;
+				}
+
+				.title i {
+					float: left;
+					display: block;
+					width: 7px;
+					height: 26px;
+					margin-right: 26px;
+					background-color: #1681d3;
+				}
+
+				.title span {
+					float: left;
+				}
+
+				.jj {
+					height: 20px;
+					line-height: 20px;
+					font-size: 20px;
+					margin-top: 60px;
+				}
+
+				.jj i {
+					display: block;
+					float: left;
+					width: 8px;
+					height: 8px;
+					background-color: #00aaef;
+					transform: rotate(45deg);
+					margin-top: 6px;
+					margin-right: 24px;
+				}
+
+				.jj span {
+					font-weight: bold;
+				}
+
+				.jj1 {
+					font-size: 16px;
+					color: #808080;
+					margin: 10px 20px 0 32px;
+				}
+
+				.jj2 {
+					font-size: 16px;
+					color: #333;
+					text-indent: 32px;
+					margin: 40px 0 0 0;
+					font-weight: bold;
+				}
+
+				.jj3 {
+					font-size: 16px;
+					font-weight: bold;
+					color: #333;
+					text-indent: 32px;
+					margin: 17px 0 0 0;
+				}
+
+				.jj1 p {
+					line-height: 32px;
+					color: #666;
+					font-size: 16px;
+				}
+
+				.jj1 .img {
+					display: block;
+					width: 305px;
+					height: 278px;
+					background-image: url(../img/u69.png);
+					background-size: 100% 100%;
+					margin: 0 0 10px -20px;
+				}
+
+				.jj4 {
+					margin: 20px 25px 0px 32px;
+				}
+
+				.jj5 {
+					margin: 10px 0;
+				}
+
+				th {
+					background: #e5e5e5;
+				}
+
+				th,
+				td {
+					height: 45px;
+					border-bottom: 1px solid #ccc;
+					border-right: 1px solid #ccc;
+					padding-left: 20px;
+				}
+
+				.mainul .red {
+					color: #f00;
+				}
+
+
+				/*平台简介*/
+
+				.jjx p {
+					display: block;
+					vertical-align: baseline;
+				}
+
+				.chooseIcon {
+					display: inline-block;
+					width: 23px;
+					height: 22px;
+					background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAWCAMAAAAcqPc3AAAAe1BMVEUAAAAWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdMWgdN7nyqvAAAAKHRSTlMABepSHSIK4tx586VpEg/VyLN0KPm4rUMtFXBrZsO9nJWDM+SfiYheqnm1zAAAAMdJREFUKM91kdmuhCAQRE+LiAsj6jjO5t03/v8Lr1FimGQ4L3SqSUNXEbjeTmVdu94eiCg+skYdC9F/U1YVu3wsm3yve6dDqb/sqih1YaEy26XWzSBz6RfMTZZGt476fVt6Jx/orjBVQJ4dkFe/08kqUb2D9REDNHd4OUMZ65mgeqhbtH/gk9xQ1HB+1BUypvTUnNS7qX+m9+LnuQ+05QxiN98GgcFtEVwyux7B58HoJ7noyek4x2+Vi2jVhByj3M04mv4ecv8HKb8hBbLw0HIAAAAASUVORK5CYII=);
+					background-size: 100% 100%;
+					vertical-align: baseline;
+					margin-top: 5px;
+					margin-left: 25px;
+				}
+
+				.nochooseIcon {
+					display: inline-block;
+					width: 23px;
+					height: 22px;
+					background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAWCAMAAAAcqPc3AAAAYFBMVEUAAABmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZ3vnYRAAAAIHRSTlMAeBII6uIfpRwN+fKyayTb1KxTKZ1n58O2lYmDb1pEysh3ttoAAACYSURBVCjPdZFZDsMgDEQHHCA7W5quae9/y0pBoBDC+7KekLE9CPBpFH0vHh+OA8Qau0nq/Kaad5e0NOMc61ZpH0vBcGBawyP6MWTczN6KWZxYXgB402Yyqkmh4MmA0ZX+eweELD0fgJ5QMhCG7trr+apP7d/anLW96ncAmfPddBhxFizTq0+52DSsDLmkHJWTRNItMcda7n9tcwYo3eXujAAAAABJRU5ErkJggg==);
+					background-size: 100% 100%;
+					vertical-align: baseline;
+					margin-top: 5px;
+					margin-left: 25px;
+				}
+
+				.paramStr {
+					margin-bottom: 270px;
+				}
+
+				.zdyStr {
+					display: none;
+				}
+
+				.zdyStr div {
+					margin-bottom: 10px;
+					height: 40px;
+				}
+
+				.zdyStr input {
+					height: 38px;
+					width: 310px;
+					border-radius: 5px;
+					margin-left: 15px;
+					border: 1px solid #ccc;
+				}
+
+				.ml-20 {
+					margin-left: 20px;
+				}
+
+				.zdyStr i {
+					display: block;
+					width: 28px;
+					height: 28px;
+					background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAgVBMVEUAAAD/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/Jib/JiZVczwdAAAAKnRSTlMAd8mpXM+Yhr2toY59VyoeGAv76eDa2Laegl9JPQb288OxgDszIxCRYEH1oa25AAAA8ElEQVQoz3XS2XKDMAwF0GvMvhMIW0KWNklb/f8HNhOPNIY45wWNL7YsBoi6iHQc62y+Y6vMTsTS73UW0crYQDQebXQlZ8ue3pwqGAE5tAv3cxnwVNEHRwChKc9y+KUzTw947ExZYDJFiIaMG3wyIkCZTJZyZHyaAr6IRqDgFY2ErHS8mn3cNCaR42kmsbdDOgAl2WFCIn0AS0QiwI/UIaAyYCJ2xa+V+a++ilcm1HwmUPBE8v246cwzKH6/h9yvHWT2QO4OpOQU4KV1ZbvahNXZEcofWHVv+44QjV5nlztsh4GE52PrprTX916S/4H9A28ZVf0D3vYtAAAAAElFTkSuQmCC);
+					background-size: 100% 100%;
+					float: right;
+					margin-top: 6px;
+					cursor: pointer;
+				}
+
+				.clearFix {
+					clear: both;
+					height: 0;
+				}
+
+				.addStr,
+				.dosign {
+					float: left;
+					display: block;
+					width: 100px;
+					height: 34px;
+					line-height: 34px;
+					text-align: center;
+					color: #fff;
+					background-color: #2581f4;
+					border-radius: 5px;
+					font-size: 16px;
+					margin-top: 20px;
+					margin-bottom: 20px;
+					cursor: pointer;
+				}
+
+				.addStr {
+					margin-left: 130px;
+					display: none;
+				}
+
+				.dosign {
+					margin-left: 130px;
+				}
+
+				.step {
+					margin-left: 20px;
+				}
+
+				.keyValue {
+					width: 735px;
+					height: 40px;
+					margin-left: 27px;
+					border-radius: 5px;
+					border: 1px solid #ccc;
+					outline: none;
+				}
+
+				.paramValue {
+					width: 735px;
+					height: 200px;
+					border-radius: 5px;
+					border: 1px solid #ccc;
+					outline: none;
+					resize:none;
+					text-indent: 10px;
+					line-height: 20px;
+					padding-top: 5px;
+				}
+
+				.paramValue:focus {
+					border: 1px solid #2581f4;
+				}
+
+				.keyValue:focus {
+					border: 1px solid #2581f4;
+				}
+				.key,.value,.keyValue{
+					text-indent: 10px;
+				}
+				.param input:focus{
+					border: 1px solid #2581f4;
+				}
+				.param input{
+					outline: none;
+				}
+
+		</style>
+	</head>
+
+	<body>
+		<header>
+		</header>
+		<nav class="nav1">
+			<div class="navCon">
+				<div class="logo fl"></div>
+				<ul class="nav fr">
+					<li>
+						<a href="/">商户管理后台</a>
+						<div class="lines lines1"></div>
+					</li>
+				</ul>
+			</div>
+			<div class="bgf"></div>
+		</nav>
+		<div class="main">
+			<div class="mCon">
+				<nav class="nav2 fl">
+					<ul style="height: 1150px;">
+						<li>
+							<div class="intro">
+								<a>简介</a><i></i></div>
+							<div class="intro1 bottomde">
+								<a href="javascript:;">商户签名自查工具</a>
+							</div>
+						</li>
+					</ul>
+				</nav>
+				<div class="content fl">
+					<div class="title"><i></i><span>签名校验</span></div>
+					<ul class="mainul">
+						<li>
+							<div class="jj"><i></i><span>1.简介</span></div>
+							<div class="jj1">此工具旨在帮助开发者检测调用【支付接口API】时发送的请求参数中生成的签名是否正确，提交相关信息后可获得签名校验结果。</div>
+						</li>
+						<li>
+							<div class="jj"><i></i><span>2.使用说明</span></div>
+							<div class="jj1">
+								<p>2.1选择校验方式: 1)<b>paramStr</b> 2)<b>自定义参数校验</b>。</p>
+								<p>2.2根据选择的校验方式填入对应的paramStr或参数值。</p>
+								<p style="text-indent: 24px;"><b>paramStr</b>：请将生成的paramStr字符串原样复制到文本框中。</p>
+								<p style="text-indent: 24px;"><b>自定义参数校验</b>：根据接口字段定义,手动填写参数名及对应值。</p>
+								<p>2.3点'生成签名'会按规则生成对应的sign签名字段及提供详细的生成签名过程。</p>
+							</div>
+						</li>
+						<li>
+							<div class="jj"><i></i><span>3.注意事项</span></div>
+							<div class="jj1">
+								<p>3.1本工具只校验签名算法是否正确，无法校验商户appKey是否正确，如通过本工具校验通过，但实际接口返回签名失败，请检查：</p>
+								<p style="text-indent: 24px;">1)，当前商户appKey、签名密钥(keyValue)是否正确，如忘记签名密钥，请前往支付商户后台重置签名密钥</p>
+								<p style="text-indent: 24px;">2)，加入签名的参数是否和接口提交的参数个数一致，字段名是否和接口文档一致</p>
+								<p style="text-indent: 24px;">3)，仔细对照签名流程，检查每个步骤是否正确</p>
+								<p>3.2注意参数名需区分大小写，必须与文档的参数名大小写一致</p>
+							</div>
+						</li>
+						<li>
+							<div class="jj"><i></i><span>4.签名、检验方式</span></div>
+							<div class="jj1 jjx">
+								<p style="text-indent: 24px;"><b>签名方式：</b><span style="margin-left: 25px;">md5</span></p>
+								<p style="text-indent: 24px;"><b class="fl">检验方式：</b>
+									<i class="chooseIcon fl paramC"></i><span class="fl paramC" style="text-indent: 10px;">paramStr</span>
+									<i class="nochooseIcon fl otherC"></i><span class="fl otherC">自定义参数效验</span>
+								</p>
+								<div class="paramStr" style="margin-top:40px;text-indent: 24px;vertical-align: baseline;">
+									<label class="fl"><b style="">paramStr串：</b></label>
+									<textarea class="fl paramValue"></textarea>
+								</div>
+
+								<div class="zdyStr" style="margin-top: 40px;">
+									<div class="param" style="text-indent: 24px;">
+										<span class="fl"><b>参数名称:</b></span>
+										<input type="text" class="key fl" style="margin-left: 38px;" />
+										<span class="ml-20 fl"><b>参数值:</b></span>
+										<input type="text" class="value fl" />
+										<i class="dlti fl"></i>
+									</div>
+									<div class="param" style="text-indent: 24px;">
+										<span class="fl"><b>参数名称:</b></span>
+										<input type="text" class="key fl" style="margin-left: 38px;" />
+										<span class="ml-20 fl"><b>参数值:</b></span>
+										<input type="text" class="value fl" />
+										<i class="dlti fl"></i>
+									</div>
+								</div>
+								<div class="clearFix"></div>
+								<div style="color: red;text-indent: 24px;margin-bottom: 10px;">注意：回调地址不能带参数</div>
+								<div class="" style="text-indent: 24px;vertical-align: baseline;">
+									<label class="fl"><b style="">签名秘钥：</b></label>
+									<input class="fl keyValue" style="" />
+
+								</div>
+								<div class="clearFix"></div>
+								<div>
+									<span class="addStr">增加参数</span>
+									<span class="dosign goto-sign-btn">生成签名</span>
+								</div>
+								<div class="clearFix"></div>
+								<div class="show-step">
+									<span class="step"><strong>#1.对参数按照key=value的格式，并按照参数名ASCII字典序排序生成字符串：</strong></span><br/>
+									<span class="step step1"></span><br/><br/>
+
+									<span class="step"><strong>#2.连接签名密钥keyValue(该密钥可在商户后台重置获取)：</strong></span><br/>
+									<span class="step step2"></span><br/><br/>
+
+									<span class="step"><strong>#3.将连接后的字符串转成大写：</strong></span><br/>
+									<span class="step step3"></span><br/><br/>
+
+									<span class="step"><strong>#4.将第三步字符串MD5（UTF-8）加密：</strong></span><br/>
+									<span class="step step4"></span><br/><br/>
+
+									<span class="step"><strong>#5.最终的提交的数据：</strong></span><br/>
+									<span class="step step5"></span><br/><br/>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/md5.js"></script>-->
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script src="http://cdn.bootcss.com/blueimp-md5/1.1.0/js/md5.js"></script>
+		<script>
+			var str = '<div class="param" style="text-indent: 24px;" ><span class="fl" ><b>参数名称:</b></span><input class="key fl" type="text" style="margin-left: 38px;"/><span class="ml-20 fl"><b>参数值:</b></span><input class="value fl" type="text" /><i class="dlti fl"></i></div>'
+			var state = 1;
+			$(".lines1").css("width", $(".lines1").parent().find("a").css("width"));
+			$(".lines2").css("width", $(".lines2").parent().find("a").css("width"));
+			$(".nav2 ul").height($(".content").height())
+			$(".nav li").on("mouseenter", function() {
+				$(this).find(".lines").show();
+			})
+			$(".nav li").on("mouseleave", function() {
+				$(this).find(".lines").hide();
+			})
+
+			$(".shu").on("mouseenter", function() {
+				$(".sh").slideDown(50);
+				$(".bgf").slideDown(50)
+			})
+			$(".shu").on("mouseleave", function() {
+				$(".sh").slideUp(50);
+				$(".bgf").slideUp(50)
+			})
+			$(".zfuj").on("mouseenter", function() {
+				$(".zfj").slideDown(50);
+				$(".bgf").slideDown(50)
+			})
+			$(".zfuj").on("mouseleave", function() {
+				$(".zfj").slideUp(50);
+				$(".bgf").slideUp(50)
+			})
+
+			$(".intro i").on("click", function() {
+				if($(this).attr("state") != 1) {
+					$(this).parent().siblings().hide(200);
+					$(this).css({
+						"transform": "rotate(180deg)",
+						"-ms-transform": "rotate(180deg)",
+						/* IE 9 */
+						"-moz-transform": "rotate(180deg)",
+						/* Firefox */
+						"-webkit-transform": "rotate(180deg)",
+						/* Safari 和 Chrome */
+						"-o-transform": "rotate(180deg)"
+					})
+					$(this).attr("state", "1");
+				} else {
+					$(this).parent().siblings().show(200);
+					$(this).css({
+						"transform": "rotate(0deg)",
+						"-ms-transform": "rotate(0deg)",
+						/* IE 9 */
+						"-moz-transform": "rotate(0deg)",
+						/* Firefox */
+						"-webkit-transform": "rotate(0deg)",
+						/* Safari 和 Chrome */
+						"-o-transform": "rotate(0deg)"
+					})
+					$(this).attr("state", "0");
+				}
+			})
+			$(".paramC").on("click", function() {
+				$(".paramStr").show();
+				$(".zdyStr").hide();
+				$(this).parent().find("i.paramC").addClass("chooseIcon").removeClass("nochooseIcon")
+				$(this).parent().find("i.otherC").addClass("nochooseIcon").removeClass("chooseIcon")
+				$(".addStr").hide();
+				state = 1
+			})
+			$(".otherC").on("click", function() {
+				$(".zdyStr").show();
+				$(".paramStr").hide();
+				$(this).parent().find("i.otherC").addClass("chooseIcon").removeClass("nochooseIcon")
+				$(this).parent().find("i.paramC").addClass("nochooseIcon").removeClass("chooseIcon")
+				$(".addStr").show()
+				state = 2
+			})
+			$(".addStr").on("click", function() {
+				$(".zdyStr").append(str);
+			})
+			$("body").on("click", ".dlti", function() {
+				$(this).parent().remove()
+			})
+			$(".goto-sign-btn").click(function() {
+				var paramString = null;
+				var keyValue = null;
+				if(state == 1) {
+					paramString = $(".paramValue").val();
+					keyValue = $(".keyValue").val();
+				} else if(state == 2) {
+					keyValue = $(".keyValue").val();
+					var paramList = [];
+					var length = $(".param").length;
+					console.log(length)
+					for(var i = 0; i < length; i++) {
+						var pkey = $(".param").eq(i).find(".key").val();
+						var pvalue = $(".param").eq(i).find(".value").val();
+						if(pkey) {
+							paramList.push(pkey + "=" + pvalue);
+						}
+					}
+					console.log(paramList)
+					paramString = paramList.join("&");
+				}
+				var psSplit = new Array();
+				psSplit = paramString.split("&");
+				psSplit.sort();
+
+				var step1 = null;
+				var step2 = null;
+				var step3 = null;
+				var step4 = null;
+				var step5 = null;
+				step1 = psSplit.join("&");
+				step2 = "keyValue=" + keyValue + "&" + step1;
+				step3 = step2.toUpperCase();
+				step4 = md5(step3);
+				step5 = step1 + "&sign=" + step4;
+				$(".step1").text(step1);
+				$(".step2").text(step2);
+				$(".step3").text(step3);
+				$(".step4").text(step4);
+				$(".step5").text(step5);
+			})
+		</script>
+	</body>
+
+</html>

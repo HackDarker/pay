@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>配置商户通道</title>
+	<#include "lib/lib.html" />
+</head>
+<body>
+	<input type="hidden" name="id" id="companyId" value="${map.id}"/>
+	<input type="hidden" name="maxSortNum" id="maxSortNum" value="${maxSortNum!}"/>
+	<div class="pop_main" style="padding-left:30px;width: 95%;">
+		<div class="panel panel-primary mt-20">
+	    	<div class="panel-header">基础配置</div>
+	    	<div class="panel-body">
+	    		<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<tbody>
+	    		    	<tr>
+	    		    		<td style="width:120px;"><strong>通道路由策略：</strong></td>
+	    		    		<td>
+	    		    			<select style="width:100px;" class="select size-M" id="isRandom" name="isRandom" size="1">
+									<option value="1" <#if obj.isRandom==1>selected="selected"</#if>>随机</option>
+									<option value="2" <#if obj.isRandom==2>selected="selected"</#if>>排序</option>
+									<option value="3" <#if obj.isRandom==3>selected="selected"</#if>>循环</option>
+								</select>
+	    		    		</td>
+	    		    	</tr>
+    		    	</tbody>
+			    </table>
+	    	</div>
+    	</div>
+    	<div id="parent-way-rate-div">
+    	<#if typeList?? && typeList?size gt 0>
+			<#list typeList as dl >
+				<div class="panel panel-primary mt-20">
+			    	<div class="panel-header" style="cursor:pointer;">
+			    		<i class="Hui-iconfont Hui-iconfont-arrow2-bottom"></i>   ${dl.wayName!} - ${dl.payTypeName!} - 费率：${dl.payWayRate!} ‰
+			    	</div>
+			    	<div id="panel-body-div-id" class="panel-body">
+			    		<div class="panel panel-primary mt-20">
+				    		<div class="panel-body">
+				    			<input type="hidden" id="pay-type-obj-hidden" payWayRate="${dl.payWayRate!}" wayId="${dl.payWayId!}" typeId="${dl.payTypeId!}">
+					    		<table class="table table-hover table-bg table-sort">
+									<tbody>
+					    		    	<tr>
+					    		    		<td>
+					    		    			<input style="width:65px;" class="dd_input input-text size-M" type="text" id="plDay" placeholder="日限额" onchange="ValidateFloat($(this),value)">
+						    		    		<button type="button" onclick="plSettingDay(this)" class="btn">统一设置</button>
+						    		    	</td>
+					    		    		<td>
+					    		    			<input style="width:65px;" class="dd_input input-text size-M" type="text" id="plMin" placeholder="单笔下限" onchange="ValidateFloat($(this),value)">
+						    		    		<button type="button" onclick="plSettingMin(this)" class="btn">统一设置</button>
+						    		    	</td>
+					    		    		<td>
+					    		    			<input style="width:65px;" class="dd_input input-text size-M" type="text" id="plMax" placeholder="单笔上限" onchange="ValidateFloat($(this),value)">
+						    		    		<button type="button" onclick="plSettingMax(this)" class="btn">统一设置</button>
+						    		    	</td>
+						    		    	<td><button type="button" class="btn btn-success add-way-rate-btn">添加通道</button></td>
+					    		    	</tr>
+				    		    	</tbody>
+							    </table>
+						    </div>
+					    </div>
+					    <div id="payWayRatePlanDiv" style="display: none;">
+							<select style="width:180px;" class="select" id="payWayRatePlan">
+								<#if dl.allWayList?? && dl.allWayList?size gt 0>
+									<#list dl.allWayList as daw >
+										<option value="${daw.id}">${daw.rateName}</option>
+									</#list>
+								</#if>
+							</select>
+						</div>
+			    		<div class="panel panel-primary mt-20" id="pay-way-panel">
+				    		<div class="panel-body">
+					    		<table class="table table-hover table-bg table-sort">
+					    			<thead>
+					    				<tr>
+					    					<th>序号</th>
+					    					<th>支付通道</th>
+					    					<th>单日限额</th>
+					    					<th>单笔限额(下限)</th>
+					    					<th>单笔限额(上限)</th>
+					    					<th>操作</th>
+					    				</tr>
+					    			</thead>
+									<tbody>
+										<#if dl.wayList?? && dl.wayList?size gt 0>
+											<#list dl.wayList as dw >
+												<tr>
+													<td><input value ="${dw.sortNum}" style="width:50px;" class="dd_input input-text size-M" type="text" id="sortNum" onchange="ValidateFloatSort($(this),value)"></td>
+													<td>
+														<select style="width:180px;" class="select" id="payWayRate">
+															<#if dl.allWayList?? && dl.allWayList?size gt 0>
+																<#list dl.allWayList as daw >
+																	<option value="${daw.id}" <#if daw.id == dw.rateId>selected="selected"</#if>>${daw.rateName}</option>
+																</#list>
+															</#if>
+														</select>
+													</td>
+													<td>
+														<input style="width:65px;" class="dd_input input-text size-M" type="text" name="maxMoney" id="maxMoney" value ="${dw.maxMoney}" onchange="ValidateFloat($(this),value)"> 元
+													</td>
+													
+													<td>
+														<input style="width:50px;" class="dd_input input-text size-M" type="text" name="oneMinMoney" id="oneMinMoney" value ="${dw.oneMinMoney}" onchange="ValidateFloatByMin($(this),value)"> 元
+													</td>
+													
+													<td>
+														<input style="width:50px;" class="dd_input input-text size-M" type="text" name="oneMaxMoney" id="oneMaxMoney" value ="${dw.oneMaxMoney}" onchange="ValidateFloatByMax($(this),value)"> 元
+													</td>
+													<td><button type="button" onclick="deleteCurrTr(this)" class="btn btn-danger">删除本行</button></td>
+												</tr>
+											</#list>
+										</#if>
+				    		    	</tbody>
+							    </table>
+							    </div>
+					    </div>
+			    	</div>
+			    	<div>&nbsp;</div>
+		    	</div>
+			</#list>
+		</#if>
+    	</div>
+		<div class="submit_btn">
+			<button style="width:100px;height:40px;" type="button" name="" value="提    交" onclick="submitData()" class="btn btn-warning"><i class="Hui-iconfont">&#xe676;</i> 提    交</button>
+		</div>
+		
+	</div>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('select').searchableSelect();
+		});
+	
+		$(".panel-header").click(function(){
+			$(this).parent().find("#panel-body-div-id").toggle(300);
+			if($(this).find("i").hasClass("Hui-iconfont-arrow2-bottom")) {
+				$(this).find("i").removeClass("Hui-iconfont-arrow2-bottom").addClass("Hui-iconfont-arrow2-right");
+			} else {
+				$(this).find("i").removeClass("Hui-iconfont-arrow2-right").addClass("Hui-iconfont-arrow2-bottom");
+			}
+		});
+		
+		$(".add-way-rate-btn").click(function(){
+			var maxSortNum = getMaxSortNum();
+			var html = "";
+	        var plan = $(this).parents("#panel-body-div-id").find("#payWayRatePlanDiv").find("#payWayRatePlan");
+	        var exitsRateIds = new Array();
+	        for(var i = 0, len = $("#parent-way-rate-div").children().length;i<len;i++){
+				for(var j = 0, leng = $("#parent-way-rate-div").children().eq(i).find("#pay-way-panel").find("tbody").children().length;j<leng;j++){
+					var obj = $("#parent-way-rate-div").children().eq(i).find("#pay-way-panel").find("tbody").children().eq(j);
+					var rateId = $(obj).find("#payWayRate").val();
+					exitsRateIds.push(rateId);
+				}
+			}
+			for(var k = 0, le = $(plan).children().length;k<le;k++){
+				var id = $(plan).children().eq(k).val();
+	            var text = $(plan).children().eq(k).text(); 
+				if(!contains(exitsRateIds,id)){
+	                html += "<option value=\""+id+"\">"+text+"</option>";
+	            }
+			}
+			if(html == "") {
+				layer.msg('已无可添加通道！', function(){});
+				return;
+			}
+			var html = "<tr><td><input value =\""+maxSortNum+"\" style=\"width:50px;\" class=\"dd_input input-text size-M\" type=\"text\" id=\"sortNum\" onchange=\"ValidateFloatSort($(this),value)\"></td>"+
+						"<td><select style=\"width:180px;\" class=\"select\" id=\"payWayRate\">"+html+"</td>"+		
+						"<td><input style=\"width:65px;\" class=\"dd_input input-text size-M\" type=\"text\" name=\"maxMoney\" id=\"maxMoney\" value =\"200000\" onchange=\"ValidateFloat($(this),value)\"> 元</td>"+
+						"<td><input style=\"width:50px;\" class=\"dd_input input-text size-M\" type=\"text\" name=\"oneMinMoney\" id=\"oneMinMoney\" value =\"0\" onchange=\"ValidateFloatByMin($(this),value)\"> 元</td>"+
+						"<td><input style=\"width:50px;\" class=\"dd_input input-text size-M\" type=\"text\" name=\"oneMaxMoney\" id=\"oneMaxMoney\" value =\"0\" onchange=\"ValidateFloatByMax($(this),value)\"> 元</td>"+
+						"<td><button type=\"button\" onclick=\"deleteCurrTr(this)\" class=\"btn btn-danger\">删除本行</button></td>"+
+						"</tr>";
+			$(this).parents("#panel-body-div-id").find("#pay-way-panel").find("tbody").append(html);
+			for(var i = 0, len = $(this).parents("#panel-body-div-id").find("#pay-way-panel").find("tbody").children().length;i<len;i++){
+				if(i == len-1) {
+					$(this).parents("#panel-body-div-id").find("#pay-way-panel").find("tbody").children().eq(i).find("#payWayRate").searchableSelect();
+				}
+			}
+		});
+		
+		function getCurrPayTypeSelect(obj){
+			var html = "";
+			var count = 0;
+			for(var i = 0, len = $("#parent-way-rate-div").children().length;i<len;i++){
+				for(var j = 0, leng = $("#parent-way-rate-div").children().eq(i).find("#pay-way-panel").find("tbody").children().length;j<leng;j++){
+					count++;
+				}
+			}
+			var plan = $(obj).parents("#panel-body-div-id").find("#payWayRatePlanDiv").find("#payWayRatePlan");
+			if(count == 0) {
+				html = $(plan).html();
+				return;
+			}
+			for(var k = 0, le = $(plan).children().length;k<le;k++){
+				var id = $(plan).children().eq(k).val();
+	            var text = $(plan).children().eq(k).text(); 
+				for(var i = 0, len = $("#parent-way-rate-div").children().length;i<len;i++){
+					for(var j = 0, leng = $("#parent-way-rate-div").children().eq(i).find("#pay-way-panel").find("tbody").children().length;j<leng;j++){
+						var obj = $("#parent-way-rate-div").children().eq(i).find("#pay-way-panel").find("tbody").children().eq(j);
+						var rateId = $(obj).find("#payWayRate").val();
+						if(rateId != id){
+			                html += "<option value=\""+id+"\">"+text+"</option>";
+			            }
+					}
+				}
+	         };
+			return html;
+		}
+		
+		function getMaxSortNum(){
+			var sn = 1;
+			var sortList = new Array();
+			for(var i = 0, len = $("#parent-way-rate-div").children().length;i<len;i++){
+				for(var j = 0, leng = $("#parent-way-rate-div").children().eq(i).find("#pay-way-panel").find("tbody").children().length;j<leng;j++){
+					var obj = $("#parent-way-rate-div").children().eq(i).find("#pay-way-panel").find("tbody").children().eq(j);
+					var sortNum = $(obj).find("#sortNum").val();
+					sortList.push(sortNum);
+				}
+			}
+			for(var i = 1, len = sortList.length+2; i<len;i++){
+				if(!contains(sortList, i)) {
+  	            	return i;
+  	            }
+			}
+			return sn;
+		}
+		
+		function deleteCurrTr(obj){
+			/* var delSortNum = $(obj).parent().parent().find("#sortNum").val();
+			var maxSortNum = $("#maxSortNum").val();
+			if(maxSortNum == delSortNum) {
+				maxSortNum--;
+				$("#maxSortNum").val(maxSortNum);
+			} */
+			$(obj).parent().parent().remove();
+		}
+		
+		function plSettingDay(obj){
+			var vl = $(obj).parent().find("#plDay").val();
+			if(vl == "") {
+				layer.msg("请输入数字");
+				return;
+			}
+			//$(obj).parent().find("#plDay").val("");
+			for(var i = 0, len = $(obj).parents("#panel-body-div-id").find("#pay-way-panel").find("tbody").children().length;i<len;i++){
+				$(obj).parents("#panel-body-div-id").find("#pay-way-panel").find("tbody").children().eq(i).find("#maxMoney").val(vl);
+			}
+		}
+		function plSettingMin(obj){
+			var vl = $(obj).parent().find("#plMin").val();
+			if(vl == "") {
+				layer.msg("请输入数字");
+				return;
+			}
+			//$(obj).parent().find("#plMin").val("");
+			for(var i = 0, len = $(obj).parents("#panel-body-div-id").find("#pay-way-panel").find("tbody").children().length;i<len;i++){
+				$(obj).parents("#panel-body-div-id").find("#pay-way-panel").find("tbody").children().eq(i).find("#oneMinMoney").val(vl);
+			}
+		}
+		function plSettingMax(obj){
+			var vl = $(obj).parent().find("#plMax").val();
+			if(vl == "") {
+				layer.msg("请输入数字");
+				return;
+			}
+			//$(obj).parent().find("#plMax").val("");
+			for(var i = 0, len = $(obj).parents("#panel-body-div-id").find("#pay-way-panel").find("tbody").children().length;i<len;i++){
+				$(obj).parents("#panel-body-div-id").find("#pay-way-panel").find("tbody").children().eq(i).find("#oneMaxMoney").val(vl);
+			}
+		}
+		
+		function ValidateFloatSort(e, pnumber){ 
+			if (!/^\d+[.]?\d*$/.test(pnumber)){ 
+				$(e).val(/^\d+[.]?\d*/.exec($(e).val())); 
+				layer.msg('请输入整数！', function(){});
+			}
+			return false; 
+		}
+		
+		function ValidateFloat(e, pnumber){ 
+			if (!/^\d+[.]?\d*$/.test(pnumber)){ 
+				$(e).val(""); 
+				layer.msg('请输入整数！', function(){});
+				return false;
+			}
+			if(pnumber == "") {
+				$(e).val(""); 
+				layer.msg('请输入整数！', function(){});
+				return false;
+			}
+			var max = $(e).parent().parent().find("#oneMaxMoney").val();
+			if(max - pnumber > 0) {
+				$(e).val(""); 
+				layer.msg('当日限额不允许小于单笔上限金额！', function(){});
+				return false;
+			} 
+			return false; 
+		}
+		
+		function ValidateFloatByMax(e, pnumber){ 
+			if (!/^\d+[.]?\d*$/.test(pnumber)){ 
+				$(e).val(""); 
+				layer.msg('请输入整数！', function(){});
+				return false;
+			}
+			if(pnumber == "") {
+				$(e).val(""); 
+				layer.msg('请输入整数！', function(){});
+				return false;
+			}
+			
+			var min = $(e).parent().parent().find("#oneMinMoney").val();
+			if(min - pnumber > 0) {
+				$(e).val(""); 
+				layer.msg('上限金额不允许小于下限金额！', function(){});
+				return false;
+			}
+			
+			var day = $(e).parent().parent().find("#maxMoney").val();
+			if(day != 0 && pnumber - day > 0) {
+				$(e).val(""); 
+				layer.msg('上限金额不允许大于单日限额！', function(){});
+				return false;
+			}
+			return false; 
+		}
+		
+		function ValidateFloatByMin(e, pnumber){ 
+			if (!/^\d+[.]?\d*$/.test(pnumber)){ 
+				$(e).val(/^\d+[.]?\d*/.exec($(e).val())); 
+				layer.msg('请输入整数！', function(){});
+				return false;
+			}
+			if(pnumber == "") {
+				$(e).val(""); 
+				layer.msg('请输入整数！', function(){});
+				return false;
+			}
+			var max = $(e).parent().parent().find("#oneMaxMoney").val();
+			if(max != 0 && pnumber - max > 0) {
+				$(e).val("");
+				layer.msg('下限金额不允许大于上限金额！', function(){});
+				return false;
+			} 
+			
+			var day = $(e).parent().parent().find("#maxMoney").val();
+			if(day != 0 && pnumber - day > 0) {
+				$(e).val(""); 
+				layer.msg('下限金额不允许大于单日限额！', function(){});
+				return false;
+			}
+			
+			return false; 
+		}
+		
+		function contains(arr, obj) {  
+	        var i = arr.length;  
+	        while (i--) {  
+	            if (arr[i] == obj) {  
+	                return true;  
+	            }  
+	        }  
+	        return false;  
+	    }
+		
+		function submitData(){
+			var result = "";
+			var sortList = new Array();
+			var rateList = new Array();
+			var wayList = new Array();
+			for(var i = 0, len = $("#parent-way-rate-div").children().length;i<len;i++){
+				var wayId = $("#parent-way-rate-div").children().eq(i).find("#pay-type-obj-hidden").attr("wayId");
+				var typeId = $("#parent-way-rate-div").children().eq(i).find("#pay-type-obj-hidden").attr("typeId");
+				var payWayRate = $("#parent-way-rate-div").children().eq(i).find("#pay-type-obj-hidden").attr("payWayRate");
+				for(var j = 0, leng = $("#parent-way-rate-div").children().eq(i).find("#pay-way-panel").find("tbody").children().length;j<leng;j++){
+					var obj = $("#parent-way-rate-div").children().eq(i).find("#pay-way-panel").find("tbody").children().eq(j);
+					var rateId = $(obj).find("#payWayRate").val();
+					var sortNum = $(obj).find("#sortNum").val();
+					var maxMoney = $(obj).find("#maxMoney").val();
+					var oneMinMoney = $(obj).find("#oneMinMoney").val();
+					var oneMaxMoney = $(obj).find("#oneMaxMoney").val();
+					if(rateId == "0" || sortNum == "") {
+	  	            	layer.msg('通道格式错误！', function(){});
+	  	            	return false;
+	  	            }
+	  	            if(contains(sortList, sortNum)) {
+	  	            	layer.msg('排序序号重复！', function(){});
+	  	            	return false;
+	  	            } else {
+	  	            	sortList.push(sortNum);
+	  	            }
+	  	            
+	  	            if(contains(rateList, rateId)) {
+	  	            	layer.msg('通道重复！', function(){});
+	  	            	return false;
+	  	            } else {
+	  	            	rateList.push(rateId);
+	  	            }
+	  	            
+	  	            if(maxMoney == "") {
+	  	            	layer.msg('单日限额不能为空！', function(){});
+	  	            	return false;
+	  	            }
+	  	            if(oneMinMoney == "") {
+	  	            	layer.msg('单笔下限不能为空！', function(){});
+	  	            	return false;
+	  	            }
+	  	            if(oneMaxMoney == "") {
+	  	            	layer.msg('单笔上限不能为空！', function(){});
+	  	            	return false;
+	  	            }
+	  	            if(oneMaxMoney != 0 && oneMinMoney != 0 && oneMinMoney - oneMaxMoney > 0) {
+	  	            	layer.msg('单笔上限不能小于单笔下限！请仔细检查!', function(){});
+	  	            	return false;
+	  	            }
+	  	            
+	  	            if(oneMaxMoney != 0 && maxMoney != 0 && oneMaxMoney - maxMoney > 0) {
+	  	            	layer.msg('单笔上限不能小于单日限额！请仔细检查!', function(){});
+	  	            	return false;
+	  	            }
+	  	            
+	  	            wayList.push(wayId+"-"+typeId+"-"+rateId+"-"+payWayRate + "-"+sortNum+"-"+maxMoney+"-"+oneMinMoney+"-"+oneMaxMoney);
+				}
+			}
+			result = wayList.join(",");
+			/* if(result == ''){
+  	            layer.msg('通道格式错误！', function(){});
+				return false;
+			} */
+			
+			var data = {};
+			data.id = $("#companyId").val();
+			data.isRandom = $("#isRandom").val();
+			data.payWayList = result;
+			//后台请求保存数据
+			$.axse("${basePath}/payv2BussCompany/configCompanyWayRate.do",  data, function(d){
+				if(d.resultCode == 200){
+					layer.msg('操作成功!', {
+						icon : 1,
+						time : 1000
+					});
+					//location.replace(location.href);
+					/* window.parent.location.reload();
+					var index = parent.layer.getFrameIndex(window.name);
+					parent.layer.close(index); */
+					setTimeout(function () { 
+				        layer_close();
+				    }, 1000);
+				}else{
+					layer.msg('操作失败!请联系技术人员!', {
+						icon : 2,
+						time : 1000
+					});
+				}
+			},
+			function(d){
+				layer.msg('服务器异常!请联系技术人员!', {
+					icon : 2,
+					time : 1000
+				});
+			});
+		}
+	</script>
+	
+</body>
+</html>

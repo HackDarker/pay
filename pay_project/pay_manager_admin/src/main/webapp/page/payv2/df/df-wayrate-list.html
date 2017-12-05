@@ -1,0 +1,229 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<#include "lib/lib.html" />
+<title>代付通道管理</title>
+</head>
+<body style="background-color: #F0F0F0">
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+		代付通道管理 <span class="c-gray en">&gt;</span> 代付通道列表
+		<a class="btn btn-success radius r mr-20" id="refresh" style="line-height: 1.6em; margin-top: 3px" href="javascript:location.replace(location.href);" title="刷新">
+		<i class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	
+	<div class="pd-20 text-c">
+		<div class="panel panel-default">
+			<div class="panel-header" style="height: 30px">
+				<div style="float: left; font-size: 15px;">条件筛选</div>
+				<div style="float:right;" class="layui-btn-group">
+				  <button type="submit" class="layui-btn layui-btn-small" onclick="date_from_submit()"><i class="layui-icon" style="line-height:12px;">&#xe615;</i> 搜索</button>
+				</div>
+			</div>
+			<div class="panel-body" style="padding: 5px;">
+				<div class="text-c">
+					<form id="data_form" action="" method="post">
+						 <table class="table table-hover table-bg table-sort">
+							<tbody>
+								<tr>
+									<td>
+										<layble>关键字：</layble>
+										<input type="text" name="dfRateName" id="dfRateName" placeholder="请输入通道名称（官方）" style="width: 250px" class="input-text" value="${map.dfRateName!}">									
+									</td>
+									<td>
+										<layble>通道状态：</layble>
+										<select style="width: 150px;height: 30px;" class="select" id="status" name="status" size="1">
+											<option value="">全部</option>
+											<option value="1" <#if map.status == 1>selected="selected"</#if>>开启</option>
+											<option value="2" <#if map.status == 2>selected="selected"</#if>>关闭</option>
+										</select>
+									</td>									
+									<td width="300"></td>
+									<td width="300"></td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="mt-20">
+			<div class="panel panel-default">
+				<div class="panel-header" style="height: 30px">
+					<div class="fl" style="font-size: 15px;" ">代付通道列表</div>
+					<div class="" style="float: right;">
+						<button class="layui-btn layui-btn-danger layui-btn-small" onclick="batchOption(1)"><i class="layui-icon" style="line-height:12px;">&#x1006;</i>批量关闭</button>
+						<button class="layui-btn layui-btn-danger layui-btn-small" onclick="batchOption(2)"><i class="layui-icon" style="line-height:12px;">&#xe640;</i>批量删除</button>
+						<button class="layui-btn layui-btn-small" onclick="batchOption(3)"><i class="layui-icon" style="line-height:12px;">&#xe618;</i>批量开启</button>
+						<button class="layui-btn layui-btn-small" onclick="cooperationBank_add()"><i class="layui-icon" style="line-height:12px;">&#xe61f;</i>添加代付通道</button>
+					</div>
+				</div>
+				<div class="panel-body">
+					<table class="table table-border table-bordered table-hover table-bg table-sort">
+						<thead>
+							<tr class="text-c">
+								<th width="25"><input type="checkbox"></th>
+								<th width="150">名称(官方可见)</th>
+								<th width="150">名称(下游可见)</th>
+								<th width="80">成本费(元/笔)</th>
+								<th width="150">资金池余额</th>
+								<th width="60">当前状态</th>
+								<th width="200">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<#if list.dataList?? && list.dataList?size gt 0>
+							<#list list.dataList as dl >
+								<tr class="text-c">
+									<td><input type="checkbox" value="${dl.id!}" isClose="${dl.status}" name="idCheckBox"></td>
+									<td>${dl.dfRateName!}</td>
+									<td>${dl.dfPayWayName!}</td>
+									<td>${dl.payWayRate!}元</td>
+									<td>${dl.totalAmount!}元</td>
+									<td>
+										<#if dl.status ==1>
+											<span class="label label-success radius">开启
+										<#elseif dl.status ==2>
+											<span class="label label-danger radius">关闭
+										<#else>
+											<span class="label red radius">其他
+										</#if>
+										</span>
+									</td>
+									<td class="td-manage">
+										<a title="查看/编辑" href="javascript:;" onclick="dfpayway_edit(${dl.id!},${list.curPage!})" class="btn btn-secondary size-MINI radius" style="text-decoration:none"><i class="Hui-iconfont Hui-iconfont-edit"> 查看/编辑</i></a>
+										
+									</td>
+								</tr>
+							</#list>
+							</#if>
+						</tbody>
+					</table>
+					</br>
+					<div id="page_list"></div>
+				</div>
+			</div>			
+		</div>
+	</div>
+	<script type="text/javascript">
+		function date_from_submit(){
+			$("#data_form").attr(
+						"action",
+						"${basePath}/dfWayRate/rateList.do").submit();
+		}
+
+
+
+		
+
+		layui.use(['laypage', 'layer'], function(){
+	  		var laypage = layui.laypage,layer = layui.layer;
+			laypage.render({
+			    elem: 'page_list',	//容器。值支持id名、原生dom对象，jquery对象
+			    count: ${list.totalData!'0'},	//数据总数。一般通过服务端得到
+			    //groups: 5,	//连续出现的页码个数
+			    limit: ${list.pageData!'10'},
+			    limits: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+				curr: ${list.curPage!'1'}, //获取起始页
+			    layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+			    jump: function(obj, first){
+			      if (!first) {
+			      window.location.href="${basePath}/dfWayRate/rateList.do?curPage="+obj.curr +"&pageData="+obj.limit+"&status="+$("#status").val()+"&dfRateName="+$("#dfRateName").val();
+					}
+			    }
+			  });
+		});
+		var isChange=0;
+		$(document).ready(function(){
+			$('select').searchableSelect();
+			isChange++;
+		});
+// 	$(function(){
+// 	 	laypage({
+// 	 	    cont: $('.page_list'), //容器。值支持id名、原生dom对象，jquery对象,
+// 		    pages: ${list.endPage! }, //总页数
+// 	 	    //skip: true, //是否开启跳页
+// // 	    	skin: 'molv',
+// 	 	    groups: 10, //连续显示分页数
+// 	 	    first: '首页', //若不显示，设置false即可
+// 	 	    last: '尾页', //若不显示，设置false即可
+// 	 	    curr:${list.curPage!},
+// 	 	   	hash: true, //开启hash
+// 	 	    skin: '#00AA91',
+// 	 	    jump: function(obj,first){ //触发分页后的回调
+// 	 	    	if(!first){
+// 	 	         	 window.location.href="${basePath}/dfWayRate/rateList.do?curPage="+obj.curr +"&pageData="+10+"&status="+$("#status").val()+"&dfRateName="+$("#dfRateName").val();
+// 	 	    	}
+// 	 	    }
+// 	 	});
+	 			
+// 	});
+	
+	function batchOption(type){
+		var isc=new Array();
+		var gids=new Array();
+      		$("input[name='idCheckBox']:checkbox").each(function(){
+      			if ($(this).is(':checked')) {
+   					gids.push($(this).val());
+   					isc.push($(this).attr("isClose"));
+				}
+        	});
+        	if(gids.length==0){
+	           	layer.msg('你一个通道都没勾选...', function(){});
+		        return;
+           }
+        	if(type==2){
+	         	if(isc.indexOf("1") > -1) {
+	         		layer.msg('不能删除开启状态的通道...', function(){});
+			        return;
+	         	}
+         	}
+           var ids = gids.join(",");
+           layer.confirm('再给你一次机会!确认要这样做吗？', function(index) {
+			var data = {};
+			data.gids = ids;
+			data.type = type;
+			//后台请求保存数据
+			$.axse("${basePath}/dfWayRate/batchUpdateDfWayRate.do",  data, function(d){
+				if(d.resultCode == 200){
+					layer.msg('操作成功!', {
+						icon : 1,
+						time : 1000
+					});
+					location.replace(location.href);
+				}else{
+					layer.msg('操作失败了...联系技术员', {icon: 2});
+				}
+			},
+			function(d){
+				layer.msg('操作失败了...联系技术员', {icon: 2});
+			});
+		});
+	}
+	
+	//添加代付渠道
+	function cooperationBank_add(title, url, w, h){
+		var url = '${basePath}/dfWayRate/addDfPayWayRateTc.do';
+		layer_show('添加代付通道', url, 880, 650);
+	}
+	//编辑支付渠道
+	function dfpayway_edit(id,curPage){
+		var url = '${basePath}/dfWayRate/editDfWayRateTc.do?id='+id+'&curPage='+curPage;
+		layer_show('编辑代付通道', url, 880,650);
+	}
+	$(document).keypress(function(e) {			
+	   	// 回车键事件  
+	      if(e.which == 13) {  
+	  		jQuery(".confirmButton").click();
+	  		date_from_submit()
+	      }  
+	});
+</script>
+</body>
+</html>

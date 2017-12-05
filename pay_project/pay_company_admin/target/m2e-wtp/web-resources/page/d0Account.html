@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>商户管理平台D0账单管理</title>
+		<meta name="renderer" content="webkit|ie-stand">
+		<meta name="force-rendering" content="webkit">
+		<meta http-equiv="x-ua-compatible" content="IE=11,10,9" >
+		<link rel="stylesheet" href="../public/css/normal.css" />
+		<link rel="stylesheet" href="../public/css/order.css" />
+		<link rel="stylesheet" href="../public/css/nav.css" />
+		<link rel="shortcut icon" href="../favico.ico" />
+	</head>
+
+	<body>
+		<header>
+			<div class="logo fl">
+				<img src="../public/img/logo.png" />
+			</div>
+			<!-- <div class="tips fr">
+				<div class="red"></div>
+			</div> -->
+			<div class="users fr user">
+				<span>全民金服</span>
+				<i></i>
+				<div class="change changeuser">
+					<div class="change1 setPayPW">设置支付密码</div>
+					<div class="change1 changepwd">修改登录密码</div>
+					<div class="change2 exitlogin">退出登录</div>
+				</div>
+			</div>
+			<!-- <div class="users fr line">
+				<span>线上应用</span>
+				<i></i>
+				<div class="change changeline">
+					<div class="change1">线上应用</div>
+					<div class="change2">线下门店</div>
+				</div>
+			</div> -->
+		</header>
+		<nav>
+			<ul>
+				<li class="stair datali" style="cursor: pointer;"><img src="../public/img/sjtj2.png"><span class="c_33">数据统计</span></li>
+				<li class="stair"><img src="../public/img/dd.png"><span class="c_80">订单</span></li>
+				<li class="secondLevel">
+					<a href="orderManager.html" class="c_33">交易订单</a>
+					<a href="refund.html" class="c_33">退款订单</a>
+					<a href="payOfAnother.html" class="c_33">代付订单</a>
+					<a href="accountManager.html" class="c_33">账单管理</a>
+				</li>
+				<li class="stair"><img src="../public/img/yy.png"><span class="c_80">应用</span></li>
+				<li class="secondLevel">
+					<a href="appManager.html" class="c_33">应用管理</a>
+				</li>
+				<li class="stair"><img src="../public/img/zh.png"><span class="c_80">账户</span></li>
+				<li class="secondLevel">
+					<a href="account.html" class="c_33">账户信息</a>
+					<a href="d0Tx.html" class="c_33">D0提现</a>
+					<a href="d0Account.html" class="c_33 active">D0账单</a>
+				</li>
+			</ul>
+			<div class="dld"><img src="../public/img/dld.png"/><span>下载SDK</span></div>
+		</nav>
+		<div class="main">
+			<!--title-->
+			<div class="title">当前位置：D0账单</div>
+			<!--关键指标-->
+			<div class="account-index">
+				<div class="index-title">
+					<i></i>
+					<span>账单查询</span>
+					<div class="fr dload">
+						<i class="fr"></i>
+						<span class="fr">导出数据</span>						
+					</div>
+				</div>
+				<div class="orderNumber">
+					<div class="data fl">
+						<label>选择时间：</label>
+						<input id="" class="condition-date data1" type="text" name="">
+						<span class="date-line">&nbsp;--&nbsp;</span>
+						<input id="" class="condition-date data2" type="text" name="">
+					</div>				
+				</div>
+
+			</div>
+			<!--表格-->
+			<div class="account-table">
+				<table cellpadding="0" cellspacing="0">
+					<thead>
+						<tr>
+							<th width="10%" class='first'>时间</th>
+							<th width="10%" class='money'>交易金额</th>
+							<th width="10%" class='money'>转T1交易金额</th>
+							<th width="10%" class='money'>已提现交易金额</th>
+							<th width="10%" class='money'>提现手续费</th>
+							<th width="10%" class='money'>提现次数</th>
+							<th width="10%" class='money'>D0交易手续费</th>
+							<th width="10%" class='money' style="padding-right:40px;">提现到账金额</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+					</tbody>
+				</table>
+				<div class="set-footer">
+					<div class="set fl">
+						共<span></span>条记录，每页显示<input autocomplete="off" type="text" value="10"/>条
+					</div>
+					<div class="jump fr">
+						<div class="firstPage">首页</div>
+						<div class="left">
+							<i></i>
+						</div>
+						<input autocomplete="off" type="text" value="1" />
+						<div class="right">
+							<i></i>
+						</div>
+						<div class="lastPage">尾页</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="bg">
+			<div class="window3">
+				<div class="top2">
+					修改密码
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;cursor:pointer;'>
+						<i></i>
+					</div>
+				</div>
+				<div class="bottom3">
+					<div class="oldpwd">
+						<label>原密码:</label>
+						<input type="password" placeholder="请输入原密码" />
+						<span style="color:red;font-size:14px;display:none">请输入原密码</span>
+					</div>
+					<div class="newpwd">
+						<label>新密码:</label>
+						<input type="password" placeholder="6-16位密码(数字、字母组成)" />
+						<span style="color:red;font-size:14px;display:none">请输入新密码</span>
+					</div>
+					<div class="newpwda">
+						<label>确认密码:</label>
+						<input type="password" placeholder="请再次输入新密码" />
+						<span style="color:red;font-size:14px;display:none">请再次输入新密码</span>
+					</div>
+					<div class="surebtn">确定</div>
+				</div>
+			</div>
+			<div class="windowPw">
+				<div class="top2">
+					设置支付密码
+					<div style='float:right;width:36px;height:36px;border-radius:0 10px 0 0;cursor:pointer;'>
+						<i></i>
+					</div>
+				</div>
+				<div class="bottom3">
+					<div class="oldpwd">
+						<label>验证码:</label>
+						<input type="text" placeholder="账户绑定邮箱查看" style="margin-left:32px" />
+						<span class="getSmS" thistime='0'>获取</span>
+						<span style="color:red;font-size:14px;display:none">请输入验证码</span>
+					</div>
+					<div class="newpwd">
+						<label>支付密码:</label>
+						<input type="password" maxlength="6" placeholder="6位数密码" style="margin-left:16px" />
+						<span style="color:red;font-size:14px;display:none">请输入密码</span>
+					</div>
+					<div class="newpwda">
+						<label>确认密码:</label>
+						<input type="password" maxlength="6" placeholder="请再次输入6位数密码" style="margin-left:16px" />
+						<span style="color:red;font-size:14px;display:none">请再次输入密码</span>
+					</div>
+					<div class="surebtn">确定</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../public/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../public/js/echarts.min.js"></script>
+		<script type="text/javascript" src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+		<script type="text/javascript" src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+		<script type="text/javascript" src="../public/js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="../public/js/md5.js"></script>
+		<script type="text/javascript" src="../public/js/exit.js"></script>
+		<script type="text/plain" id="trmode">
+			<tr>
+				<td datas='clearTime' class='first'></td>
+				<td datas='balance' class='money'></td>
+				<td datas='t1Balance' class='money'></td>
+				<td datas='txBalance' class='money'></td>
+				<td datas='txServiceAmount' class='money'></td>
+				<td datas='txCount' class='money'></td>
+				<td datas='payServiceAmount' class='money'></td>
+				<td datas='arrivalAmount' class='money' style="padding-right:40px;"></td>
+			</tr>
+		</script>
+		<script>
+			var totalpage,totaldata;
+			var param={};
+			param.clearTimeBegin = '';
+			param.clearTimeEnd = "";
+			param.curPage = 1;
+			param.pageData = 10;
+			$("body").on("click", ".getSmS", function() {
+				var _this = $(this);
+				if($(this).attr("thistime") == 0) {
+					_this.attr("thistime", "60");
+					_this.css("background", "#ccc");
+					setTimeout(function() {
+						ret()
+					}, 1000)
+					function ret() {
+						if(_this.attr("thistime") != 0) {
+							_this.html(_this.attr("thistime") - 1 + "s")
+							_this.attr("thistime", _this.attr("thistime") - 1);
+							setTimeout(function() {
+								ret()
+							}, 1000)
+						} else {
+							_this.attr("thistime", "0");
+							_this.html("获取")
+							_this.css("background", "#2581f4");
+						}
+					}
+
+					$.ajax({
+						type: 'get',
+						url: "/sys/sendEmail.do",
+						async: true,
+						success: function(data) {
+							if(!!data && data.resultCode == 200) {
+
+							} else {
+								alert(data.message)
+							}
+						}
+					})
+				}
+
+			})
+			$("body").on("keydown",".windowPw .oldpwd input,.windowPw .newpwd input,.windowPw .newpwda input",function(){
+				$(this).parent().find('span').not(".getSmS").hide();
+			})
+			$("body").on("click", ".windowPw .surebtn", function() {
+				var param = {};
+				param.code = $(".windowPw .oldpwd input").val();
+				param.payPassWord = $(".windowPw .newpwd input").val();
+				pw2 =  $(".windowPw .newpwda input").val()
+				param.payPassWordMD5 = md5(md5(param.payPassWord))
+				$(".windowPw .oldpwd span").not(".getSmS").hide();
+				$(".windowPw .newpwd span").hide();
+				$(".windowPw .newpwda span").hide();
+				var isCode = false,
+					pwd1 = false,
+					pwd2 = false;
+				if($(".windowPw .oldpwd input").val()){
+					isCode = true;
+				}else{
+					$(".windowPw .oldpwd span").not(".getSmS").show();
+				}
+				
+				if($(".windowPw .newpwd input").val() ){
+					//console.log($(".windowPw .newpwd input").val())
+					if(/^\d{6}$/.test($(".windowPw .newpwd input").val())){
+						pwd1 = true;
+					}else{
+						$(".windowPw .newpwd span").html("密码格式不正确")
+						$(".windowPw .newpwd span").show();
+					}
+					
+				}else{
+					$(".windowPw .newpwd span").html("请输入密码")
+					$(".windowPw .newpwd span").show();
+				}
+				
+				if($(".windowPw .newpwda input").val()){
+					if(/^\d{6}$/.test($(".windowPw .newpwd input").val())){
+						pwd2 = true;
+					}else{
+						$(".windowPw .newpwd span").html("密码格式不正确")
+						$(".windowPw .newpwd span").show();
+					}
+					
+				}else{
+					$(".windowPw .newpwd span").html("请再次输入密码")
+					$(".windowPw .newpwda span").show();
+				}
+				
+				if($(".windowPw .newpwd input").val()&&$(".windowPw .newpwda input").val()){
+					if($(".windowPw .newpwd input").val()!=$(".windowPw .newpwda input").val()){
+						alert("两次密码不一样")
+						$(".windowPw .newpwd input").val("");
+						$(".windowPw .newpwda input").val("");
+					}
+					
+				}
+				if(isCode && pwd1 && pwd2){
+					if(param.payPassWord == pw2){
+						$.ajax({
+							type:"get",
+							url:'/sys/checkEmailCode.do',
+							async:false,
+							data:param,
+							success:function(data){
+								console.log(data);
+								if(!!data && data.resultCode==200){
+									alert("修改成功")
+									$(".oldpwd input").val("");
+									$(".newpwd input").val("");
+									$(".newpwda input").val("");
+									$(".bg").hide();
+									$(".windowPw").hide();
+									$(".window").hide();
+								}else {
+									alert(data.message)
+								}
+							}
+						})
+					}
+				}
+				
+			});
+			$("body").on("focus",".data1",function(){
+				if($(".data2").val()){
+					WdatePicker({"maxDate":$(".data2").val()});
+				}else{
+					WdatePicker({"maxDate":new Date()});
+				}
+			})
+			$(".dload").on("click",function(){
+				var url = "/TX/ordersClearExport.do?clearTimeBegin="+$(".data1").val()+"&clearTimeEnd="+$(".data2").val();	
+				location.href = url;
+			});
+			$("body").on("focus",".data2",function(){
+					if($(".data1").val()){
+						WdatePicker({"minDate":$(".data1").val(),"maxDate":new Date()});
+					}else{
+						WdatePicker({"maxDate":new Date()});
+					}
+			})
+			$(".data1,.data2").on("blur",function(){
+				if($(".data1").val()&& $(".data2").val()) {
+					param.dateType=5;
+					param.clearTimeBegin=$(".data1").val();
+					param.clearTimeEnd=$(".data2").val();
+					$(".jump input").val("1");
+					param.curPage=1;
+					txOrderList();
+					//curData()
+					param.clearTimeBegin="";
+					param.clearTimeEnd="";
+				}
+			})
+			$(".user i").on("click", function() {
+				$(".changeuser").show();
+			})
+			$(".user").on("mouseleave", function() {
+				$(".changeuser").hide();
+			})
+			
+			$(".user i").on("mouseenter", function() {
+				$(this).css("background-image","url(../public/img/down2.png)");
+			})
+			$(".user i").on("mouseleave", function() {
+				$(this).css("background-image","url(../public/img/down1.png)");
+			})
+			$(".line").on("click mouseenter", function() {
+				$(".changeline").show();
+			})
+			$(".line").on("click mouseleave", function() {
+				$(".changeline").hide();
+			})
+			$(".datali").on("click",function(){
+				window.location="data.html"
+			})
+			$(".dld").on("click",function(){
+				window.open("http://pay.aijinfu.cn/sdk-download.html")
+			})
+			$("body").on("click",".closex",function(){
+				$(".bg").hide();
+			})
+			$("body").on("mouseleave",".closex",function(){
+				$(this).css("background","rgba(0,0,0,0)")
+				$(this).find("i").css("background-image","url(../public/img/close.png)")
+			})
+			$(".set input").on("change",function(){
+				
+				if($(this).val()>totaldata){
+					$(this).val(totaldata)
+				}
+				if($(this).val()<1){
+					$(this).val("1")
+				}
+				if(!/^[0-9]*$/.test($(this).val())){
+					alert("请输入正确的数字");
+					$(this).val(10);
+					param.pageData=10;
+					param.curPage=1
+					$(".jump input").val("1");
+					txOrderList();
+					window.getSelection().removeAllRanges();
+			    }else{
+			    	$(this).val(parseInt($(this).val()))
+			    	param.pageData=$(this).val();
+			    	param.curPage=1
+					$(".jump input").val("1");
+			    	txOrderList();
+			    }
+				
+			});
+			$(".jump .left").on("click",function(){
+				if($(".jump input").val()>1){
+					$(".jump input").val(Number($(".jump input").val())-1);
+					param.curPage=$(".jump input").val()
+					txOrderList();
+				}else{
+					
+				}
+			})
+			$(".jump .right").on("click",function(){
+				if($(".jump input").val()<totalpage){
+					$(".jump input").val(Number($(".jump input").val())+1);
+					param.curPage=$(".jump input").val()
+					txOrderList();
+				}else{
+					
+				}
+			})
+			$(".jump .firstPage").on("click",function(){
+				$(".jump input").val("1")
+				param.curPage=1;
+				txOrderList();
+				
+			})
+			$(".jump .lastPage").on("click",function(){
+				if(totalpage){
+					$(".jump input").val(totalpage)
+					param.curPage=totalpage;
+					txOrderList();
+				}else{
+					$(".jump input").val(1)
+					param.curPage=1;
+					txOrderList();
+				}
+				
+			})
+			$(".jump input").on("change",function(){
+				
+				if($(this).val()>totalpage){
+					$(this).val(totalpage)
+				}
+				if($(this).val()<1){
+					$(this).val("1");
+				}
+				if(!/^[0-9]*$/.test($(this).val())){
+					$(this).val("1");
+			    }else{
+			    	$(".jump input").val(parseInt($(".jump input").val()))
+			    }
+				param.curPage=$(".jump input").val()
+				txOrderList();
+			})
+			txOrderList();
+			function txOrderList(){
+				$.ajax({
+					type:"get",
+					url:"/TX/txOrderClearList.do",
+					data:param,
+					async:false,
+					success:function(data){
+						console.log(data);
+						if(!!data&&data.resultCode==200){
+							totalpage = data.Data.txClearOrderList.totalPage;
+							totaldata = data.Data.txClearOrderList.totalData;
+							data = data.Data.txClearOrderList.dataList;
+							var length = data.length;
+							var str = '';
+							$('.set span').html(totaldata);
+							$(".account-table tbody").html();
+							if(length==0){
+								$(".account-table tbody").html("<div class='nodata' style='text-align:center;height:60px;line-height:60px;'>很抱歉,没有找到账单信息……</div>")
+								$(".nodata").css("width",$(".nodata").parent().eq(0).width()+'px')
+							}else{
+								for(var i = 0;i < length;i++){
+									str += $("#trmode").html()
+								}
+								$(".account-table tbody").html(str);
+								for(var i = 0;i < length;i++){
+									for(var j = 0;j < $(".account-table tbody tr").eq(i).children().length;j++){
+										$(".account-table tbody tr").eq(i).children().eq(j).html(data[i][$(".account-table  tbody tr").eq(i).children().eq(j).attr("datas")])
+									}
+									if(data[i].clearTime){
+										$(".account-table tbody tr").eq(i).children().eq(0).html(gettime(data[i].clearTime))
+									}
+									
+								}
+							}
+						}else{
+							if(!!data.message){
+								alert(data.message);
+							}else{
+								$("body").html(data);
+							}
+						}
+					}
+				})
+			}
+			
+			function gettime(time){
+				time = new Date(time);
+				var timeStr='';
+				timeStr+=time.getFullYear();
+				timeStr = time.getMonth()<9 ? timeStr+'-0'+(time.getMonth()+1) : timeStr+'-'+(time.getMonth()+1);
+				timeStr = time.getDate()<10 ? timeStr+'-0'+time.getDate() : timeStr+'-'+time.getDate();
+				timeStr = time.getHours()<10 ? timeStr+' 0'+time.getHours() : timeStr+' '+time.getHours();;
+				timeStr = time.getMinutes()<10 ? timeStr+':0'+time.getMinutes() : timeStr+':'+time.getMinutes();
+				timeStr = time.getSeconds()<10 ? timeStr+':0'+time.getSeconds() : timeStr+':'+time.getSeconds();
+				return timeStr;
+			}
+		</script>
+
+	</body>
+
+</html>

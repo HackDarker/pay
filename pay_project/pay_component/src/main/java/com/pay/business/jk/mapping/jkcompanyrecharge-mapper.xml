@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.pay.business.jk.mapper.JkCompanyRechargeMapper">
+
+	<resultMap id="jkcompanyrecharge_result_map" type="com.pay.business.jk.entity.JkCompanyRecharge" >
+		<id column="id" property="id" />
+		<result column="info_id" property="infoId"/>
+		<result column="company_id" property="companyId"/>
+		<result column="add_balance" property="addBalance"/>
+		<result column="create_time" property="createTime"/>
+	</resultMap>
+	
+	<!-- 分页limit -->
+	<sql id="base_page_query_end">
+		<![CDATA[
+			LIMIT #{curPage},#{pageData}
+		]]>
+	</sql>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from jk_company_recharge  
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="infoId!=null and infoId!=''">
+				and info_id = #{infoId}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="addBalance!=null and addBalance!=''">
+				and add_balance = #{addBalance}
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增对象 如果需要在新增的时候返回id 就加入这个: useGeneratedKeys="true" keyProperty="id"   -->
+	<insert id="insertByEntity" parameterType="com.pay.business.jk.entity.JkCompanyRecharge" useGeneratedKeys="true" keyProperty="id">
+		insert into jk_company_recharge
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+				id,
+			</if>
+      		<if test="infoId!=null ">
+				info_id,
+			</if>
+      		<if test="companyId!=null ">
+				company_id,
+			</if>
+      		<if test="addBalance!=null ">
+				add_balance,
+			</if>
+      		<if test="createTime!=null ">
+				create_time,
+			</if>
+    	</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		<if test="id!=null ">
+      			#{id},
+			</if>
+      		<if test="infoId!=null ">
+      			#{infoId},
+			</if>
+      		<if test="companyId!=null ">
+      			#{companyId},
+			</if>
+      		<if test="addBalance!=null ">
+      			#{addBalance},
+			</if>
+      		<if test="createTime!=null ">
+      			#{createTime},
+			</if>
+    	</trim>
+	</insert>
+	
+	<!-- 根据删除 -->
+	<delete id="deleteByEntity" parameterType="com.pay.business.jk.entity.JkCompanyRecharge">
+		delete from jk_company_recharge
+		<where>
+      		<if test="id!=null ">
+				and id=#{id}
+			</if>
+      		<if test="infoId!=null ">
+				and info_id=#{infoId}
+			</if>
+      		<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+      		<if test="addBalance!=null ">
+				and add_balance=#{addBalance}
+			</if>
+      		<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</delete>
+
+	<!-- 根据对象修改 -->
+	<update id="updateByEntity" parameterType="com.pay.business.jk.entity.JkCompanyRecharge">
+		update jk_company_recharge
+		<set>
+			<if test="infoId!=null ">
+				info_id=#{infoId},
+			</if>
+			<if test="companyId!=null ">
+				company_id=#{companyId},
+			</if>
+			<if test="addBalance!=null ">
+				add_balance=#{addBalance},
+			</if>
+			<if test="createTime!=null ">
+				create_time=#{createTime},
+			</if>
+		</set>
+		<where>
+				id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据对象查询单个 -->
+	<select id="selectSingle" resultType="com.pay.business.jk.entity.JkCompanyRecharge" resultMap="jkcompanyrecharge_result_map">
+		select id,info_id,company_id,add_balance,create_time from jk_company_recharge
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="infoId!=null ">
+				and info_id=#{infoId}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="addBalance!=null ">
+				and add_balance=#{addBalance}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据对象查询列表-->
+	<select id="selectByObject" resultMap="jkcompanyrecharge_result_map" >
+		select id,info_id,company_id,add_balance,create_time from jk_company_recharge
+		<where>
+			<if test="id!=null ">
+				and id=#{id}
+			</if>
+			<if test="infoId!=null ">
+				and info_id=#{infoId}
+			</if>
+			<if test="companyId!=null ">
+				and company_id=#{companyId}
+			</if>
+			<if test="addBalance!=null ">
+				and add_balance=#{addBalance}
+			</if>
+			<if test="createTime!=null ">
+				and create_time=#{createTime}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="pageQueryByObject" resultMap="jkcompanyrecharge_result_map" >
+		
+		SELECT id,info_id,company_id,add_balance,create_time FROM jk_company_recharge 
+		<where>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="infoId!=null and infoId!=''">
+				and info_id = #{infoId}
+			</if>
+			<if test="companyId!=null and companyId!=''">
+				and company_id = #{companyId}
+			</if>
+			<if test="addBalance!=null and addBalance!=''">
+				and add_balance = #{addBalance}
+			</if>
+			<if test="createTimeBegin!=null and createTimeBegin!=''">
+				and create_time <![CDATA[ >= ]]> str_to_date(#{createTimeBegin},  '%Y-%m-%d') 
+			</if>
+			<if test="createTimeEnd!=null and createTimeEnd!=''">
+				and create_time <![CDATA[ <= ]]> str_to_date(#{createTimeEnd},  '%Y-%m-%d') 
+			</if>
+		</where>
+			<if test="sortName!=null and sortName!=''">
+				ORDER BY ${sortName} ${sortOrder}
+			</if>
+		<include refid="base_page_query_end"/>
+	</select>
+	
+</mapper>
