@@ -1,0 +1,64 @@
+<?php
+/**
+ * 签名 
+ */
+function getSign($arr,$keyValue){
+    $string = 'keyValue='.$keyValue.'&'.getParamStr($arr); 
+    //echo $string;
+    $sign=md5(strtoupper($string));
+    return $sign;
+}
+
+function getParamStr($arr){
+    $string='';
+    ksort($arr);
+    //拼接不需要uncode  不用http_build_query()； 
+    $count = count ( $arr );  
+    $i = 0;
+    foreach ( $arr as $k => $v ) {  
+        if ($i < $count - 1) {  
+            $string .= $k . '=' . $v . '&';  
+        } else {  
+            $string .= $k . '=' . $v;  
+        }  
+        $i ++;  
+    } 
+    return $string;
+}
+
+function checkSign($arr,$keyValue){
+    $sign = $arr['sign'];
+    unset($arr['sign']);
+    $check_sign=getSign($arr,$keyValue);
+    return $sign === $check_sign ? true : false;
+}
+
+//支付测试签名示例
+$arr=array("payMoney"=>"0.01","bussOrderNum"=>"201702280450246794","notifyUrl"=>"http://www.aijinfu.cn/payDetail/test.do","appKey"=>"6413f866b558d3e2b6ccf4f0d865f9df","orderName"=>"测试支付");
+$sign = getSign($arr,'u4smNesRMrDAIU62HXNy1eoeP9uD8yaUKCcd103j');//加密
+$paramStr = getParamStr($arr).'&sign='.$sign;
+
+/*//查询订单签名示例  
+$arr=array("bussOrderNum"=>"201702280450246794","appKey"=>"6413f866b558d3e2b6ccf4f0d865f9df","orderNum"=>"DD2017536545662646");
+$sign = getSign($arr,'u4smNesRMrDAIU62HXNy1eoeP9uD8yaUKCcd103j');//加密
+$paramStr = getParamStr($arr).'&sign='.$sign;*/
+
+/*//退款签名示例  
+$arr=array("refundMoney"=>"0.01","bussOrderNum"=>"201702280450246794","appKey"=>"6413f866b558d3e2b6ccf4f0d865f9df","orderNum"=>"DD2017536545662646","refundType"=>"Y");
+$sign = getSign($arr,'u4smNesRMrDAIU62HXNy1eoeP9uD8yaUKCcd103j');//加密
+$paramStr = getParamStr($arr).'&sign='.$sign;*/
+
+/*//获取对账单签名示例  
+$arr=array("billTime"=>"20170206","appKey"=>"6413f866b558d3e2b6ccf4f0d865f9df");
+$sign = getSign($arr,'u4smNesRMrDAIU62HXNy1eoeP9uD8yaUKCcd103j');//加密
+$paramStr = getParamStr($arr).'&sign='.$sign;*/
+
+/*//异步通知回调参数验签
+$arr=array("result_code"=>"200","order_num"=>"DD2017124512345661","buss_order_num"=>"21564561561456","pay_money"=>"0.01","pay_discount_money"=>"0.01","pay_time"=>"20170206122558");
+$sign = getSign($arr,'u4smNesRMrDAIU62HXNy1eoeP9uD8yaUKCcd103j');//加密
+$arr['sign'] = $sign;
+//验签
+$con = checkSign($arr, "u4smNesRMrDAIU62HXNy1eoeP9uD8yaUKCcd103j");*/
+
+echo $paramStr; 
+?>
